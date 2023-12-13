@@ -61,6 +61,11 @@ if (url.includes("/loading") && obj.data) {
   delete obj.data;
 }
 
+if (url.includes("/util/update") &&
+obj.data.operation_float_7_0) {
+  delete obj.data.operation_float_7_0;
+}
+
 $done({ body: JSON.stringify(obj) });
 
 function fixPos(arr) {
