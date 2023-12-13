@@ -49,7 +49,7 @@ if (url.includes("/home/list") && obj.data.banner_v2) {
 
 if (obj?.data?.rows?.length > 0) {
   obj.data.rows = obj.data.rows.filter(
-    (i) => !(i?.hasOwnProperty("ad_banner_id") || ["ad_campaign_id_", "ad_campaign_name", "abs_position"]?.includes(i?.card_goto))
+    (i) => !(i?.hasOwnProperty("ad_banner_id") || ["ad_campaign_id_", "ad_campaign_name", "abs_position"]?.includes(i?.ad))
   );
 }
 
