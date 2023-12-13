@@ -51,8 +51,8 @@ if (url.includes("/publish") && obj.data.hongbao) {
   delete obj.data.hongbao;
 }
 
-if (url.includes("/util/loading") && obj.data && obj.data.error_code === 0) {
-  obj.data = {};
+if (url.includes("/loading") && obj.data) {
+  delete obj.data;
 }
 
 $done({ body: JSON.stringify(obj) });
