@@ -47,6 +47,10 @@ if (url.includes("/home/list") && obj.data.banner_v2) {
   delete obj.data.banner_v2;
 }
 
+if (url.includes("/publish") && obj.data.hongbao) {
+  delete obj.data.hongbao;
+}
+
 if (url.includes("/util/loading") && obj.data && obj.data.error_code === 0) {
   obj.data = {};
 }
