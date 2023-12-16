@@ -1,53 +1,51 @@
-const requestUrl = $request.url;
+const url = $request.url;
+if (!$response.body) $done({});
 
-if (!$response.body) {
-  $done({});
+let obj = JSON.parse($response.body);
+
+const { bottom_nav_list } = obj.data?.disorder_cards || {};
+if (url.includes("/homepage/v1/core") && bottom_nav_list) {
+  obj.data.disorder_cards.bottom_nav_list.data = (bottom_nav_list.data || []).filter(item => ["v6x_home", "user_center"].includes(item.id));
+  fixPos(obj.data.disorder_cards.bottom_nav_list.data);
 }
 
-let parsedBody = JSON.parse($response.body);
-
-const disorderCards = parsedBody.data?.disorder_cards;
-const bottomNavList = disorderCards?.bottom_nav_list;
-const isHomepageCore = requestUrl.includes("/homepage/v1/core");
-
-if (isHomepageCore && bottomNavList) {
-  const filteredBottomNavList = (bottomNavList.data || []).filter(item => ["v6x_home", "user_center"].includes(item.id));
-  parsedBody.data.disorder_cards.bottom_nav_list.data = filteredBottomNavList;
-  applyPositionFix(filteredBottomNavList);
+if (url.includes("/homepage/v1/core")) {
+  delete obj.data?.common_params;
+  delete obj.data?.omega_params;
+  delete obj.data?.order_cards;
 }
 
-if (isHomepageCore) {
-  removeProperties(parsedBody.data, ["common_params", "omega_params", "order_cards"]);
+if (url.includes("/usercenter/me")) {
+  const cards = obj.data?.cards || [];
+  obj.data.cards = cards.filter((item) => ["priority", "general", "security", "wallet"].includes(item.tag));
+  fixPos(obj.data.cards);
 }
 
-if (requestUrl.includes("/usercenter/me")) {
-  const userCards = parsedBody.data?.cards || [];
-  parsedBody.data.cards = filterUserCards(userCards, ["priority", "general", "security" , "wallet"]);
-  applyPositionFix(parsedBody.data.cards);
+if (obj?.data?.cards) {
+  obj.data.cards.forEach(card => {
+    if (card.tag === "wallet") {
+      if (card.items) {
+        const filteredItems = card.items.filter(item => item.title === "优惠券" || item.title === "出行卡");
+        card.items = filteredItems;
+      }
+      if (card.card_type === 4 && card.bottom_items) {
+        const filteredBottomItems = card.bottom_items.filter(item => 
+          item.title === "省钱套餐" || item.title === "天天神券"
+        );
+        card.bottom_items = filteredBottomItems;
+      }
+    }
+  });
 }
 
-if (shouldDeleteData(requestUrl)) {
-  delete parsedBody.data;
+if (url.includes("/resapi/activity/mget") || url.includes("/dynamic/conf") || url.includes("/homepage/v1/other/fast") || url.includes("/agent/v3/feeds") || url.includes("/resapi/activity/xpget") || url.includes("/gateway")) {
+  delete obj.data;
 }
 
-$done({ body: JSON.stringify(parsedBody) });
+$done({ body: JSON.stringify(obj) });
 
-function applyPositionFix(array) {
-  for (let i = 0; i < array.length; i++) {
-    array[i].pos = i + 1;
+function fixPos(arr) {
+  for (let i = 0; i < arr.length; i++) {
+    arr[i].pos = i + 1;
   }
-}
-
-function filterUserCards(cards, allowedTags) {
-  return cards.filter(item => allowedTags.includes(item.tag));
-}
-
-function removeProperties(obj, properties) {
-  for (const property of properties) {
-    delete obj[property];
-  }
-}
-
-function shouldDeleteData(url) {
-  return url.includes("/resapi/activity/mget") || url.includes("/dynamic/conf") || url.includes("/homepage/v1/other/fast") || url.includes("/agent/v3/feeds") || url.includes("/resapi/activity/xpget") || url.includes("/gateway");
 }
