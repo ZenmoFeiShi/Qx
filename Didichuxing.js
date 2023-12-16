@@ -22,7 +22,7 @@ if (isHomepageCore) {
 
 if (requestUrl.includes("/usercenter/me")) {
   const userCards = parsedBody.data?.cards || [];
-  parsedBody.data.cards = filterUserCards(userCards, ["priority", "general", "security"]);
+  parsedBody.data.cards = filterUserCards(userCards, ["priority", "general", "security" , "wallet"]);
   applyPositionFix(parsedBody.data.cards);
 }
 
