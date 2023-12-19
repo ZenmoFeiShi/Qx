@@ -1,9 +1,6 @@
 #!name = T3出行
 #!author = 怎么肥事
 #!update = 2023-12-19 21:10
-#! ps = 需要分流禁用掉
- //ip-cidr, 223.6.6.6/32, reject
- //ip-cidr, 223.5.5.5/32, reject
 
 ^https:\/\/passenger\.t3go\.cn(:\d+)?\/passenger-app-api\/notoken\/api\/home\/v\d\/leftmenu url reject-dict
 ^https:\/\/passenger\.t3go\.cn(:\d+)?\/solution-passenger-api\/notoken\/trip\/api\/solution\/passenger\/open\/getHomeMenuList url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/T3.js
@@ -11,6 +8,7 @@
 ^https:\/\/passenger\.t3go\.cn(:\d+)?\/passenger-activity-api\/notoken\/api\/v\d\/ad\/getActivityPopup url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/T3.js
 ^https:\/\/passenger\.t3go\.cn(:\d+)?\/passenger-activity-api\/notoken\/api\/v\d\/ad\/getNotices url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/T3.js
 ^https:\/\/passenger\.t3go\.cn(:\d+)?\/passenger-activity-api\/notoken\/api\/v\d\/resourceLocation\/floating url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/T3.js
+^http:\/\/.+\/resolve url reject
 
 
 hostname = *.t3go.cn
