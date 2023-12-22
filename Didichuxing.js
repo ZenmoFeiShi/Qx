@@ -23,7 +23,7 @@ if (url.includes("/usercenter/me")) {
 
 const excludedTitles = ['天天领福利', '金融服务', '更多服务', '企业服务'];
 
-if (obj) {
+if (obj && obj.data && obj.data.cards) {
   obj.data.cards = obj.data.cards.filter(card => !excludedTitles.includes(card.title));
   if (obj?.data?.cards) {
     obj.data.cards.forEach(card => {
