@@ -17,34 +17,35 @@ if (url.includes("/homepage/v1/core")) {
 
 if (url.includes("/usercenter/me")) {
   const cards = obj.data?.cards || [];
-  obj.data.cards = cards.filter((item) => ["priority", "general", "security", "wallet"].includes(item.tag));
+  const filteredCards = cards.filter((item) => ["priority", "general", "security", "wallet"].includes(item.tag));
+  obj.data.cards = filteredCards;
   fixPos(obj.data.cards);
 }
 
-const excludedTitles = ['天天领福利', '金融服务', '更多服务', '企业服务'];
+if (url.includes("/usercenter/me")) {
+  const excludedTitles = ['天天领福利', '金融服务', '更多服务', '企业服务'];
 
-if (obj && obj.data && obj.data.cards) {
-  obj.data.cards = obj.data.cards.filter(card => !excludedTitles.includes(card.title));
-  if (obj?.data?.cards) {
-    obj.data.cards.forEach(card => {
-      if (card.tag === "wallet") {
-        if (card.items) {
-          const filteredItems = card.items.filter(item => item.title === "优惠券");
-          card.items = filteredItems;
+  if (obj && obj.data && obj.data.cards) {
+    const filteredCards = obj.data.cards.filter(card => !excludedTitles.includes(card.title));
+    obj.data.cards = filteredCards;
+
+    if (obj?.data?.cards) {
+      obj.data.cards.forEach(card => {
+        if (card.tag === "wallet") {
+          if (card.items) {
+            const filteredItems = card.items.filter(item => item.title === "优惠券");
+            card.items = filteredItems;
+          }
+          if (card.card_type === 4 && card.bottom_items) {
+            const filteredBottomItems = card.bottom_items.filter(item => 
+              item.title === "省钱套餐" || item.title === "天天神券"
+            );
+            card.bottom_items = filteredBottomItems;
+          }
         }
-        if (card.card_type === 4 && card.bottom_items) {
-          const filteredBottomItems = card.bottom_items.filter(item => 
-            item.title === "省钱套餐" || item.title === "天天神券"
-          );
-          card.bottom_items = filteredBottomItems;
-        }
-      }
-    });
+      });
+    }
   }
-
-  $done({ body: JSON.stringify(obj) });
-} else {
-  $done();
 }
 
 if (url.includes("/resapi/activity/mget") || url.includes("/dynamic/conf") || url.includes("/homepage/v1/other/fast") || url.includes("/agent/v3/feeds") || url.includes("/resapi/activity/xpget") || url.includes("/gateway")) {
