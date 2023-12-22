@@ -15,8 +15,6 @@ if (url.includes("/homepage/v1/core")) {
   delete obj.data?.order_cards;
 }
 
-
-
 if (url.includes("/usercenter/me")) {
   const excludedTitles = ['天天领福利', '金融服务', '更多服务', '企业服务'];
 
