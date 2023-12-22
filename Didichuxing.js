@@ -15,12 +15,7 @@ if (url.includes("/homepage/v1/core")) {
   delete obj.data?.order_cards;
 }
 
-if (url.includes("/usercenter/me")) {
-  const cards = obj.data?.cards || [];
-  const filteredCards = cards.filter((item) => ["priority", "general", "security", "wallet"].includes(item.tag));
-  obj.data.cards = filteredCards;
-  fixPos(obj.data.cards);
-}
+
 
 if (url.includes("/usercenter/me")) {
   const excludedTitles = ['天天领福利', '金融服务', '更多服务', '企业服务'];
@@ -54,8 +49,4 @@ if (url.includes("/resapi/activity/mget") || url.includes("/dynamic/conf") || ur
 
 $done({ body: JSON.stringify(obj) });
 
-function fixPos(arr) {
-  for (let i = 0; i < arr.length; i++) {
-    arr[i].pos = i + 1;
-  }
-}
+
