@@ -49,4 +49,9 @@ if (url.includes("/resapi/activity/mget") || url.includes("/dynamic/conf") || ur
 
 $done({ body: JSON.stringify(obj) });
 
+function fixPos(arr) {
+  for (let i = 0; i < arr.length; i++) {
+    arr[i].pos = i + 1;
+  }
+}
 
