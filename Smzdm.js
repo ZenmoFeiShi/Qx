@@ -65,6 +65,12 @@ if (url.includes("/util/update") &&
 obj.data.operation_float_7_0) {
   delete obj.data.operation_float_7_0;
 }
+if (url.includes("/v1/app/home") && obj.data) {
+if (obj.data) {
+  obj.data = obj.data.filter((item) => item.id === "40" || item.id === "20");
+  fixPos(obj.data);
+ }
+}
 
 $done({ body: JSON.stringify(obj) });
 
