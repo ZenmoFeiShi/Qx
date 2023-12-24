@@ -1,4 +1,4 @@
-// 2023-12-23 09:41
+// 2023-12-24 21:10
 const url = $request.url;
 
 if (!$response.body) {
@@ -9,6 +9,10 @@ let obj = JSON.parse($response.body);
 
 if (url.includes("/vip") && obj.data.big_banner) {
   delete obj.data.big_banner;
+}
+
+if (url.includes("/publish/get_bubble") && obj.data) {
+  delete obj.data;
 }
 
 if (obj.data.functions) {
