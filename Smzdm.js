@@ -1,4 +1,4 @@
-// 2023-12-28 00:08
+// 2023-12-28 00:10
 const url = $request.url;
 
 if (!$response.body) {
@@ -36,12 +36,18 @@ if (url.includes("/v3/home")) {
   fixPos(obj.data.component);
 }
 
-if (url.includes("/util/update") && obj.data.ad_black_list) {
-  delete obj.data.ad_black_list;
-}
+if (url.includes("/util/update") && obj.data) {
+  if (obj.data.ad_black_list) {
+    delete obj.data.ad_black_list;
+  }
+  
+  if (obj.data.operation_float_7_0) {
+    delete obj.data.operation_float_7_0;
+  }
 
-if (url.includes("/util/update") && obj.data.haojia_widget) {
-  delete obj.data.haojia_widget;
+  if (obj.data.haojia_widget) {
+    delete obj.data.haojia_widget;
+  }
 }
 
 if (obj.data && obj.data.widget) {
@@ -68,11 +74,6 @@ if (url.includes("/publish") && obj.data && obj.data.hongbao) {
 
 if (url.includes("/loading") && obj.data) {
   delete obj.data;
-}
-
-if (url.includes("/util/update") &&
-obj.data.operation_float_7_0) {
-  delete obj.data.operation_float_7_0;
 }
 
 if (url.includes("/v1/app/home") && obj.data) {
