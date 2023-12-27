@@ -40,7 +40,7 @@ if (url.includes("/util/update") && obj.data.ad_black_list) {
   delete obj.data.ad_black_list;
 }
 
-if (obj.data.widget) {
+if (obj.data && obj.data.widget) {
   delete obj.data.widget;
 }
 
