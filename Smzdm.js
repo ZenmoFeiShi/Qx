@@ -1,4 +1,4 @@
-// 2023-12-27 23:32
+// 2023-12-27 23:38
 const url = $request.url;
 
 if (!$response.body) {
@@ -20,7 +20,7 @@ if (obj.data && obj.data.functions) {
   fixPos(obj.data.functions);
 }
 
-if (obj.data.services) {
+if (obj.data && obj.data.services) {
   obj.data.services = obj.data.services.filter((item) => item.type === "articel_manage" || item.type === "199794" || item.type === "199796");
   fixPos(obj.data.services);
 }
