@@ -1,4 +1,4 @@
-// 2023-12-24 21:10
+// 2023-12-27 23:32
 const url = $request.url;
 
 if (!$response.body) {
@@ -15,7 +15,7 @@ if (url.includes("/publish/get_bubble") && obj.data) {
   delete obj.data;
 }
 
-if (obj.data.functions) {
+if (obj.data && obj.data.functions) {
   obj.data.functions = obj.data.functions.filter((item) => item.type === "message");
   fixPos(obj.data.functions);
 }
