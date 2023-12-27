@@ -1,4 +1,4 @@
-// 2023-12-27 23:51
+// 2023-12-27 23:59
 const url = $request.url;
 
 if (!$response.body) {
@@ -58,7 +58,7 @@ if (obj?.data?.rows?.length > 0) {
   );
 }
 
-if (url.includes("/publish") && obj.data.hongbao) {
+if (url.includes("/publish") && obj.data && obj.data.hongbao) {
   delete obj.data.hongbao;
 }
 
