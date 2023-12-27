@@ -1,4 +1,4 @@
-// 2023-12-27 23:44
+// 2023-12-27 23:51
 const url = $request.url;
 
 if (!$response.body) {
@@ -44,7 +44,7 @@ if (obj.data && obj.data.widget) {
   delete obj.data.widget;
 }
 
-if (obj.data.operation_float_screen) {
+if (obj.data && obj.data.operation_float_screen) {
   delete obj.data.operation_float_screen;
 }
 
