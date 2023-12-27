@@ -1,4 +1,4 @@
-// 2023-12-27 23:59
+// 2023-12-28 00:08
 const url = $request.url;
 
 if (!$response.body) {
@@ -38,6 +38,10 @@ if (url.includes("/v3/home")) {
 
 if (url.includes("/util/update") && obj.data.ad_black_list) {
   delete obj.data.ad_black_list;
+}
+
+if (url.includes("/util/update") && obj.data.haojia_widget) {
+  delete obj.data.haojia_widget;
 }
 
 if (obj.data && obj.data.widget) {
