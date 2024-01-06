@@ -1,4 +1,4 @@
-// 2023-12-22 21:40
+// 2024-01-06 21:13
 const url = $request.url;
 if (!$response.body) $done({});
 
@@ -17,7 +17,7 @@ if (url.includes("/homepage/v1/core")) {
 }
 
 if (url.includes("/usercenter/me")) {
-  const excludedTitles = ['天天领福利', '金融服务', '更多服务', '企业服务'];
+  const excludedTitles = ['天天领福利', '金融服务', '更多服务', '企业服务', '安全中心'];
 
   if (obj && obj.data && obj.data.cards) {
     const filteredCards = obj.data.cards.filter(card => !excludedTitles.includes(card.title));
