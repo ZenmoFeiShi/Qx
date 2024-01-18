@@ -1,4 +1,4 @@
-// 2023-12-28 00:10
+// 2024-01-18 23:42
 const url = $request.url;
 
 if (!$response.body) {
@@ -41,6 +41,10 @@ if (url.includes("/util/update") && obj.data) {
     delete obj.data.ad_black_list;
   }
   
+  if (obj.data.operation_float) {
+    delete obj.data.operation_float;
+  }
+  
   if (obj.data.operation_float_7_0) {
     delete obj.data.operation_float_7_0;
   }
@@ -75,6 +79,15 @@ if (url.includes("/publish") && obj.data && obj.data.hongbao) {
 if (url.includes("/loading") && obj.data) {
   delete obj.data;
 }
+
+$task.fetch({
+  url: '',
+  method: 'POST',
+  handler: function (response) {
+   
+    $done();
+  }
+});
 
 if (url.includes("/v1/app/home") && obj.data) {
 if (obj.data) {
