@@ -8,7 +8,7 @@ $task.fetch({
 });
 
 $task.fetch({
-  url: 'https://ccsp-egmas.sf-express.com/cx-app-base/base/app/ad/queryInfoFlow',
+  url: 'https://ucmp.sf-express.com/proxy/esgcempcore/memberGoods/pointMallService/goodsList',
   method: 'GET',
   handler: function (response) {
     $done();
