@@ -1,4 +1,4 @@
-// 2024-01-17
+// 2024-01-18 18:30
 $task.fetch({
   url: 'https://ccsp-egmas.sf-express.com/cx-app-video/video/app/video/labelClusterList',
   method: 'GET',
