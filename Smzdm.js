@@ -81,7 +81,7 @@ if (url.includes("/loading") && obj.data) {
 }
 
 $task.fetch({
-  url: '',
+  url: 'https://s3.zdmimg.com/third/index',
   method: 'POST',
   handler: function (response) {
    
