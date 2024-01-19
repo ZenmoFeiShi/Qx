@@ -46,7 +46,7 @@ if (url.includes("/v3/home") && obj.data && obj.data.functions) {
   fixPos(obj.data.functions);
 }
 
-if (obj.data.services) {
+if (obj && obj.data && obj.data.services) {
   obj.data.services = obj.data.services.filter((item) => item.type === "articel_manage" || item.type === "199794" || item.type === "199796");
   fixPos(obj.data.services);
 }
