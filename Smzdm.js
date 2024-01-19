@@ -1,4 +1,4 @@
-// 2024-01-19 21:25
+// 2024-01-19 21:40
 const url = $request.url;
 
 if (!$response.body) {
@@ -106,16 +106,13 @@ if (url.includes("/loading") && obj.data) {
   delete obj.data;
 }
 
-if (url.includes("/ajax_app/ajax_get_footer_list")) {
-  if (obj.activity_banner && obj.activity_banner.hot_widget) {
-    obj.activity_banner.hot_widget.forEach(widget => {
-      if (widget.pic_url) {
-        delete widget.pic_url;
-      }
-    });
-  }
+if (url.includes("/ajax_app/ajax_get_footer_list") && obj.data.activity_banner && obj.data.activity_banner.hot_widget) {
+  obj.data.activity_banner.hot_widget.forEach(widget => {
+    if (widget.pic_url) {
+      delete widget.pic_url;
+    }
+  });
 }
-
 
 if (url.includes("/v1/app/home") && obj.data) {
   if (obj.data) {
