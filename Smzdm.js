@@ -1,4 +1,4 @@
-// 2024-01-19 21:06
+// 2024-01-19 21:25
 const url = $request.url;
 
 if (!$response.body) {
@@ -105,6 +105,17 @@ if (url.includes("/publish") && obj.data.hongbao) {
 if (url.includes("/loading") && obj.data) {
   delete obj.data;
 }
+
+if (url.includes("/ajax_app/ajax_get_footer_list")) {
+  if (obj.activity_banner && obj.activity_banner.hot_widget) {
+    obj.activity_banner.hot_widget.forEach(widget => {
+      if (widget.pic_url) {
+        delete widget.pic_url;
+      }
+    });
+  }
+}
+
 
 if (url.includes("/v1/app/home") && obj.data) {
   if (obj.data) {
