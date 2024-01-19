@@ -41,7 +41,7 @@ if (url.includes("/publish/get_bubble") && obj.data) {
   delete obj.data;
 }
 
-if (obj.data.functions) {
+if (url.includes("/v3/home") && obj.data && obj.data.functions) {
   obj.data.functions = obj.data.functions.filter((item) => item.type === "message");
   fixPos(obj.data.functions);
 }
