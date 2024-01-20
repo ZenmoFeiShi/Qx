@@ -33,11 +33,13 @@ const fixPos = (arr) => {
   }
 };
 
-if (url.includes("/vip") && obj.data.big_banner) {
-  delete obj.data.big_banner;
+if (url.includes("/vip")) {
+  if (obj.data.big_banner) {
+    delete obj.data.big_banner;
+  }
 }
 
-if (url.includes("/publish/get_bubble") && obj.data) {
+if (url.includes("/publish/get_bubble")) {
   delete obj.data;
 }
 
@@ -47,7 +49,7 @@ if (url.includes("/v3/home") && obj.data && obj.data.functions) {
 }
 
 if (obj && obj.data && obj.data.services) {
-  obj.data.services = obj.data.services.filter((item) => item.type === "articel_manage" || item.type === "199794" || item.type === "199796");
+  obj.data.services = obj.data.services.filter((item) => ["articel_manage", "199794", "199796"].includes(item.type));
   fixPos(obj.data.services);
 }
 
@@ -56,35 +58,20 @@ if (url.includes("/vip/bottom_card_list") && obj.data.rows) {
 }
 
 if (url.includes("/v3/home")) {
-  obj.data.component = obj.data.component.filter((item) => 
-    item.zz_type === "circular_banner" || item.zz_type === "fixed_banner" || item.zz_type === "filter" || item.zz_type === "list" 
-  );
-  fixPos(obj.data.component);
+  if (obj.data.component) {
+    obj.data.component = obj.data.component.filter((item) => ["circular_banner", "fixed_banner", "filter", "list"].includes(item.zz_type));
+    fixPos(obj.data.component);
+  }
 }
 
 if (url.includes("/util/update") && obj.data) {
-  if (obj.data.ad_black_list) {
-    delete obj.data.ad_black_list;
-  }
+  const propertiesToDelete = ["ad_black_list", "operation_float_7_0", "haojia_widget", "operation_float", "widget", "operation_float_screen"];
   
-  if (obj && obj.data && obj.data.operation_float_7_0) {
-  delete obj.data.operation_float_7_0;
-}
-
-if (obj && obj.data && obj.data.haojia_widget) {
-  delete obj.data.haojia_widget;
-}
-
-if (obj && obj.data && obj.data.operation_float) {
-  delete obj.data.operation_float;
-}
-
-if (obj && obj.data && obj.data.widget) {
-  delete obj.data.widget;
-}
-
-if (obj && obj.data && obj.data.operation_float_screen) {
-  delete obj.data.operation_float_screen;
+  propertiesToDelete.forEach(property => {
+    if (obj.data[property]) {
+      delete obj.data[property];
+    }
+  });
 }
 
 if (url.includes("/home/list") && obj.data.banner_v2) {
