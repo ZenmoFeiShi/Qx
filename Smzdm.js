@@ -1,4 +1,4 @@
-// 2024-01-20 08:27
+// 2024-01-20 08:35
 const url = $request.url;
 
 if (!$response.body) {
@@ -76,7 +76,7 @@ if (url.includes("/util/update") && obj.data) {
   }
 }
 
-if (obj.data.widget) {
+if (obj && obj.data && obj.data.widget) {
   delete obj.data.widget;
 }
 
