@@ -1,4 +1,4 @@
-// 2024-01-20 07:57
+// 2024-01-20 08:05
 const url = $request.url;
 
 if (!$response.body) {
@@ -67,24 +67,23 @@ if (url.includes("/util/update") && obj.data) {
     delete obj.data.ad_black_list;
   }
   
-  if (obj.data.operation_float_7_0) {
-    delete obj.data.operation_float_7_0;
-  }
-
-  if (obj.data.haojia_widget) {
-    delete obj.data.haojia_widget;
-  }
+  if (obj && obj.data && obj.data.operation_float_7_0) {
+  delete obj.data.operation_float_7_0;
 }
 
-if (obj.data.operation_float) {
+if (obj && obj.data && obj.data.haojia_widget) {
+  delete obj.data.haojia_widget;
+}
+
+if (obj && obj.data && obj.data.operation_float) {
   delete obj.data.operation_float;
 }
 
-if (obj.data.widget) {
+if (obj && obj.data && obj.data.widget) {
   delete obj.data.widget;
 }
 
-if (obj.data.operation_float_screen) {
+if (obj && obj.data && obj.data.operation_float_screen) {
   delete obj.data.operation_float_screen;
 }
 
