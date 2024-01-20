@@ -1,4 +1,4 @@
-// 2024-01-20 08:35
+// 2024-01-20 08:40
 const url = $request.url;
 
 if (!$response.body) {
@@ -80,7 +80,7 @@ if (obj && obj.data && obj.data.widget) {
   delete obj.data.widget;
 }
 
-if (obj.data.operation_float_screen) {
+if (obj && obj.data && obj.data.operation_float_screen) {
   delete obj.data.operation_float_screen;
 }
 
