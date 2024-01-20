@@ -1,4 +1,4 @@
-// 2024-01-20 08:40
+// 2024-01-20 08:44
 const url = $request.url;
 
 if (!$response.body) {
@@ -94,11 +94,11 @@ if (obj?.data?.rows?.length > 0) {
   );
 }
 
-if (url.includes("/publish") && obj.data.hongbao) {
+if (url.includes("/publish") && obj.data && obj.data.hongbao) {
   delete obj.data.hongbao;
 }
 
-if (url.includes("/loading") && obj.data) {
+if (url.includes("/loading") && obj && obj.data) {
   delete obj.data;
 }
 
