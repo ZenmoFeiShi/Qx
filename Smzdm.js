@@ -1,4 +1,4 @@
-// 2024-01-20 08:18
+// 2024-01-20 08:27
 const url = $request.url;
 
 if (!$response.body) {
@@ -74,10 +74,6 @@ if (url.includes("/util/update") && obj.data) {
   if (obj.data.haojia_widget) {
     delete obj.data.haojia_widget;
   }
-}
-
-if (obj.data.operation_float) {
-  delete obj.data.operation_float;
 }
 
 if (obj.data.widget) {
