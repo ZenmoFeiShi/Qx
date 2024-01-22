@@ -1,4 +1,4 @@
-//2024-01-22 10:09
+//2024-01-22 10:47
 const url = $request.url;
 const scriptEnvironment = typeof $task != 'undefined' ? 'Surge' : (typeof $loon != 'undefined' ? 'Loon' : (typeof $httpClient != 'undefined' ? 'Qx' : 'Unknown'));
 if (!$response.body || scriptEnvironment === 'Unknown') {
@@ -11,7 +11,8 @@ const shouldDeleteData = (url) => {
          url.includes("/furion/position/content") ||
          url.includes("/hot/soul/rank") ||
          url.includes("/post/gift/list") ||
-         url.includes("/mobile/app/version/queryIos");
+         url.includes("/mobile/app/version/queryIos") ||
+         url.includes("/teenager/config");
 };
 
 const shouldModifyLimitInfo = (url, obj) => {
