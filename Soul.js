@@ -13,8 +13,7 @@ const shouldDeleteData = (url) => {
          url.includes("/post/gift/list") ||
          url.includes("/mobile/app/version/queryIos") ||
          url.includes("/teenager/config") ||
-         url.includes("/winterfell/v2/getIpByDomain
-");
+         url.includes("/winterfell/v2/getIpByDomain");
 };
 
 const shouldModifyLimitInfo = (url, obj) => {
