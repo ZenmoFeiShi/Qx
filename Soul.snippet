@@ -1,6 +1,6 @@
 #!name = Soul净化,解锁部分功能
 #!author = 怎么肥事
-#!update = 2024-01-22 15:14
+#!update = 2024-01-22 16:53
 
 
 ^https:\/\/api-a\.soulapp\.cn\/v2\/post\/gift\/list url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/Soul.js
@@ -10,6 +10,6 @@
 ^https:\/\/post\.soulapp\.cn\/v\d\/post\/homepage\/guide\/card url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/Soul.js
 ^https:\/\/api-user\.soulapp\.cn\/furion\/position\/content url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/Soul.js
 ^https:\/\/api-account\.soulapp\.cn\/teenager\/config url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/Soul.js
-
-
-hostname = api-account.soulapp.cn, api-a.soulapp.cn, api-pay.soulapp.cn, gateway-mobile-gray.soulapp.cn, api-chat.soulapp.cn, 8.210.3.170, 47.75.72.47, post.soulapp.cn, api-user.soulapp.cn,api-account.soulapp.cn,47.99.42.29, 47.97.215.55, 120.27.235.201
+^https:\/\/ssp\.soulapp\.cn\/api\/q url reject-dict  //@可莉
+^https:\/\/47\.110\.187\.87\/winterfell\/v2\/getIpByDomain url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/Soul.js  //@可莉
+hostname = api-account.soulapp.cn, api-a.soulapp.cn, api-pay.soulapp.cn, gateway-mobile-gray.soulapp.cn, api-chat.soulapp.cn, 8.210.3.170, 47.75.72.47, post.soulapp.cn, api-user.soulapp.cn,api-account.soulapp.cn,ssp.soulapp.cn,47.110.187.87,47.99.42.29,47.97.215.55,120.27.235.201
