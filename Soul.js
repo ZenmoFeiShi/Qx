@@ -1,4 +1,4 @@
-//2024-01-22 09:43
+//2024-01-22 10:04
 const url = $request.url;
 let obj = JSON.parse($response.body);
 
@@ -13,13 +13,6 @@ const shouldDeleteData = (url) => {
 const shouldModifyLimitInfo = (url, obj) => {
   return url.includes("/chat/limitInfo") && obj.data && obj.data.limit !== undefined;
 };
-
-const supportedEnvironments = ["Qx", "Loon", "Surge"];
-const currentEnvironment = $request.headers["User-Agent"];
-
-if (!currentEnvironment || !supportedEnvironments.some(env => currentEnvironment.includes(env))) {
-  $done({});
-}
 
 if (!obj.data || shouldDeleteData(url)) {
   delete obj.data;
