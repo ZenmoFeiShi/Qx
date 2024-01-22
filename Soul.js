@@ -1,4 +1,4 @@
-//2024-01-22 16:55
+//2024-01-22 22:22  感谢@可莉对去除开屏广告提供的帮助
 const url = $request.url;
 const scriptEnvironment = typeof $task != 'undefined' ? 'Surge' : (typeof $loon != 'undefined' ? 'Loon' : (typeof $httpClient != 'undefined' ? 'Qx' : 'Unknown'));
 if (!$response.body || scriptEnvironment === 'Unknown') {
