@@ -1,4 +1,4 @@
-//2024-01-23 21:27  感谢@可莉对去除开屏广告提供的帮助
+//2024-01-23 21:43  感谢@可莉对去除开屏广告提供的帮助
 const url = $request.url;
 const scriptEnvironment = typeof $task !== 'undefined' ? 'Surge' : (typeof $loon !== 'undefined' ? 'Loon' : (typeof $httpClient !== 'undefined' ? 'Qx' : 'Unknown'));
 
@@ -15,7 +15,8 @@ const shouldDeleteData = (url) => {
          url.includes("/post/gift/list") ||
          url.includes("/mobile/app/version/queryIos") ||
          url.includes("/teenager/config") ||
-         url.includes("/winterfell/v2/getIpByDomain");
+         url.includes("/winterfell/v2/getIpByDomain") || 
+         url.includes("/official/scene/module");
 };
 
 const shouldModifyLimitInfo = (url, obj) => {
