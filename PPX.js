@@ -1,4 +1,4 @@
-// 2024-01-17 10:56
+// 2024-01-23 14:05
 const url = $request.url;
 const scriptEnvironment = typeof $task != 'undefined' ? 'Surge' : (typeof $loon != 'undefined' ? 'Loon' : (typeof $httpClient != 'undefined' ? 'Qx' : 'Unknown'));
 
@@ -26,7 +26,7 @@ function filterProfileEntrances(obj) {
 
 function filterChannelModel(obj) {
   if (obj.data.channel_model) {
-    obj.data.channel_model = obj.data.channel_model.filter(item => ["follow_feed", "feed", "immersion_video", "image_text"].includes(item.event_name));
+    obj.data.channel_model = obj.data.channel_model.filter(item => ["feed", "immersion_video", "image_text"].includes(item.event_name));
     fixPos(obj.data.channel_model);
   }
 }
