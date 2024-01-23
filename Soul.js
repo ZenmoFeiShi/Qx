@@ -1,9 +1,11 @@
-//2024-01-22 22:22  感谢@可莉对去除开屏广告提供的帮助
+//2024-01-23 21:27  感谢@可莉对去除开屏广告提供的帮助
 const url = $request.url;
-const scriptEnvironment = typeof $task != 'undefined' ? 'Surge' : (typeof $loon != 'undefined' ? 'Loon' : (typeof $httpClient != 'undefined' ? 'Qx' : 'Unknown'));
+const scriptEnvironment = typeof $task !== 'undefined' ? 'Surge' : (typeof $loon !== 'undefined' ? 'Loon' : (typeof $httpClient !== 'undefined' ? 'Qx' : 'Unknown'));
+
 if (!$response.body || scriptEnvironment === 'Unknown') {
   $done({});
 }
+
 let obj = JSON.parse($response.body);
 
 const shouldDeleteData = (url) => {
@@ -19,6 +21,24 @@ const shouldDeleteData = (url) => {
 const shouldModifyLimitInfo = (url, obj) => {
   return url.includes("/chat/limitInfo") && obj.data && obj.data.limit !== undefined;
 };
+
+if (url.includes("/vip/meet/userInfo")) {
+  if (obj.data.superStarDTO && obj.data.superStarDTO.superVIP !== undefined) {
+    obj.data.superStarDTO.superVIP = true;
+    obj.data.superStarDTO.validTime = 9887893999000;
+    obj.data.flyPackageDTO.hasFlyPackage = true;
+  }
+}
+
+if (url.includes("/privilege/supervip/status")) {
+  if (obj.data.superVIP !== undefined) {
+    obj.data.superVIP = true;
+    obj.data.remainDay = 9887893999000;
+    obj.data.hasCancelVIPSubscription = false;
+    obj.data.hasCancelVIPSubOfIAP = false;
+    obj.data.hasFlyPackage = true;
+  }
+}
 
 if (!obj.data || shouldDeleteData(url)) {
   delete obj.data;
