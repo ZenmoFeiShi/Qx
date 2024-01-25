@@ -1,4 +1,4 @@
-//2024-01-23 21:43  感谢@可莉对去除开屏广告提供的帮助
+//2024-01-25 13:41  感谢@可莉对去除开屏广告提供的帮助
 const url = $request.url;
 const scriptEnvironment = typeof $task !== 'undefined' ? 'Surge' : (typeof $loon !== 'undefined' ? 'Loon' : (typeof $httpClient !== 'undefined' ? 'Qx' : 'Unknown'));
 
@@ -47,6 +47,10 @@ if (!obj.data || shouldDeleteData(url)) {
 
 if (shouldModifyLimitInfo(url, obj)) {
   obj.data.limit = false;
+}
+
+if (url.includes("/post/recSquare/subTabs")) {
+  obj.data = obj.data.filter(item => [7, 6, 2].includes(item.tabType));
 }
 
 $done({ body: JSON.stringify(obj) });
