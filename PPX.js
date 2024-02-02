@@ -8,15 +8,6 @@ if (!$response.body || scriptEnvironment === 'Unknown') {
 
 let obj = JSON.parse($response.body);
 
-function filterBannerInfo() {
-  if (obj.data && obj.data.data && Array.isArray(obj.data.data)) {
-    obj.data.data.forEach((item, index) => {
-      if (item.banner_info) {
-        delete obj.data.data[index].banner_info;
-      }
-    });
-  }
-}
 
 function filterProfileEntrances() {
   let profileEntrances = obj.data.profile_entrances;
