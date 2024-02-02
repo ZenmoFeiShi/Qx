@@ -30,9 +30,7 @@ function fixPos(arr) {
   }
 }
 
-if (url.includes("/bds/feed/stream/")) {
-  filterBannerInfo();
-} else if (url.includes("/bds/user/check_in/")) {
+  if (url.includes("/bds/user/check_in/")) {
   filterProfileEntrances();
 } else if (url.includes("/bds/feed/channel_list/")) {
   filterChannelModel();
