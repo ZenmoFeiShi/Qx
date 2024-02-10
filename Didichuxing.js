@@ -1,44 +1,35 @@
-// 2024-01-06 21:13
+// 2024-02-10 23:54
 const url = $request.url;
 if (!$response.body) $done({});
 
 let obj = JSON.parse($response.body);
 
-const { bottom_nav_list } = obj.data?.disorder_cards || {};
-if (url.includes("/homepage/v1/core") && bottom_nav_list) {
-  obj.data.disorder_cards.bottom_nav_list.data = (bottom_nav_list.data || []).filter(item => ["v6x_home", "user_center"].includes(item.id));
-  fixPos(obj.data.disorder_cards.bottom_nav_list.data);
-}
+// 保留打车、顺风车、代驾、青桔骑行、省钱套装
+const keepNavIds = ['dache_anycar', 'carmate', 'driverservice', 'bike', 'youhuishangcheng'];
+obj.data.order_cards.nav_list_card.data = obj.data.order_cards.nav_list_card.data.filter(item => keepNavIds.includes(item.nav_id));
 
-if (url.includes("/homepage/v1/core")) {
-  delete obj.data?.common_params;
-  delete obj.data?.omega_params;
-  delete obj.data?.order_cards;
-}
+// 保留底部tap首页、我的
+const keepBottomNavIds = ['v6x_home', 'user_center'];
+obj.data.disorder_cards.bottom_nav_list.data = obj.data.disorder_cards.bottom_nav_list.data.filter(item => keepBottomNavIds.includes(item.id));
 
 if (url.includes("/usercenter/me")) {
   const excludedTitles = ['天天领福利', '金融服务', '更多服务', '企业服务', '安全中心'];
 
-  if (obj && obj.data && obj.data.cards) {
-    const filteredCards = obj.data.cards.filter(card => !excludedTitles.includes(card.title));
-    obj.data.cards = filteredCards;
+  if (obj.data && obj.data.cards) {
+    obj.data.cards = obj.data.cards.filter(card => !excludedTitles.includes(card.title));
 
-    if (obj?.data?.cards) {
-      obj.data.cards.forEach(card => {
-        if (card.tag === "wallet") {
-          if (card.items) {
-            const filteredItems = card.items.filter(item => item.title === "优惠券");
-            card.items = filteredItems;
-          }
-          if (card.card_type === 4 && card.bottom_items) {
-            const filteredBottomItems = card.bottom_items.filter(item => 
-              item.title === "省钱套餐" || item.title === "天天神券"
-            );
-            card.bottom_items = filteredBottomItems;
-          }
+    obj.data.cards.forEach(card => {
+      if (card.tag === "wallet") {
+        if (card.items) {
+          card.items = card.items.filter(item => item.title === "优惠券");
         }
-      });
-    }
+        if (card.card_type === 4 && card.bottom_items) {
+          card.bottom_items = card.bottom_items.filter(item => 
+            item.title === "省钱套餐" || item.title === "天天神券"
+          );
+        }
+      }
+    });
   }
 }
 
@@ -47,10 +38,3 @@ if (url.includes("/resapi/activity/mget") || url.includes("/dynamic/conf") || ur
 }
 
 $done({ body: JSON.stringify(obj) });
-
-function fixPos(arr) {
-  for (let i = 0; i < arr.length; i++) {
-    arr[i].pos = i + 1;
-  }
-}
-
