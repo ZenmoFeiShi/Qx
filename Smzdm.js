@@ -117,12 +117,4 @@ if (url.includes("/v1/app/home") && obj.data) {
   }
 }
 
-$task.fetch({
-  url: 'https://s3.zdmimg.com/third/index',
-  method: 'POST',
-  handler: function (response) {
-    $done();
-  }
-});
-
 $done({ body: JSON.stringify(obj) });
