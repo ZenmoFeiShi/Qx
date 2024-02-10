@@ -62,7 +62,6 @@ const deletePaths = [
   url.includes('/util/update') ? 'data.operation_float' : null,
   url.includes('/util/update') ? 'data.haojia_widget' : null,
   url.includes('/home/list') ? 'data.banner_v2' : null,
-  url.includes('/loading') ? 'data' : null,
   url.includes('/publish') ? 'data.hongbao' : null,
 ].filter(Boolean);
 
