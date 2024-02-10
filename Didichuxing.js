@@ -1,17 +1,21 @@
-// 2024-02-10 23:54
+// 2024-02-11 24:00
 const url = $request.url;
 if (!$response.body) $done({});
 
 let obj = JSON.parse($response.body);
 
-// 保留打车、顺风车、代驾、青桔骑行、省钱套装
-const keepNavIds = ['dache_anycar', 'carmate', 'driverservice', 'bike', 'youhuishangcheng'];
-obj.data.order_cards.nav_list_card.data = obj.data.order_cards.nav_list_card.data.filter(item => keepNavIds.includes(item.nav_id));
-
-// 保留底部tap首页、我的
-const keepBottomNavIds = ['v6x_home', 'user_center'];
-obj.data.disorder_cards.bottom_nav_list.data = obj.data.disorder_cards.bottom_nav_list.data.filter(item => keepBottomNavIds.includes(item.id));
-
+if (url.includes("/homepage/v1/core")) {
+  // 保留打车、顺风车、代驾、青桔骑行、省钱套装
+  const keepNavIds = ['dache_anycar', 'carmate', 'driverservice', 'bike', 'youhuishangcheng'];
+  if (obj.data && obj.data.order_cards && obj.data.order_cards.nav_list_card && obj.data.order_cards.nav_list_card.data) {
+    obj.data.order_cards.nav_list_card.data = obj.data.order_cards.nav_list_card.data.filter(item => keepNavIds.includes(item.nav_id));
+  }
+  // 保留底部tap首页、我的
+  const keepBottomNavIds = ['v6x_home', 'user_center'];
+  if (obj.data && obj.data.disorder_cards && obj.data.disorder_cards.bottom_nav_list && obj.data.disorder_cards.bottom_nav_list.data) {
+    obj.data.disorder_cards.bottom_nav_list.data = obj.data.disorder_cards.bottom_nav_list.data.filter(item => keepBottomNavIds.includes(item.id));
+  }
+}
 if (url.includes("/usercenter/me")) {
   const excludedTitles = ['天天领福利', '金融服务', '更多服务', '企业服务', '安全中心'];
 
