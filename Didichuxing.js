@@ -1,12 +1,12 @@
-// 2024-02-11 00:01
+// 2024-02-12 19:42
 const url = $request.url;
 if (!$response.body) $done({});
 
 let obj = JSON.parse($response.body);
 
 if (url.includes("/homepage/v1/core")) {
-  // 保留打车、顺风车、代驾、青桔骑行、省钱套装
-  const keepNavIds = ['dache_anycar', 'carmate', 'driverservice', 'bike', 'youhuishangcheng'];
+  // 保留打车、顺风车、代驾、青桔骑行
+  const keepNavIds = ['dache_anycar', 'carmate', 'driverservice', 'bike'];
   if (obj.data && obj.data.order_cards && obj.data.order_cards.nav_list_card && obj.data.order_cards.nav_list_card.data) {
     obj.data.order_cards.nav_list_card.data = obj.data.order_cards.nav_list_card.data.filter(item => keepNavIds.includes(item.nav_id));
   }
