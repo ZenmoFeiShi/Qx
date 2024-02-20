@@ -1,4 +1,4 @@
-// 2024-02-20 11:24
+// 2024-02-20 11:54
 let obj = JSON.parse($response.body);
 const url = $request.url;
 
@@ -50,6 +50,11 @@ function customURLProcessing(obj) {
       category.menuList = category.menuList.filter(item => retainedTitles.includes(item.title));
     });
   }
+  if (url.includes("/player_tabs_v2")) {
+  if (obj && obj.cards) {
+    obj.cards = obj.cards.filter(card => card.alias_name !== "play_vip_promotion");
+ }
+}
   if (url.includes('/home_top_menu')) {
     obj.cards.forEach(card => {
       if (card.items && Array.isArray(card.items)) {
