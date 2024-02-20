@@ -1,0 +1,13 @@
+#!name = 爱奇艺净化
+#!author = 怎么肥事
+#!update = 2024-02-20 11:30
+
+^https:\/\/comment-card\.iqiyi\.com\/views_comment\/3\.0\/long_video_comments url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/iQIYI.js
+^https:\/\/cards\.iqiyi\.com\/(waterfall|views_(search|category|home)\/3\.0\/(hot_query_search|category_home|feed|qy_home)|views_plt\/3\.0\/player_tabs_v2) url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/iQIYI.js
+^https?:\/\/api\.iqiyi\.com\/3f4\/(cards\.iqiyi\.com\/views_search\/3\.0\/hot_query_search|iface2\.iqiyi\.com\/(views\/3\.0\/(home_top_menu|bottom_theme)|views_pop\/3\.0\/pop_home\/1|aggregate\/3\.0\/getMyMenus)) url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/iQIYI.js
+^https:\/\/iface2\.iqiyi\.com\/aggregate\/3\.0\/getMyMenus url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/iQIYI.js
+^https:\/\/(?:api\.iqiyi\.com\/3f4\/)?iface2\.iqiyi\.com\/(?:aggregate|views_pop)\/\d\.\d\/(?:siri_suggest|pop_control) url reject-dict
+https?:\/\/search\.video\.(?:iqiyi|qiyi)\.com\/q url reject-dict
+^https:\/\/.+\.iqiyi\.com\/mixer url reject-dict
+
+hostname = -i.vip.iqiyi.com, *.iqiyi.com
