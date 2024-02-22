@@ -56,14 +56,14 @@ function customURLProcessing(obj) {
  }
 }
   if (url.includes('/home_top_menu')) {
-    obj.cards.forEach(card => {
-      if (card.items && Array.isArray(card.items)) {
-        card.items = card.items.filter(item => {
-          const txt = item.click_event && item.click_event.txt;
-          return txt !== "直播" && txt !== "热点" && txt !== "我要直播";
-        });
-      }
-    });
+     obj.cards.forEach(card => {
+       if (card.items && Array.isArray(card.items)) {
+         card.items = card.items.filter(item => !(
+           ["直播", "热点", "我要直播"].includes(item.click_event.txt)
+         ));
+       }
+     });
+   }
 
   if (url.includes("/category_home") && obj.hasOwnProperty("cards")) {
     obj.cards = obj.cards.filter(card => !(
