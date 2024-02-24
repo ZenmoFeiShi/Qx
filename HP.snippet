@@ -1,8 +1,10 @@
 #!name = 虎扑净化
 #!author = 怎么肥事
-#!update = 2024-02-21 19:27
+#!update = 2024-02-24 15:43
+^https:\/\/games\.mobileapi\.hupu\.com\/\d\/\d\.\d\.\d+\/bplapi\/reddot\/v1\/app\/getReddot url reject-dict
 
 ^https:\/\/fairy\.mobileapi\.hupu\.com\/mang\/preview\/banners url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/HP.js
+
 ^https:\/\/bbs\.mobileapi\.hupu\.com\/\d\/\d\.\d\.\d+\/(bbsallapi\/tag\/v1\/heatTag|bbsrankapi\/v1\/rating\/list) url reject-dict
 
 ^https:\/\/bbs\.mobileapi\.hupu\.com\/\d\/\d\.\d\.\d+\/bbsallapi\/lego\/data url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/HP.js
