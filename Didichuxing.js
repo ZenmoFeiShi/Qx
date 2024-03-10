@@ -1,8 +1,21 @@
-// 2024-02-12 19:42
+// 2024-03-11 00:39
 const url = $request.url;
 if (!$response.body) $done({});
 
 let obj = JSON.parse($response.body);
+
+if (url.includes("/other/pGetSceneList")) {
+  if (obj && obj.data && obj.data.scene_list instanceof Array) {
+    obj.data.scene_list = obj.data.scene_list.filter(item => item.text !== "优惠商城");
+  }
+  if (obj && obj.data && obj.data.show_data instanceof Array) {
+    obj.data.show_data.forEach((block) => {
+      if (block.scene_ids instanceof Array) {
+        block.scene_ids = block.scene_ids.filter(id => id !== "scene_coupon_mall");
+      }
+    });
+  }
+}
 
 if (url.includes("/homepage/v1/core")) {
   // 保留打车、顺风车、代驾、青桔骑行
