@@ -1,8 +1,7 @@
 #!name = 滴滴出行
 #!author = 怎么肥事
 #!update = 2024-03-15 10:42
-#! ps = 需要分流禁用掉 gwp.xiaojukeji.com,ip-cidr, 123.207.209.39/32, reject
-ip-cidr, 123.207.209.60/32, reject
+#! ps = 需要分流禁用掉 ip-cidr, 123.207.209.39/32, ip-cidr, 123.207.209.60/32
 
 ^https:\/\/hd\.xiaojukeji\.com\/d url reject-dict
 ^https:\/\/common\.diditaxi\.com\.cn\/common\/v\d\/usercenter\/me url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/Didichuxing.js
