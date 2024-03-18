@@ -1,4 +1,4 @@
-// 2024-03-15 12:01
+// 2024-03-18 19:47
 const url = $request.url;
 if (!$response.body) $done({});
 
@@ -18,13 +18,13 @@ if (url.includes("/other/pGetSceneList")) {
 }
 
 if (url.includes("/homepage/v1/core")) {
-  // 保留打车、代驾、青桔骑行
-  const keepNavIds = ['dache_anycar', 'driverservice', 'bike'];
+  // 保留打车、代驾、青桔骑行、公交地铁、滴滴货运
+  const keepNavIds = ['dache_anycar', 'driverservice', 'bike' , 'gongjiao' , 'freight'];
   if (obj.data && obj.data.order_cards && obj.data.order_cards.nav_list_card && obj.data.order_cards.nav_list_card.data) {
     obj.data.order_cards.nav_list_card.data = obj.data.order_cards.nav_list_card.data.filter(item => keepNavIds.includes(item.nav_id));
   }
-  // 保留底部tap首页、我的
-  const keepBottomNavIds = ['v6x_home', 'user_center'];
+  // 保留底部tap首页、出游、我的
+  const keepBottomNavIds = ['v6x_home', 'yuantu', 'user_center' ];
   if (obj.data && obj.data.disorder_cards && obj.data.disorder_cards.bottom_nav_list && obj.data.disorder_cards.bottom_nav_list.data) {
     obj.data.disorder_cards.bottom_nav_list.data = obj.data.disorder_cards.bottom_nav_list.data.filter(item => keepBottomNavIds.includes(item.id));
   }
