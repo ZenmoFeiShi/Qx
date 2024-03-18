@@ -1,4 +1,4 @@
-// 2024-03-18 19:47
+// 2024-03-18 20:04
 const url = $request.url;
 if (!$response.body) $done({});
 
@@ -29,6 +29,14 @@ if (url.includes("/homepage/v1/core")) {
     obj.data.disorder_cards.bottom_nav_list.data = obj.data.disorder_cards.bottom_nav_list.data.filter(item => keepBottomNavIds.includes(item.id));
   }
 }
+
+if (url.includes("/ota/na/yuantu/infoList")) {
+if (obj.data && obj.data.disorder_cards && obj.data.disorder_cards.top_banner_card && obj.data.disorder_cards.top_banner_card.data && obj.data.disorder_cards.top_banner_card.data[0] && obj.data.disorder_cards.top_banner_card.data[0].T === "yuentu_top_banner") {
+    // 移除顶部卡片
+    obj.data.disorder_cards.top_banner_card.data.splice(0, 1);
+ }
+}
+
 if (url.includes("/usercenter/me")) {
   const excludedTitles = ['天天领福利', '金融服务', '更多服务', '企业服务', '安全中心'];
 
