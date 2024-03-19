@@ -1,4 +1,4 @@
-// 2024-03-18 20:04
+// 2024-03-19 11:15
 const url = $request.url;
 if (!$response.body) $done({});
 
@@ -18,8 +18,8 @@ if (url.includes("/other/pGetSceneList")) {
 }
 
 if (url.includes("/homepage/v1/core")) {
-  // 保留打车、代驾、青桔骑行、公交地铁、滴滴货运
-  const keepNavIds = ['dache_anycar', 'driverservice', 'bike' , 'gongjiao' , 'freight'];
+  // 保留打车、代驾、青桔骑行、城际拼车、滴滴货运
+  const keepNavIds = ['dache_anycar', 'driverservice', 'bike' , 'yuancheng' , 'freight'];
   if (obj.data && obj.data.order_cards && obj.data.order_cards.nav_list_card && obj.data.order_cards.nav_list_card.data) {
     obj.data.order_cards.nav_list_card.data = obj.data.order_cards.nav_list_card.data.filter(item => keepNavIds.includes(item.nav_id));
   }
