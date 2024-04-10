@@ -11,14 +11,15 @@ if (url.includes("/mang/preview/banners")) {
 }
 
 if (url.includes("/bbsallapi/lego/data")) {
-  parsedData.data.cards.forEach(card => {
-    if (card.code === "multiIcon") {
-        const titlesToRemove = ["个性换肤", "专家预测", "邀请好友", "版主中心", "JRs战术板", "草稿箱"];
-        card.components = card.components.filter(component => {
-            return !titlesToRemove.includes(component.data.title);
-        });
-    }
-});
+    obj.data.cards.forEach(card => { 
+        if (card.code === "multiIcon") {
+            const titlesToRemove = ["个性换肤", "专家预测", "邀请好友", "版主中心", "JRs战术板", "草稿箱"];
+            card.components = card.components.filter(component => {
+                return !titlesToRemove.includes(component.data.title);
+            });
+        }
+    });
+}
 
 if (url.includes("/bplapi/user/v1/more")) {
     if (obj.result && obj.result.vipInfo && obj.result.vipInfo.textInfo) {
