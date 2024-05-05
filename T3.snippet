@@ -1,7 +1,9 @@
 #!name = T3出行
 #!author = 怎么肥事
-#!update = 2023-12-19 21:10
-
+#!update = 2024-05-05 15:31
+^https:\/\/passenger\.t3go\.cn(:\d+)?\/passenger-activity-api\/api\/v1\/resource\/getTripRemind url reject-dict
+^https:\/\/passenger\.t3go\.cn(:\d+)?\/common-app-api\/api\/passenger\/v1\/getCardInfo url reject-dict
+^https:\/\/passenger\.t3go\.cn(:\d+)?\/passenger-activity-api\/api\/v3\/resource\/bottom url reject-dict
 ^https:\/\/passenger\.t3go\.cn(:\d+)?\/passenger-app-api\/notoken\/api\/home\/v\d\/leftmenu url reject-dict
 ^https:\/\/passenger\.t3go\.cn(:\d+)?\/solution-passenger-api\/notoken\/trip\/api\/solution\/passenger\/open\/getHomeMenuList url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/T3.js
 ^https:\/\/passenger\.t3go\.cn(:\d+)?\/passenger-activity-api\/notoken\/api\/v\d\/ad\/getNegativescreen url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/T3.js
