@@ -1,4 +1,4 @@
-//   2024-04-12 20.10
+//   2024-05-24 09.38
 const url = $request.url;
 let obj = JSON.parse($response.body);
 
@@ -11,7 +11,7 @@ if (url.includes("/config/v3/basic")) {
 
   if (obj.data && obj.data.bottomBarControl && obj.data.bottomBarControl.tabs) {
     obj.data.bottomBarControl.tabs = obj.data.bottomBarControl.tabs.filter(tab => {
-      return tab.name !== "商城";
+      return tab.name !== "商城" && tap.name !== "课程";
     });
   }
 }
