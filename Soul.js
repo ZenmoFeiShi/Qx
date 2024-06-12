@@ -1,4 +1,4 @@
-//2024-06-12 22:00  感谢@可莉对去除开屏广告提供的帮助
+//2024-06-12 23:04  感谢@可莉对去除开屏广告提供的帮助
 const url = $request.url;
 const scriptEnvironment = typeof $task !== 'undefined' ? 'Surge' : (typeof $loon !== 'undefined' ? 'Loon' : (typeof $httpClient !== 'undefined' ? 'Qx' : 'Unknown'));
 
@@ -40,6 +40,14 @@ if (url.includes("/v6/planet/config")) {
       }
     });
   }
+}
+if (obj && obj.data && obj.data.coreCards && Array.isArray(obj.data.coreCards)) {
+  obj.data.coreCards = obj.data.coreCards.map(card => {
+    if (card.style === 2) {
+      card.style = 1;
+    }
+    return card;
+  });
 }
 
 if (url.includes("/chatroom/chatClassifyRoomList")) {
