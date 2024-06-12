@@ -1,4 +1,4 @@
-//2024-01-25 13:41  感谢@可莉对去除开屏广告提供的帮助
+//2024-06-12 22:00  感谢@可莉对去除开屏广告提供的帮助
 const url = $request.url;
 const scriptEnvironment = typeof $task !== 'undefined' ? 'Surge' : (typeof $loon !== 'undefined' ? 'Loon' : (typeof $httpClient !== 'undefined' ? 'Qx' : 'Unknown'));
 
@@ -23,24 +23,30 @@ const shouldModifyLimitInfo = (url, obj) => {
   return url.includes("/chat/limitInfo") && obj.data && obj.data.limit !== undefined;
 };
 
-if (url.includes("/vip/meet/userInfo")) {
-  if (obj.data.superStarDTO && obj.data.superStarDTO.superVIP !== undefined) {
-    obj.data.superStarDTO.superVIP = true;
-    obj.data.superStarDTO.validTime = 9887893999000;
-    obj.data.flyPackageDTO.hasFlyPackage = true;
+if (url.includes("/v6/planet/config")) {
+  const gamesToRemove = [
+    "异世界回响", "狼人魅影", "梦想海岛王", "幻想星球", "爆弹喵", "星球实验室", "兴趣群组", "群聊派对"
+  ];
+    
+  if (obj.data && obj.data.gameInfo && Array.isArray(obj.data.gameInfo.gameCards)) {
+    obj.data.gameInfo.gameCards = obj.data.gameInfo.gameCards.filter(card => !gamesToRemove.includes(card.title));
+  }
+  
+  if (obj.data && Array.isArray(obj.data.coreCards)) {
+    obj.data.coreCards = obj.data.coreCards.filter(card => !gamesToRemove.includes(card.title));        
+    obj.data.coreCards.forEach(card => {
+      if (card.secondCards && Array.isArray(card.secondCards)) {
+        card.secondCards = card.secondCards.filter(sc => !gamesToRemove.includes(sc.title));
+      }
+    });
   }
 }
 
-if (url.includes("/privilege/supervip/status")) {
-  if (obj.data.superVIP !== undefined) {
-    obj.data.superVIP = true;
-    obj.data.remainDay = 9887893999000;
-    obj.data.hasCancelVIPSubscription = false;
-    obj.data.hasCancelVIPSubOfIAP = false;
-    obj.data.hasFlyPackage = true;
+if (url.includes("/chatroom/chatClassifyRoomList")) {
+  if (obj.data && obj.data.roomList) {
+    obj.data.roomList = [];
   }
 }
-
 if (!obj.data || shouldDeleteData(url)) {
   delete obj.data;
 }
