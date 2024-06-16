@@ -1,4 +1,4 @@
-//2024-06-12 23:04  感谢@可莉对去除开屏广告提供的帮助
+//2024-06-16 18:40  感谢@可莉对去除开屏广告提供的帮助
 const url = $request.url;
 const scriptEnvironment = typeof $task !== 'undefined' ? 'Surge' : (typeof $loon !== 'undefined' ? 'Loon' : (typeof $httpClient !== 'undefined' ? 'Qx' : 'Unknown'));
 
@@ -48,6 +48,10 @@ if (obj && obj.data && obj.data.coreCards && Array.isArray(obj.data.coreCards)) 
     }
     return card;
   });
+}
+
+if (url.includes("/homepage/diamond/position/info")) {
+    obj.data = obj.data.filter(item => item.code !== "PET_PLANET" && item.code !== "GIFT_WALL" && item.code !== "SHOP");
 }
 
 if (url.includes("/chatroom/chatClassifyRoomList")) {
