@@ -1,9 +1,9 @@
-// 2024.07.05 15:15
+// 2024.07.05 15:22
 const url = $request.url;
 let obj = JSON.parse($response.body);
 
 if (url.includes("/homePage/getHomePageInfo")) {
-    const moduleIdDelete = [120, 810, 119, 819, 7, 852, 122, 801, 13, 688 , 502 , 668];
+    const moduleIdDelete = [120, 810, 119, 819, 7, 852, 122, 801, 13, 688 , 502 , 668 , 93 , 53 , 87];
     obj.data.cmsInfo.cmsList = obj.data.cmsInfo.cmsList.filter(item => 
         !moduleIdDelete.includes(item.moduleId));
 }
