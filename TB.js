@@ -1,4 +1,4 @@
-//2024.07.06   01:25
+//2024.07.06   01:57
 
 const url = $request.url;
 let obj;
@@ -33,6 +33,7 @@ if (url.includes("/sidebar/home")) {
 
 if (url.includes('c/s/sync')) {
     delete obj.floating_icon?.homepage?.icon_url;
+    delete obj.floating_icon?.pb?.icon_url
     delete obj.mainbar;
     delete obj.duxiaoman_url;
     delete obj.whitelist;
