@@ -1,7 +1,14 @@
-//2024.07.06   00:53
+//2024.07.06   01:25
 
 const url = $request.url;
-let obj = JSON.parse($response.body);
+let obj;
+try {
+    obj = JSON.parse($response.body);
+} catch (error) {
+    console.error("JSON 解析错误：", error);
+    $done({});
+    return;
+}
 
 if (url.includes("/user/profile")) {
     delete obj.custom_grid;
@@ -17,23 +24,23 @@ if (url.includes("/user/profile")) {
     delete obj.vip_banner;
     delete obj.bubble_info;
     delete obj.recom_swan_list;
-    }
+}
 
 if (url.includes("/sidebar/home")) {
     delete obj.vip_banner;
     delete obj.tools;
-    }
+}
 
 if (url.includes('c/s/sync')) {
-    delete obj.floating_icon.homepage.icon_url;
+    delete obj.floating_icon?.homepage?.icon_url;
     delete obj.mainbar;
     delete obj.duxiaoman_url;
     delete obj.whitelist;
     delete obj.yy_live_tab;
-    }
+}
 
 if (url.includes("/livefeed/feed")) {
-    delete obj.data.banner.items;
-    }
+    delete obj.data?.banner?.items;
+}
 
 $done({body: JSON.stringify(obj)});
