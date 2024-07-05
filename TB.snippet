@@ -1,0 +1,18 @@
+#!name = 贴吧净化
+#!author = 怎么肥事、app2smile、可莉
+#!update = 2024-07-06 00:55
+#!⚠️本地分流添加
+#  host, afd.baidu.com, reject
+#  host, mobads.baidu.com, reject
+
+^https:\/\/tiebac\.baidu\.com\/c\/f\/search\/discover url reject-dict
+^https:\/\/tiebac\.baidu\.com\/livefeed\/feed url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/TB.js
+^https:\/\/tiebac\.baidu\.com\/c\/s\/sync url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/TB.js
+^https:\/\/tiebac\.baidu\.com\/c\/f\/sidebar\/home url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/TB.js
+^https:\/\/tiebac\.baidu\.com\/c\/u\/user\/profile url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/TB.js
+^https:\/\/tiebac\.baidu\.com\/c\/f\/excellent\/personalized url script-response-body https://raw.githubusercontent.com/app2smile/rules/master/js/tieba-proto.js
+
+
+
+
+hostname = tieba.baidu.com, tiebac.baidu.com
