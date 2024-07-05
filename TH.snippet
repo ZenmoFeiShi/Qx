@@ -1,0 +1,17 @@
+#!name = 途虎养车净化
+#!author = 怎么肥事
+#!update = 2024-07-05 15:15
+
+^https:\/\/mkt-gateway\.tuhu\.cn\/mkt-scene-marketing-service\/api\/scene\/queryScheme url reject-dict
+^https:\/\/mkt-gateway\.tuhu\.cn\/mkt-push-message-box\/banner\/cms\/getIndexBanner url reject-dict
+^https:\/\/cl-gateway\.tuhu\.cn\/cl-common-api\/api\/personalCenter\/getAutoSuperConfig url reject-dict
+^https:\/\/mkt-gateway\.tuhu\.cn\/mkt-cms\/circle\/recommend\/v3 url reject-dict
+^https:\/\/cl-gateway\.tuhu\.cn\/cl-shop-api\/shopTab\/getModuleForC url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/TH.js
+^https:\/\/mkt-gateway\.tuhu\.cn\/mlp-product-search-api\/search\/helper\/defaultAndHotWord url reject-dict
+^https:\/\/cl-gateway\.tuhu\.cn\/cl-homepage-service\/homePage\/getHomePageInfo url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/TH.js
+^https:\/\/cl-gateway\.tuhu\.cn\/cl-common-api\/api\/personalCenter\/getCmsModuleList url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/TH.js
+
+
+
+
+hostname = mkt-gateway.tuhu.cn, cl-gateway.tuhu.cn
