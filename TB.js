@@ -1,4 +1,4 @@
-//2024.07.06   01:57
+//2024.07.06   02:11
 
 const url = $request.url;
 let obj;
@@ -29,6 +29,9 @@ if (url.includes("/user/profile")) {
 if (url.includes("/sidebar/home")) {
     delete obj.vip_banner;
     delete obj.tools;
+    if (obj.user_info && Array.isArray(obj.user_info.show_icon_list)) {
+        obj.user_info.show_icon_list = obj.user_info.show_icon_list.filter(icon => icon.sub_type !== "user_growth_level");
+    }
 }
 
 if (url.includes('c/s/sync')) {
