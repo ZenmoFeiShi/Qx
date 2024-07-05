@@ -1,4 +1,4 @@
-//2024.07.06   02:11
+//2024.07.06   03:09
 
 const url = $request.url;
 let obj;
@@ -11,27 +11,21 @@ try {
 }
 
 if (url.includes("/user/profile")) {
-    delete obj.custom_grid;
-    delete obj.finance_tab;
-    delete obj.video_channel_info;
-    delete obj.namoaixud;
-    delete obj.recom_naws_list;
     delete obj.banner;
     delete obj.duxiaoman_entry;
-    delete obj.zone_info;
-    delete obj.namoaixud_entry;
-    delete obj.duxiaoman;
+    delete obj.recom_naws_list;
     delete obj.vip_banner;
-    delete obj.bubble_info;
-    delete obj.recom_swan_list;
+    delete obj.namoaixud_entry;
 }
 
-if (url.includes("/sidebar/home")) {
-    delete obj.vip_banner;
-    delete obj.tools;
-    if (obj.user_info && Array.isArray(obj.user_info.show_icon_list)) {
-        obj.user_info.show_icon_list = obj.user_info.show_icon_list.filter(icon => icon.sub_type !== "user_growth_level");
-    }
+if (obj.hasOwnProperty("user") && obj["user"].hasOwnProperty("user_growth")) {
+    delete obj["user"]["user_growth"];
+}
+
+const typesToRemove = [60, 53,  58, 50, 10, 64, 51, 52, 55, 57, 62];
+
+if (obj.custom_grid && Array.isArray(obj.custom_grid)) {
+    obj.custom_grid = obj.custom_grid.filter(item => !typesToRemove.includes(item.type));
 }
 
 if (url.includes('c/s/sync')) {
