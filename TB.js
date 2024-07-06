@@ -1,4 +1,4 @@
-//2024.07.06   21:48
+//2024.07.07   01:42
 
 const url = $request.url;
 let obj;
@@ -38,7 +38,7 @@ const typesToRemove = [60, 53,  58, 50, 10, 64, 51, 52, 55, 57, 62];
 if (obj.custom_grid && Array.isArray(obj.custom_grid)) {
     obj.custom_grid = obj.custom_grid.filter(item => !typesToRemove.includes(item.type));
 }
-
+/*
 if (url.includes('c/s/sync')) {
     delete obj.floating_icon?.homepage?.icon_url;
     delete obj.floating_icon?.pb?.icon_url
@@ -47,7 +47,7 @@ if (url.includes('c/s/sync')) {
     delete obj.whitelist;
     delete obj.yy_live_tab;
 }
-
+*/
 if (url.includes("/livefeed/feed")) {
     delete obj.data?.banner?.items;
 }
