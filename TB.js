@@ -1,4 +1,4 @@
-//2024.07.06   11:33
+//2024.07.06   13:26
 
 const url = $request.url;
 let obj;
@@ -13,6 +13,10 @@ try {
 if (url.includes("/sidebar/home")) {
     delete obj.vip_banner;
     delete obj.tools;
+    }
+    
+if (url.includes("/frs/frsBottom")) {
+    delete obj.card_activity.small_card;
     }
     
 if (url.includes("/user/profile")) {
