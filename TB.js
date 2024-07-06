@@ -1,4 +1,4 @@
-//2024.07.06   03:09
+//2024.07.06   11:33
 
 const url = $request.url;
 let obj;
@@ -10,6 +10,11 @@ try {
     return;
 }
 
+if (url.includes("/sidebar/home")) {
+    delete obj.vip_banner;
+    delete obj.tools;
+    }
+    
 if (url.includes("/user/profile")) {
     delete obj.banner;
     delete obj.duxiaoman_entry;
