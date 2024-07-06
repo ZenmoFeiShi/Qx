@@ -1,6 +1,6 @@
 #!name = 贴吧净化
 #!author = 怎么肥事、app2smile、可莉
-#!update = 2024-07-06 20:28
+#!update = 2024-07-06 20:42
 #!⚠️本地分流添加
 #  host, afd.baidu.com, reject
 #  host, mobads.baidu.com, reject
@@ -8,11 +8,13 @@
 ^https:\/\/tiebac\.baidu\.com\/c\/f\/search\/discover url reject-dict
 ^https:\/\/tiebac\.baidu\.com\/livefeed\/feed url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/TB.js
 ^https:\/\/tiebac\.baidu\.com\/c\/s\/sync url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/TB.js
-^https:\/\/tiebac\.baidu\.com\/c\/u\/user\/profile$ url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/TB.js
 ^https:\/\/tiebac\.baidu\.com\/c\/f\/sidebar\/home url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/TB.js
+^https:\/\/tiebac\.baidu\.com\/c\/u\/user\/profile url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/TB.js 
 ^https:\/\/tieba\.baidu\.com\/c\/f\/frs\/frsBottom url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/TB.js
-^http(s:\/\/tiebac|:\/\/c\.tieba)\.baidu\.com\/(c\/f\/(frs\/(page|threadlist|generalTabList)|pb\/page|excellent\/personalized)$|tiebaads\/commonbatch|c\/s\/sync$) url script-response-body https://raw.githubusercontent.com/app2smile/rules/master/js/tieba-json.js
-^http(s:\/\/tiebac|:\/\/c\.tieba)\.baidu\.com\/c\/f\/(frs\/(page|threadlist|generalTabList)|pb\/page|excellent\/personalized)\?cmd url script-response-body https://raw.githubusercontent.com/app2smile/rules/master/js/tieba-proto.js
+^https:\/\/tiebac\.baidu\.com\/c\/f\/excellent\/personalized url script-response-body https://raw.githubusercontent.com/app2smile/rules/master/js/tieba-proto.js
+^https:\/\/tiebac\.baidu\.com\/c\/f\/pb\/page url script-response-body https://raw.githubusercontent.com/app2smile/rules/master/js/tieba-proto.js
+^https:\/\/tiebac\.baidu\.com\/c\/f\/frs\/page url script-response-body https://raw.githubusercontent.com/app2smile/rules/master/js/tieba-proto.js
+^https:\/\/tiebac\.baidu\.com\/c\/f\/frs\/generalTabList url script-response-body https://raw.githubusercontent.com/app2smile/rules/master/js/tieba-proto.js
 
 
 
