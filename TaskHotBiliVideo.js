@@ -1,4 +1,7 @@
 /*
+#!name = bilibili星榜全网热播
+#!author = 怎么肥事
+#!update = 2024-07-07 12:20
 0 18 * * * https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/TaskHotBiliVideo.js, tag=bilibili星榜, img-url=https://raw.githubusercontent.com/fmz200/wool_scripts/main/icons/apps/BiliBili.png, enabled=true
 */
 
