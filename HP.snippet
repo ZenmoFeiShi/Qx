@@ -1,6 +1,6 @@
 #!name = 虎扑净化
 #!author = 怎么肥事
-#!update = 2024-06-16 18:48
+#!update = 2024-07-18 14:13
 
 ^https:\/\/fairy\.mobileapi\.hupu\.com\/gallery\/getmod2 url reject-200
 
@@ -17,6 +17,10 @@
 ^https:\/\/goblin\.hupu\.com\/\d\/\d\.\d\.\d+\/interfaceAd\/getOther\/v\d url reject-dict
 
 ^https:\/\/goblin\.hupu\.com\/\d\/\d\.\d\.\d+\/interfaceAd\/getOther\/batch url reject-dict
+
+^https:\/\/games\.mobileapi\.hupu\.com\/3\/8\.0\.86\/bplcommentapi\/bpl\/score_tab\/groups url reject-dict
+
+^https:\/\/games\.mobileapi\.hupu\.com\/3\/8\.0\.86\/bplapi\/banner\/getLocationBanners url reject-dict
 
 ^https:\/\/games\.mobileapi\.hupu\.com\/\d\/\d\.\d\.\d+\/buffer\/hotList url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/HP.js
 
