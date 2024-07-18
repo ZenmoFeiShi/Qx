@@ -50,10 +50,6 @@ if (obj && obj.data && obj.data.coreCards && Array.isArray(obj.data.coreCards)) 
   });
 }
 
-if (url.includes("/homepage/diamond/position/info")) {
-    obj.data = obj.data.filter(item => item.code !== "PET_PLANET" && item.code !== "GIFT_WALL" && item.code !== "SHOP");
-}
-
 if (url.includes("/chatroom/chatClassifyRoomList")) {
   if (obj.data && obj.data.roomList) {
     obj.data.roomList = [];
