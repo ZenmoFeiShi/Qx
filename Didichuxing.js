@@ -1,4 +1,4 @@
-// 2024-04-11 15:37
+// 2024-07-20 20:23
 const url = $request.url;
 if (!$response.body) $done({});
 
@@ -56,10 +56,6 @@ if (url.includes("/usercenter/me")) {
       }
     });
   }
-}
-
-if (url.includes("/resapi/activity/mget") || url.includes("/dynamic/conf") || url.includes("/homepage/v1/other/fast") || url.includes("/agent/v3/feeds") || url.includes("/resapi/activity/xpget") || url.includes("/gateway")) {
-  delete obj.data;
 }
 
 $done({ body: JSON.stringify(obj) });
