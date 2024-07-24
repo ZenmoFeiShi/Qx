@@ -1,4 +1,4 @@
-// 2024-07-20 20:23
+// 2024-07-24 13:57
 /*需要分流禁用掉 
 ip-cidr, 123.207.209.39/32, reject
 ip-cidr, 123.207.209.60/32, reject
@@ -32,7 +32,7 @@ if (url.includes("/homepage/v1/core")) {
     obj.data.order_cards.nav_list_card.data = obj.data.order_cards.nav_list_card.data.filter(item => keepNavIds.includes(item.nav_id));
   }
   // 保留底部tap首页、我的
-  const keepBottomNavIds = ['v6x_home', 'user_center' ];
+  const keepBottomNavIds = ['v6x_home', 'home_page' , 'user_center' ];
   if (obj.data && obj.data.disorder_cards && obj.data.disorder_cards.bottom_nav_list && obj.data.disorder_cards.bottom_nav_list.data) {
     obj.data.disorder_cards.bottom_nav_list.data = obj.data.disorder_cards.bottom_nav_list.data.filter(item => keepBottomNavIds.includes(item.id));
   }
