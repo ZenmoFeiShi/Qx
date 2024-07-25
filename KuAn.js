@@ -1,4 +1,4 @@
-// 2024.07.25 20:51
+// 2024.07.25 20:52
 
 const url = $request.url;
 const obj = JSON.parse($response.body);
@@ -27,7 +27,7 @@ if (url.includes("/v6/account/loadConfig?key=my_page_card_config")) {
   obj.data.forEach((item) => {
     if (item.entities && item.entities.length > 0) {
       item.entities = item.entities.filter((entity) => {
-        return ![2261, 1633, 413, 417, 1754, 1966].includes(entity.entityId);
+        return ![2261, 1633, 413, 417, 1754, 1966 ,2274].includes(entity.entityId);
       });
     }
   });
