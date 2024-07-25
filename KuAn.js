@@ -1,4 +1,4 @@
-// 2024.07.25 20:23
+// 2024.07.25 20:51
 
 const url = $request.url;
 const obj = JSON.parse($response.body);
@@ -23,16 +23,24 @@ if (url.includes("/v6/account/loadConfig?key=my_page_card_config")) {
         !item.title.includes("值得买") &&
         !item.title.includes("红包")
     );
-} else if (url.includes("/v6/main/init")) {
-    obj.data = obj.data.filter(item => {
-        if (item.title === "关注" && item.title === "酷品") {
-            return false;
-        }
-        if (item.entities) {
-            item.entities = item.entities.filter(entity => entity.title !== "关注" && item.title === "酷品");
-        }
-        return true;
-    });
+} else if (url.includes('/v6/main/init')) {
+  obj.data.forEach((item) => {
+    if (item.entities && item.entities.length > 0) {
+      item.entities = item.entities.filter((entity) => {
+        return ![2261, 1633, 413, 417, 1754, 1966].includes(entity.entityId);
+      });
+    }
+  });
+
+  obj.data = obj.data.filter((item) => {
+    if (item.title === "关注") {
+      return false;
+    }
+    if (item.entities) {
+      item.entities = item.entities.filter((entity) => entity.title !== "关注");
+    }
+    return true;
+  });
 }
 
 $done({ body: JSON.stringify(obj) });
