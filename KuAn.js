@@ -1,4 +1,4 @@
-// 2024.07.25 16:21
+// 2024.07.25 20:23
 
 const url = $request.url;
 const obj = JSON.parse($response.body);
@@ -25,11 +25,11 @@ if (url.includes("/v6/account/loadConfig?key=my_page_card_config")) {
     );
 } else if (url.includes("/v6/main/init")) {
     obj.data = obj.data.filter(item => {
-        if (item.title === "关注") {
+        if (item.title === "关注" && item.title === "酷品") {
             return false;
         }
         if (item.entities) {
-            item.entities = item.entities.filter(entity => entity.title !== "关注");
+            item.entities = item.entities.filter(entity => entity.title !== "关注" && item.title === "酷品");
         }
         return true;
     });
