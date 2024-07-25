@@ -1,4 +1,4 @@
-// 2024.07.18 09:27
+// 2024.07.25 16:21
 
 const url = $request.url;
 const obj = JSON.parse($response.body);
@@ -19,7 +19,7 @@ if (url.includes("/v6/account/loadConfig?key=my_page_card_config")) {
     });
 } else if (url.includes("/v6/main/indexV8")) {
     obj.data = obj.data.filter(item => 
-        item.entityId !== 32557 && item.entityId !== 29349 &&
+        item.entityId !== 32557 && item.entityId !== 29349 && item.entityId !== 28621 &&
         !item.title.includes("值得买") &&
         !item.title.includes("红包")
     );
