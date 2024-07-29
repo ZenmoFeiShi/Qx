@@ -24,22 +24,21 @@ if (url.includes("/v6/account/loadConfig?key=my_page_card_config")) {
         !item.title.includes("红包")
     );
 } else if (url.includes("/v6/main/init")) {
-    obj.data.forEach((item) => {
-        if (item.entities && item.entities.length > 0) {
-            item.entities = item.entities.filter((entity) => {
-                return ![2261, 1633, 413, 417, 1754, 1966, 2274, 1170, 1175, 1190, 2258].includes(entity.entityId);
-            });
+    if (obj.data?.length > 0) {
+        let newDatas = [];
+        for (let item of obj.data) {
+            if ([944, 945, 6390].includes(item?.entityId)) {
+                continue;
+            } 
+            if (item.entities && item.entities.length > 0) {
+                item.entities = item.entities.filter((entity) => {
+                    return ![2261, 1633, 413, 417, 1754, 1966, 2274, 1170, 1175, 1190, 2258].includes(entity.entityId);
+                });
+            }
+            newDatas.push(item);
         }
-    });
-  
-    obj.data = obj.data.filter((item) => {
-        return ![944, 945].includes(item.entityId) && item.title !== "关注";
-    });
-    obj.data.forEach((item) => {
-        if (item.entities) {
-            item.entities = item.entities.filter((entity) => entity.title !== "关注");
-        }
-    });
+        obj.data = newDatas;
+    }
 }
 
 $done({ body: JSON.stringify(obj) });
