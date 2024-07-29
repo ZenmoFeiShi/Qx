@@ -1,4 +1,4 @@
-// 2024.07.29 11:44
+// 2024.07.29 11:51
 
 const url = $request.url;
 const obj = JSON.parse($response.body);
@@ -33,11 +33,10 @@ if (url.includes("/v6/account/loadConfig?key=my_page_card_config")) {
         }
     });
 }
- obj.data.forEach(item => {
-        if (item.extraDataArr && item.extraDataArr.hasOwnProperty('SplashAd.Type')) {
-            delete item.extraDataArr['SplashAd.Type'];
-        }
-    });
-}
 
+obj.data.forEach(item => {
+    if (item.extraDataArr && item.extraDataArr.hasOwnProperty('SplashAd.Type')) {
+        delete item.extraDataArr['SplashAd.Type'];
+    }
+});
 $done({ body: JSON.stringify(obj) });
