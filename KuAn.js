@@ -1,4 +1,4 @@
-// 2024.07.29 16:07
+// 2024.07.29 17:15
 
 const url = $request.url;
 const obj = JSON.parse($response.body);
@@ -38,6 +38,7 @@ obj.data.forEach(item => {
     if (item.extraDataArr) {
         delete item.extraDataArr['SplashAd.Type'];
         delete item.extraData;
+        delete item.extraDataArr;
     }
 });
 $done({ body: JSON.stringify(obj) });
