@@ -29,4 +29,10 @@ if (url.includes('/api/philo/personal/hub')) {
     }
 }
 
+if (url.includes("/api/oak/integration/render")) {
+    delete obj.ui.bottom_section;  //限时
+    delete obj.ui.live_section.float_info;  //直播
+    delete obj.bottom_section_list; //限时
+    }
+    
 $done({body: JSON.stringify(obj)});
