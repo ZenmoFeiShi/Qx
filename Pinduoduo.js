@@ -15,7 +15,7 @@ if (url.includes('/api/alexa/homepage/hub')) {
 
         // Remove tabs with specific titles
         obj.result.bottom_tabs = obj.result.bottom_tabs.filter(tab => {
-            return tab.title !== '多多视频' && tab.title !== '大促会场';
+            return tab.title !== '多多视频' && tab.title !== '大促会场' && tab.title !== '搜索' && tab.title !== '直播';
         });
     }
 }
