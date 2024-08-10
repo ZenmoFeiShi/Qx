@@ -6,6 +6,7 @@ try {
     if (url.includes('/api/alexa/homepage/hub') && obj.result && Array.isArray(obj.result.bottom_tabs)) {
         obj.result.bottom_tabs = obj.result.bottom_tabs.filter(tab => tab.title !== '多多视频' && tab.title !== '大促会场' && tab.title !== '搜索' && tab.title !== '直播');
         delete obj.result.icon_set;
+        delete obj.result.search_bar_hot_query;
         }
 
     if (url.includes('/api/philo/personal/hub')) {
