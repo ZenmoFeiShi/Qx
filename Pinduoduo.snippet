@@ -1,6 +1,6 @@
 #!name = 拼多多净化页面布局
 #!author = 怎么肥事
-#!update = 2024-08-10 15:23
+#!update = 2024-08-13 17:04
 
 ^https:\/\/api\.pinduoduo\.com\/search_hotquery url reject-dict
 ^https:\/\/api\.pinduoduo\.com\/api\/zaire_biz\/chat\/resource\/get_list_data url reject-dict
@@ -11,6 +11,7 @@
 ^https:\/\/api\.pinduoduo\.com\/api\/engels\/reviews\/require\/append url reject-dict
 ^https:\/\/api\.pinduoduo\.com\/api\/caterham\/v3\/query\/my_order_group url reject-dict
 ^https:\/\/api\.pinduoduo\.com\/api\/caterham\/v3\/query\/likes url reject-dict
+^https:\/\/api\.pinduoduo\.com\/search url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/Pinduoduo.js
 ^https:\/\/api\.pinduoduo\.com\/api\/philo\/personal\/hub url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/Pinduoduo.js
 ^https:\/\/api\.pinduoduo\.com\/api\/alexa\/homepage\/hub url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/Pinduoduo.js
 ^https:\/\/api\.pinduoduo\.com\/api\/oak\/integration\/render url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/Pinduoduo.js
