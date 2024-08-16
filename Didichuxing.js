@@ -1,4 +1,4 @@
-// 2024-07-24 13:57
+// 2024-08-16 21:18
 /*需要分流禁用掉 
 ip-cidr, 123.207.209.39/32, reject
 ip-cidr, 123.207.209.60/32, reject
@@ -26,23 +26,27 @@ if (url.includes("/other/pGetSceneList")) {
 }
 
 if (url.includes("/homepage/v1/core")) {
-  // 保留打车、代驾、青桔骑行
-  const keepNavIds = ['dache_anycar', 'driverservice', 'bike' ];
+  const keepNavIds = ['dache_anycar', 'driverservice', 'bike'];
   if (obj.data && obj.data.order_cards && obj.data.order_cards.nav_list_card && obj.data.order_cards.nav_list_card.data) {
     obj.data.order_cards.nav_list_card.data = obj.data.order_cards.nav_list_card.data.filter(item => keepNavIds.includes(item.nav_id));
   }
-  // 保留底部tap首页、我的
-  const keepBottomNavIds = ['v6x_home', 'home_page' , 'user_center' ];
+  const keepBottomNavIds = ['v6x_home', 'home_page', 'user_center'];
   if (obj.data && obj.data.disorder_cards && obj.data.disorder_cards.bottom_nav_list && obj.data.disorder_cards.bottom_nav_list.data) {
     obj.data.disorder_cards.bottom_nav_list.data = obj.data.disorder_cards.bottom_nav_list.data.filter(item => keepBottomNavIds.includes(item.id));
   }
 }
 
 if (url.includes("/ota/na/yuantu/infoList")) {
-if (obj.data && obj.data.disorder_cards && obj.data.disorder_cards.top_banner_card && obj.data.disorder_cards.top_banner_card.data && obj.data.disorder_cards.top_banner_card.data[0] && obj.data.disorder_cards.top_banner_card.data[0].T === "yuentu_top_banner") {
-    // 移除顶部卡片
+  if (obj.data && obj.data.disorder_cards && obj.data.disorder_cards.top_banner_card && obj.data.disorder_cards.top_banner_card.data && obj.data.disorder_cards.top_banner_card.data[0] && obj.data.disorder_cards.top_banner_card.data[0].T === "yuentu_top_banner") {
     obj.data.disorder_cards.top_banner_card.data.splice(0, 1);
- }
+  }
+}
+
+if (url.includes("/gulfstream/passenger-center/v2/other/pInTripLayout")) {
+  const namesToRemove = ["passenger_common_casper"];
+  obj.data.page_conf.order_components = obj.data.page_conf.order_components.filter(
+    component => !(component.name && namesToRemove.includes(component.name))
+  );
 }
 
 if (url.includes("/usercenter/me")) {
