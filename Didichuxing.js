@@ -1,4 +1,4 @@
-// 2024-08-16 21:18
+// 2024-08-20 09:49
 /*需要分流禁用掉 
 ip-cidr, 123.207.209.39/32, reject
 ip-cidr, 123.207.209.60/32, reject
@@ -44,7 +44,7 @@ if (url.includes("/ota/na/yuantu/infoList")) {
 
 if (url.includes("/gulfstream/passenger-center/v2/other/pInTripLayout")) {
   const namesToRemove = ["passenger_common_casper"];
-  obj.data.page_conf.order_components = obj.data.page_conf.order_components.filter(
+  obj.data.order_components = obj.data.order_components.filter(
     component => !(component.name && namesToRemove.includes(component.name))
   );
 }
