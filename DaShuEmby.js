@@ -1,5 +1,19 @@
 //2024.8.22
 
+/*
+@Name：大叔Emby自动观看保号
+@Author：怎么肥事
+使用方法：手动观看一次，提示获取成功✅即可食用
+[rewrite_local]
+^https:\/\/emby3\.mcjoker\.xyz:443\/emby\/Sessions\/Playing -url script-request-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/DaShuEmby.js
+
+[task_local]
+35 22 15,30 * * https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/DaShuEmby.js, tag=大叔Emby自动观看, enabled=true
+
+[MITM]
+hostname = emby3.mcjoker.xyz
+
+*/
 const isRequest = typeof $request !== 'undefined';
 const isSurge = typeof $httpClient !== 'undefined'; 
 const isLoon = typeof $loon !== 'undefined'; 
