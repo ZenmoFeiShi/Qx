@@ -8,7 +8,7 @@
 ^https:\/\/emby3\.mcjoker\.xyz:443\/emby\/Sessions\/Playing url script-request-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/DaShuemby.js
 
 [task_local]
-35 22 15,30 * * https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/DaShuemby.js, tag=大叔Emby自动观看, enabled=true
+35 22 15,30 * * https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/DaShuemby.js, tag=大叔Emby自动观看, img-url=https://raw.githubusercontent.com/fmz200/wool_scripts/main/icons/lige47/emby.png, enabled=true
 
 [MITM]
 hostname = emby3.mcjoker.xyz
