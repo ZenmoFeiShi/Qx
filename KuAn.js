@@ -1,4 +1,4 @@
-// 2024.07.29 17:15
+// 2024.10.22 10:13
 
 const url = $request.url;
 const obj = JSON.parse($response.body);
@@ -19,9 +19,11 @@ if (url.includes("/v6/account/loadConfig?key=my_page_card_config")) {
     });
 } else if (url.includes("/v6/main/indexV8")) {
     obj.data = obj.data.filter(item => 
-        item.entityId !== 32557 && item.entityId !== 29349 && item.entityId !== 28621 &&
-        !item.title.includes("值得买") &&
-        !item.title.includes("红包")
+        item.entityId !== 32557 && 
+        item.entityId !== 29349 && 
+        item.entityId !== 28621 &&
+        !(typeof item.title === 'string' && item.title.includes("值得买")) &&
+        !(typeof item.title === 'string' && item.title.includes("红包"))
     );
 } else if (url.includes("/v6/main/init")) {
     obj.data = obj.data.filter(item => ![944, 945].includes(item.entityId) && item.title !== "关注");
