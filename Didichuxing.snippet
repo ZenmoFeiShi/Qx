@@ -1,12 +1,14 @@
 /*
 #!name = 滴滴出行
 #!author = 怎么肥事
-#!update = 2024-09-08 21:09
+#!update = 2024-10-22 21:56
 #! ps = 需要分流禁用掉以下ip地址⬇️
 ip-cidr, 123.207.209.39/32, reject
 ip-cidr, 123.207.209.60/32, reject
 ip-cidr, 139.199.240.12/32, reject
 ip-cidr, 116.85.3.37/32, reject
+ip-cidr, 162.14.157.2/32, reject
+ip-cidr, 162.14.157.24/32, reject
 群友EDDA分享
 ip-cidr, 139.199.240.15/32, reject
 */
@@ -23,8 +25,8 @@ ip-cidr, 139.199.240.15/32, reject
 ^https:\/\/api\.udache\.com\/gulfstream\/pre-sale\/v1\/other\/pGetSceneList url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/Didichuxing.js
 ^https:\/\/conf\.diditaxi\.com\.cn\/ota\/na\/yuantu\/infoList url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/Didichuxing.js
 ^https:\/\/api\.udache\.com\/gulfstream\/passenger-center\/v2\/other\/pInTripLayout url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/Didichuxing.js
+^https:\/\/conf\.diditaxi\.com\.cn\/homepage\/v1\/other\/slow url reject-dict
 
 
 
-
-hostname = common.diditaxi.com.cn, freight.xiaojukeji.com, daijia.kuaidadi.com, ct.xiaojukeji.com, res.xiaojukeji.com, conf.diditaxi.com.cn ,api.udache.com ,123.207.209.*, 112.53.55.225,120.241.142.*,120.241.143.*,116.85.2.*, 116.85.3.*, 139.199.240.84
+hostname = common.diditaxi.com.cn, freight.xiaojukeji.com, daijia.kuaidadi.com, 162.14.157.*, ct.xiaojukeji.com, res.xiaojukeji.com, conf.diditaxi.com.cn ,api.udache.com ,123.207.209.*, 112.53.55.225,120.241.142.*,120.241.143.*,116.85.2.*, 116.85.3.*, 139.199.240.84
