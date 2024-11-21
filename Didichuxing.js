@@ -64,7 +64,7 @@ if (url.includes("/usercenter/me")) {
         }
         if (card.card_type === 4 && card.bottom_items) {
           card.bottom_items = card.bottom_items.filter(item => 
-            item.title === "省钱套餐" || item.title === "天天神券"
+            item.title === "省钱套餐" || item.title === "出行里程"
           );
         }
       }
