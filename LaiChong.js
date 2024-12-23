@@ -81,7 +81,6 @@ hostname = shop.laichon.com
       "Accept-Encoding": "gzip,compress,br,deflate",
       "content-type": "application/x-www-form-urlencoded",
       "Connection": "keep-alive",
-      "openid": "oOO3c4h2u7CciZz-hTy8Yew0Q2Tw",
       "Referer": "https://servicewechat.com/wxa68db1dabe823e7e/421/page-frame.html",
       "Host": "shop.laichon.com",
       "User-Agent":
