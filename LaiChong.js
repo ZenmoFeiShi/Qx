@@ -1,4 +1,4 @@
-//2024.12.23  23：17
+//2024.12.23  23：19
 /*
 @Name：莱充小程序
 @Author：怎么肥事
@@ -7,7 +7,7 @@
 ^https:\/\/shop\.laichon\.com\/api\/v1\/member\/userinfo url script-request-header https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/LaiChong.js
 
 [task_local]
-50 9 * * * https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/LaiChong.js, tag=莱充, enabled=true
+50 9 * * * https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/LaiChong.js, tag=莱充, enabled=true
 
 [MITM]
 hostname = shop.laichon.com
