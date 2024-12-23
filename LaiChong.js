@@ -64,14 +64,14 @@ hostname = shop.laichon.com
         authList = JSON.parse(raw);
       } catch (e) {
         console.log("[解析失败] MY_AUTH_LIST 非法，脚本结束");
-        $notify("重放失败", "", "MY_AUTH_LIST 数据异常，无法解析");
+        $notify("请求失败", "", "MY_AUTH_LIST 数据异常，无法解析");
         return $done();
       }
     }
 
     if (!authList || authList.length === 0) {
-      console.log("尚未捕获到任何账号信息，无法重放");
-      $notify("重放失败", "", "请先让脚本捕获至少一个 Authorization");
+      console.log("尚未捕获到任何账号信息，无法请求");
+      $notify("请求失败", "", "请先让脚本捕获至少一个 Authorization");
       return $done();
     }
 
