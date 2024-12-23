@@ -1,5 +1,18 @@
 //2024.12.23
+/*
+@Name：莱充小程序
+@Author：怎么肥事
+使用方法：点击我的自动获取支持多账号
+[rewrite_local]
+^https:\/\/shop\.laichon\.com\/api\/v1\/member\/userinfo url script-request-header https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/LaiChong.js
 
+[task_local]
+50 9 * * * https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/LaiChong.js, tag=莱充, enabled=true
+
+[MITM]
+hostname = shop.laichon.com
+
+*/
 
 !(async () => {
   if (typeof $request !== "undefined") {
