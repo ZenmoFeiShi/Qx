@@ -30,6 +30,15 @@ if (/^https:\/\/18hlw\.com/.test(url)) {
     );
 } 
 
+const blockSelectors = [
+  /<blockquote>[\s\S]*?<\/blockquote>/g,  
+  /<p>🔥火爆热瓜推荐🔥：<\/p>[\s\S]*?<hr \/>/g,
+];
+
+blockSelectors.forEach(selector => {
+  body = body.replace(selector, '');
+});
+
 $done({ body });
 
 
