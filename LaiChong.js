@@ -90,18 +90,18 @@ hostname = shop.laichon.com
 
     const tasks = [
       {
-        desc: "签到", 
-        body: "", 
+        desc: "签到",
+        body: "",
         url: "https://shop.laichon.com/api/v1/task/signComplete"
       },
       {
-        desc: "观看视频", 
+        desc: "观看视频",
         body: "task_id=4",
         url: "https://shop.laichon.com/api/v1/task/taskComplete"
       },
       {
-        desc: "充电任务", 
-        body: "task_id=3", 
+        desc: "充电任务",
+        body: "task_id=3",
         url: "https://shop.laichon.com/api/v1/task/taskComplete"
       },
     ];
@@ -112,12 +112,12 @@ hostname = shop.laichon.com
       const currentAuth = authList[i];
       console.log(`\n========== 开始执行第 ${i + 1} 个账号 ==========`);
 
-      let totalPoints = 0;   
-      let detailArr = [];   
+      let totalPoints = 0;
+      let detailArr = [];
 
       for (const item of tasks) {
         const { desc, body, url } = item;
-        
+
         const requestOpts = {
           url,
           method: "POST",
@@ -135,21 +135,15 @@ hostname = shop.laichon.com
           continue;
         }
 
-        const { code, data, msg } = resp;
-        if (code === 1) {
-        
-          if (data !== null && data !== undefined) {
-            const gotPoints = parseInt(data, 10) || 0;
-            totalPoints += gotPoints;
-            detailArr.push(`${desc}: 成功(+${gotPoints})`);
-            console.log(`${desc} 成功, 积分+${gotPoints}`);
-          } else {
-            detailArr.push(`${desc}: 成功(+0)`);
-            console.log(`${desc} 成功, data=null, 无额外积分`);
-          }
+        const statusCode = resp.statusCode || 500;
+        if (statusCode === 200) {
+          const gotPoints = 1;
+          totalPoints += gotPoints;
+          detailArr.push(`${desc}: 成功(+${gotPoints})`);
+          console.log(`${desc} 成功, 积分+${gotPoints}`);
         } else {
-          detailArr.push(`${desc}: 失败(${msg || "未知错误"})`);
-          console.log(`${desc} 失败, 原因: ${msg || "未知"}`);
+          detailArr.push(`${desc}: 失败(${resp.msg || "未知错误"})`);
+          console.log(`${desc} 失败, 原因: ${resp.msg || "未知"}`);
         }
       }
 
@@ -169,13 +163,13 @@ hostname = shop.laichon.com
   }
 })();
 
-
 function doRequest(reqObj) {
   return new Promise((resolve) => {
     $task.fetch(reqObj).then(
       (resp) => {
         try {
           const data = JSON.parse(resp.body || "{}");
+          data.statusCode = resp.statusCode;  // 加入响应状态码
           resolve(data);
         } catch (e) {
           console.log("JSON 解析异常:", e);
