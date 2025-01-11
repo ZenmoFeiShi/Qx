@@ -1,4 +1,4 @@
-//2024.01.12  00：51
+//2024.01.12  00：58
 /*
 @Name：莱充小程序
 @Author：怎么肥事
@@ -24,43 +24,49 @@ hostname = shop.laichon.com
   }
   $done();
 
-  async function handleRequest() {
-    try {
-      const auth = $request.headers?.Authorization;
-      if (!auth) {
-        console.log("[捕获失败] 未获取到 Authorization");
-        return;
-      }
-      const saveKey = "MY_AUTH_LIST";
-      let authList = [];
-      const raw = getPersistentData(saveKey);
-      if (raw) {
-        try {
-          authList = JSON.parse(raw);
-        } catch (e) {
-          console.log("[解析失败] MY_AUTH_LIST 非法，重置为空数组");
-          authList = [];
-        }
-      }
-
-      if (authList.includes(auth)) {
-        console.log("[捕获跳过] 重复账号: " + auth);
-        notify("获取参数跳过", "", "发现重复的 Authorization，已忽略");
-        return;
-      }
-
-      authList.push(auth);
-      const success = setPersistentData(saveKey, JSON.stringify(authList));
-      if (success) {
-        console.log("[捕获成功] 新增 Authorization: " + auth);
-        notify("获取参数成功", "", `已新增账号：${auth}`);
-      } else {
-        console.log("[捕获失败] 写入持久化数据失败");
-      }
-    } catch (err) {
-      console.log("捕获阶段异常:", err);
+async function handleRequest() {
+  try {
+    const auth = $request.headers?.Authorization;
+    if (!auth) {
+      console.log("[捕获失败] 未获取到 Authorization");
+      return;
     }
+    const saveKey = "LaichongAuthList";
+    let authList = [];
+    const raw = getPersistentData(saveKey);
+    if (raw) {
+      try {
+        authList = JSON.parse(raw);
+      } catch (e) {
+        console.log("[解析失败] LaichongAuthList 非法，重置为空数组");
+        authList = [];
+      }
+    }
+
+    if (authList.includes(auth)) {
+      console.log("[捕获跳过] 重复账号: " + auth);
+      notify("获取参数跳过", "", "发现重复的 Authorization，已忽略");
+      return;
+    }
+
+    // 限制最多存储两个账号
+    if (authList.length >= 2) {
+      console.log("[账号管理] 已达到账号上限，移除最早的账号");
+      authList.shift();
+    }
+
+    authList.push(auth);
+    const success = setPersistentData(saveKey, JSON.stringify(authList));
+    if (success) {
+      console.log("[捕获成功] 新增 Authorization: " + auth);
+      notify("获取参数成功", "", `已新增账号：${auth}`);
+    } else {
+      console.log("[捕获失败] 写入持久化数据失败");
+    }
+  } catch (err) {
+    console.log("捕获阶段异常:", err);
   }
+}
 
   async function handleTask() {
     const saveKey = "MY_AUTH_LIST";
