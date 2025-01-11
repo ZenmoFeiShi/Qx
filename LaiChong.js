@@ -211,18 +211,18 @@ hostname = shop.laichon.com
   }
 
   function getPersistentData(key) {
-    if (typeof $prefs !== "undefined") return $prefs.valueForKey(key);
-    if (typeof $persistentStore !== "undefined")
-      return $persistentStore.read(key);
-    return null;
-  }
+  if (typeof $prefs !== "undefined") return $prefs.valueForKey(key);
+  if (typeof $persistentStore !== "undefined") return $persistentStore.read(key);
+  if (typeof $boxjs !== "undefined") return $boxjs.data(key); // BoxJs 支持
+  return null;
+}
 
-  function setPersistentData(key, value) {
-    if (typeof $prefs !== "undefined") return $prefs.setValueForKey(value, key);
-    if (typeof $persistentStore !== "undefined")
-      return $persistentStore.write(value, key);
-    return false;
-  }
+function setPersistentData(key, value) {
+  if (typeof $prefs !== "undefined") return $prefs.setValueForKey(value, key);
+  if (typeof $persistentStore !== "undefined") return $persistentStore.write(value, key);
+  if (typeof $boxjs !== "undefined") return $boxjs.dataSave(key, value); // BoxJs 支持
+  return false;
+}
 
   function notify(title, subtitle, content) {
     if (typeof $notify !== "undefined") $notify(title, subtitle, content);
