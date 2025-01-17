@@ -124,8 +124,8 @@ async function handleTask() {
       if (code === 1) {
         const gotPoints = data ? parseInt(data, 10) || 0 : 0;
         totalPoints += gotPoints;
-        detailArr.push(`${desc}: 成功(+${gotPoints})`);
-        console.log(`${desc} 成功, 积分+${gotPoints}`);
+        detailArr.push(`${desc}: 成功(+1)`);
+        console.log(`${desc} 成功, 积分+1`);
       } else {
         detailArr.push(`${desc}: 失败(${msg || "未知错误"})`);
         console.log(`${desc} 失败, 错误: ${msg || "未知"}`);
