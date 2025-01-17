@@ -1,4 +1,4 @@
-//2024.01.17  00：58
+//2024.01.17  14：20
 /*
 @Name：莱充小程序
 @Author：怎么肥事
@@ -44,7 +44,6 @@ async function handleRequest() {
       return;
     }
 
-    // 限制最多存储 2 个账号，超过则删除最早的
     if (authList.length >= 2) {
       console.log("[账号管理] 账号数已达上限，移除最早的");
       authList.shift();
@@ -132,7 +131,7 @@ async function handleTask() {
       }
     }
 
-    finalMsg.push(`【账号${i + 1}】总积分: ${totalPoints} | ${detailArr.join("；")}`);
+    finalMsg.push(`【账号${i + 1}】| ${detailArr.join("；")}`);
   }
 
   const notifyTitle = "多账号任务执行结果";
