@@ -1,10 +1,11 @@
 #!name = 贴吧净化
 #!author = 怎么肥事、app2smile、可莉
-#!update = 2024-07-07 22:25
+#!update = 2025-03-23 09:52
 #!⚠️本地分流添加
 #  host, afd.baidu.com, reject
 #  host, mobads.baidu.com, reject
 
+^https:\/\/tiebac\.baidu\.com\/c\/u\/chat\/getChatSubscriptionList url reject-dict
 ^https:\/\/tiebac\.baidu\.com\/c\/f\/search\/discover url reject-dict
 ^https:\/\/tiebac\.baidu\.com\/c\/f\/forum\/forumGuide url reject-dict
 ^https:\/\/tiebac\.baidu\.com\/livefeed\/feed url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/TB.js
