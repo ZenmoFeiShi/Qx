@@ -1,4 +1,4 @@
-//          2025/4/29
+//          2025/4/30
  //同程旅行
 ^https:\/\/wx\.17u\.cn\/xcxhomeapi\/aggregator\/index url reject-dict
 ^https:\/\/wx\.17u\.cn\/mytourapi\/mytrip\/blankflight url reject-dict
@@ -22,6 +22,8 @@
 ^https:\/\/wx\.17u\.cn\/wireless\/monitor\/wx\/common\/compressevent url reject-dict
 ^https:\/\/a1d5b283e-wx621112590b635086\.sh\.wxgateway\.com\/xcxhomeapi\/home\/screen url reject-dict
 //美团
+^https:\/\/web\.meituan\.com\/api\/miniprogram\/tabbar\/all\/query url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/MeiTuanNoAd.js
+^https:\/\/web\.meituan\.com\/api\/miniprogram\/index\/aggregate url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/MeiTuanNoAd.js
 ^https:\/\/web\.meituan\.com\/api\/miniprogram\/my\/novelZone url reject-dict
 ^https:\/\/web\.meituan\.com\/api\/miniprogram\/my\/resources url reject-dict
 ^https:\/\/npay\.meituan\.com\/conch\/flow\/mypage-wallet-info url reject-dict
