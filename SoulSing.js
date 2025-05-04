@@ -8,7 +8,7 @@
 ^https:\/\/increase-openapi\.soulapp\.cn\/increase\/sign\/userSign url script-request-header https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/SoulSing.js
 
 [task_local]
-50 9 * * * https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/SoulSing.js, tag=Soul金币签到, enabled=true
+50 9 * * * https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/SoulSing.js, tag=Soul金币签到, img-url=https://raw.githubusercontent.com/fmz200/wool_scripts/main/icons/apps/Soul.png, enabled=true
 
 [MITM]
 hostname = increase-openapi.soulapp.cn
