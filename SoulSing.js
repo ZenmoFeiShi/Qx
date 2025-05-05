@@ -53,7 +53,7 @@ if (isRequest) {
   const headersRaw = getVal("soul_sign_headers");
 
   if (!url || !headersRaw) {
-    notify("签到失败❌", "", "未找到请求参数");
+    notify("Soul金币签到失败❌", "", "未找到请求参数");
     $done();
   } else {
     const headers = JSON.parse(headersRaw);
@@ -65,7 +65,7 @@ if (isRequest) {
         const msg = json?.data?.msg || "无 msg";
         const title = json?.data?.signRewardMsg?.title;
 
-        notify("签到结果", msg, title || "");
+        notify("Soul金币签到结果", msg, title || "");
         log("响应内容:\n" + body);
       } catch (e) {
         notify("解析失败", "", e.toString());
