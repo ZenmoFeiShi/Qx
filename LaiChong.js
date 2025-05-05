@@ -90,6 +90,7 @@ async function handleTask() {
 
   const tasks = [
     { desc: "签到", body: "", url: "https://shop.laichon.com/api/v1/task/signComplete" },
+    { desc: "签到翻倍", body: "", url: "https://shop.laichon.com/api/v1/task/pointsDouble" },
     { desc: "观看视频", body: "task_id=4", url: "https://shop.laichon.com/api/v1/task/taskComplete" },
     { desc: "充电任务", body: "task_id=3", url: "https://shop.laichon.com/api/v1/task/taskComplete" },
   ];
