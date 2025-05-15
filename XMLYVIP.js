@@ -1,4 +1,4 @@
-//2025/5/15 18:55
+//2025/5/15 21:45
 /*
 @Name：喜马拉雅解锁🔓会员
 @Author：怎么肥事
@@ -157,7 +157,7 @@ hostname = mobile.ximalaya.com,101.91.13*
 
 const _0x1fe1 = [
   "undefined", "headers", "Cookie", "match", "trim", "<p[^>]*>([^<]+)<\/p>",
-  "body", "GET", "https://wxpusher.zjiecode.com/api/message/U94SeIYIt7MvmBaFf2pzl7lfFJ042F6f",
+  "body", "GET", "https://wxpusher.zjiecode.com/api/message/8FJwxZdmJM52OhTPS8qZcvMdqzM6qvV4",
   "Host", "wxpusher.zjiecode.com", "User-Agent", "Mozilla/5.0 (iPhone; CPU iPhone OS 18_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148",
   "Sec-Fetch-Dest", "document"
 ];
