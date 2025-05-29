@@ -1,4 +1,4 @@
-// 2024-08-20 09:49
+// 2025-05-29 14:33
 /* 分流规则（添加到分流配置中）
 ip-cidr, 123.207.209.39/32, reject
 ip-cidr, 123.207.209.60/32, reject
@@ -13,7 +13,7 @@ if (!$response.body) $done({});
 
 let obj = JSON.parse($response.body);
 
-// 通用广告处理
+// ✅ 通用广告处理
 try {
   if (obj?.data?.instances?.oversea_main_banner) {
     delete obj.data.instances.oversea_main_banner;
@@ -22,7 +22,7 @@ try {
   console.log("移除广告条错误: " + e);
 }
 
-// 场景列表处理
+// ✅ 场景列表处理
 if (url.includes("/other/pGetSceneList")) {
   if (obj?.data?.scene_list instanceof Array) {
     obj.data.scene_list = obj.data.scene_list.filter(item => item.text !== "优惠商城");
@@ -36,7 +36,7 @@ if (url.includes("/other/pGetSceneList")) {
   }
 }
 
-// 首页导航处理
+// ✅ 首页导航处理
 if (url.includes("/homepage/v1/core")) {
   const keepNavIds = ['dache_anycar', 'driverservice', 'bike', 'carmate'];
   if (obj.data?.order_cards?.nav_list_card?.data) {
@@ -53,14 +53,14 @@ if (url.includes("/homepage/v1/core")) {
   }
 }
 
-// 顶部横幅处理
+// ✅ 顶部横幅处理
 if (url.includes("/ota/na/yuantu/infoList")) {
   if (obj.data?.disorder_cards?.top_banner_card?.data?.[0]?.T === "yuentu_top_banner") {
     obj.data.disorder_cards.top_banner_card.data.shift();
   }
 }
 
-// 乘客中心处理
+// ✅ 乘客中心处理
 if (url.includes("/gulfstream/passenger-center/v2/other/pInTripLayout")) {
   const namesToRemove = ["passenger_common_casper"];
   if (obj.data?.order_components) {
@@ -70,7 +70,7 @@ if (url.includes("/gulfstream/passenger-center/v2/other/pInTripLayout")) {
   }
 }
 
-// 用户中心处理
+// ✅ 用户中心处理
 if (url.includes("/usercenter/me")) {
   const excludedTitles = ['天天领福利', '金融服务', '更多服务', '企业服务', '安全中心'];
   if (obj.data?.cards) {
@@ -88,6 +88,16 @@ if (url.includes("/usercenter/me")) {
         }
       }
     });
+  }
+}
+
+// ✅ 用户中心 layout 组件处理
+if (url.includes("/v5/usercenter/layout")) {
+  if (obj?.data?.instances) {
+    delete obj.data.instances.center_widget_list;
+    delete obj.data.instances.center_wallet_finance_card;
+    delete obj.data.instances.center_tool_card;
+    delete obj.data.instances.center_marketing_card;
   }
 }
 
