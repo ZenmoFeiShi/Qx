@@ -95,9 +95,9 @@ if (url.includes("/usercenter/me")) {
 if (url.includes("/v5/usercenter/layout")) {
   if (obj?.data?.instances) {
     delete obj.data.instances.center_widget_list;
-    delete obj.data.instances.center_wallet_finance_card;
+    // delete obj.data.instances.center_wallet_finance_card;
     delete obj.data.instances.center_tool_card;
-  // delete obj.data.instances.center_marketing_card;
+    delete obj.data.instances.center_marketing_card;
   }
 }
 
