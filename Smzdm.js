@@ -1,4 +1,4 @@
-// 2024-09-08 20:59
+// 2025-06-04 00:34
 const url = $request.url;
 
 if (!$response.body) {
@@ -115,6 +115,25 @@ if (url.includes("/v1/app/home") && obj.data) {
   if (obj.data) {
     obj.data = obj.data.filter((item) => item.id === "40" || item.id === "20");
     fixPos(obj.data);
+  }
+}
+
+if (url.includes("/sou/list_v10")) {
+  if (obj?.data?.rows && Array.isArray(obj.data.rows)) {
+    let originalLength = obj.data.rows.length;
+    obj.data.rows = obj.data.rows.filter(item => {
+      const isAd = 
+        item.model_type === 'ads' ||
+        item.article_tag === '广告' ||
+        item.tag === '广告' ||
+        item.left_tag === '广告' ||
+        item.expose_sct === '广告' ||
+        item.promotion_type === 3;
+      return !isAd;
+    });
+    
+    let deletedCount = originalLength - obj.data.rows.length;
+    console.log(`搜索页推荐广告删除完毕，共删除 ${deletedCount} 条广告`);
   }
 }
 
