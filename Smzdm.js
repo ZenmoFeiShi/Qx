@@ -35,6 +35,8 @@ const fixPos = (arr) => {
 
 if (url.includes("/vip") && obj.data.big_banner) {
   delete obj.data.big_banner;
+  delete obj.data.top_banner;
+  delete obj.data.yaoqingshaiwu;
 }
 
 if (url.includes("/publish/get_bubble") && obj.data) {
