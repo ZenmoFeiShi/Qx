@@ -133,7 +133,6 @@ if (url.includes("/sou/list_v10")) {
     });
     
     let deletedCount = originalLength - obj.data.rows.length;
-    console.log(`搜索页推荐广告删除完毕，共删除 ${deletedCount} 条广告`);
   }
 }
 
