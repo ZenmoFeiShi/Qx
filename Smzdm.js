@@ -120,6 +120,12 @@ if (url.includes("/v1/app/home") && obj.data) {
   }
 }
 
+if (url.includes("/detail_modul/user_related_modul")) {
+    if (obj?.data?.super_coupon) {
+      delete obj.data.super_coupon;
+    }
+  }
+  
 if (url.includes("/sou/list_v10")) {
   if (obj?.data?.rows && Array.isArray(obj.data.rows)) {
     let originalLength = obj.data.rows.length;
