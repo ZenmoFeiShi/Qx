@@ -1,7 +1,7 @@
 //2025/07/26  22:55
 /*
 @Name：老百姓大药房小程序
-@Author：怎么肥事号
+@Author：怎么肥事
 [rewrite_local]
 ^https:\/\/mall\.lbxcn\.com\/mall\/scc-point-member\/crm-api\/bonus\/sign-in url script-request-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/LKXDYF.js
 
