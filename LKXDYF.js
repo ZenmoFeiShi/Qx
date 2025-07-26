@@ -3,10 +3,10 @@
 @Name：老百姓大药房小程序
 @Author：怎么肥事号
 [rewrite_local]
-^https:\/\/mall\.lbxcn\.com\/mall\/scc-point-member\/crm-api\/bonus\/sign-in url script-request-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/LBXDYF.js
+^https:\/\/mall\.lbxcn\.com\/mall\/scc-point-member\/crm-api\/bonus\/sign-in url script-request-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/LKXDYF.js
 
 [task_local]
-1 0 * * * https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/LBXDYF.js, tag=老百姓大药房签到, enabled=true
+1 0 * * * https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/LKXDYF.js, tag=老百姓大药房签到, enabled=true
 
 [MITM]
 hostname = mall.lbxcn.com
