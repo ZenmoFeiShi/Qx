@@ -3,7 +3,7 @@
 @Author：怎么肥事
 使用方法：打开重写进软件，退出登录再重新登录
 [rewrite_local]
-^https:\/\/motibang\.com:8001\/api\/1\/user\/info url script-response-body 1.js
+^https:\/\/motibang\.com:8001\/api\/1\/user\/info url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/MTB.js
 
 [MITM]
 hostname = motibang.com
