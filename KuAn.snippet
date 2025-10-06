@@ -2,7 +2,7 @@
 #!author = 怎么肥事、walala
 #!update = 2024-07-19 00:45
 
-^https:\/\/api\.coolapk\.com\/v6\/user\/profile url jsonjq-response-body '.data.level = 20'
+^https:\/\/api\.coolapk\.com\/v6\/user\/profile url jsonjq-response-body '.data.level = 20|.data.fans =99999'
 https:\/\/api\.coolapk\.com\/v6\/search\?.*type=hotSearch url reject-dict
 ^https:\/\/api\.coolapk\.com\/v6\/main\/init url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/KuAn.js
 ^https:\/\/api\.coolapk\.com\/v6\/main\/indexV8 url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/KuAn.js
