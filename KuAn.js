@@ -1,4 +1,4 @@
-// 2024.10.22 10:13
+// 2025.10.7
 
 const url = $request.url;
 const obj = JSON.parse($response.body);
@@ -26,7 +26,7 @@ if (url.includes("/v6/account/loadConfig?key=my_page_card_config")) {
         !(typeof item.title === 'string' && item.title.includes("红包"))
     );
 } else if (url.includes("/v6/main/init")) {
-    obj.data = obj.data.filter(item => ![944, 945].includes(item.entityId) && item.title !== "关注");
+    obj.data = obj.data.filter(item => ![944, 945,24455,36839].includes(item.entityId) && item.title !== "关注");
     obj.data.forEach(item => {
         if (item.entities) {
             item.entities = item.entities.filter(entity => {
