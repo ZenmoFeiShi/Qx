@@ -26,11 +26,11 @@ if (url.includes("/v6/account/loadConfig?key=my_page_card_config")) {
         !(typeof item.title === 'string' && item.title.includes("红包"))
     );
 } else if (url.includes("/v6/main/init")) {
-    obj.data = obj.data.filter(item => ![944, 945,24455,36839].includes(item.entityId) && item.title !== "关注");
+    obj.data = obj.data.filter(item => ![944, 945,24455,36839,1635].includes(item.entityId) && item.title !== "关注");
     obj.data.forEach(item => {
         if (item.entities) {
             item.entities = item.entities.filter(entity => {
-                return ![2261, 1633, 413, 417, 1754, 1966, 2274, 1170, 1175, 1190, 2258].includes(entity.entityId) && entity.title !== "关注";
+                return ![1635,2261, 1633, 413, 417, 1754, 1966, 2274, 1170, 1175, 1190, 2258].includes(entity.entityId) && entity.title !== "关注";
             });
         }
     });
