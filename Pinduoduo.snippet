@@ -4,6 +4,12 @@
 #!版本号：7.79.0
 
 //pdd
+ip-cidr, 114.110.98.3/32, reject
+ip-cidr, 114.110.98.2/32, reject
+ip-cidr, 36.152.46.3/32, reject
+ip-cidr, 114.110.96.6/32, reject
+ip-cidr, 36.152.46.13/32, reject
+ip-cidr, 121.5.84.85/32, reject
 host, sdk.1rtb.net, reject
 host, titan.pinduoduo.com, reject
 ip-cidr, 183.194.214.21/32, reject
@@ -43,7 +49,10 @@ ip-cidr, 101.35.212.35/32, reject
 ^https:\/\/api\.pinduoduo\.com\/api\/caterham\/v3\/query\/my_order_group url reject-dict
 ^https:\/\/api\.pinduoduo\.com\/api\/caterham\/v3\/query\/likes url reject-dict
 
-
+^https:\/\/api\.pinduoduo\.com\/api\/phantom\/gbdbpdv\/extra url reject-dict
+^https:\/\/api\.pinduoduo\.com\/api\/manufacturer\/cross\/shortcut\/list url reject-dict
+^https:\/\/api\.pinduoduo\.com\/api\/dunkirk\/liveactivity\/push\/create\/url\/report url reject-dict
+^https:\/\/api\.pinduoduo\.com\/api\/growth\/nagato\/app\/index\/gather url reject-dict
 
 
 
