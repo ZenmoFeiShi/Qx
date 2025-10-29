@@ -24,6 +24,10 @@ ip-cidr, 81.69.130.131/32, reject
 ip-cidr, 114.110.96.26/32, reject
 ip-cidr, 101.35.212.35/32, reject
 
+^https:\/\/api\.pinduoduo\.com\/api\/alexa\/homepage\/hub url jsonjq-response-body 'del(.result.icon_set, .result.search_bar_hot_query, .result.dy_module) | if .result.bottom_tabs then .result.bottom_tabs |= map(select(.title != "多多视频" and .title != "大促会场" and .title != "搜索" and .title != "直播")) else . end'
+^https:\/\/api\.pinduoduo\.com\/search url jsonjq-response-body 'del(.expansion)'
+^https:\/\/api\.pinduoduo\.com\/api\/philo\/personal\/hub url jsonjq-response-body 'del(.monthly_card_entrance, .personal_center_style_v2_vo, .icon_set.icons, .icon_set.top_personal_icons)'
+^https:\/\/api\.pinduoduo\.com\/api\/oak\/integration\/render url jsonjq-response-body 'del(.bottom_section_list, .ui.bottom_section, .ui.live_section.float_info)'
 ^https:\/\/api\.pinduoduo\.com\/api\/caterham\/v3\/query\/order_detail_group url jsonjq-response-body 'del(.data.goods_list)'
 ^https:\/\/api\.pinduoduo\.com\/api\/aristotle\/unrated_order_for_unreceived_tab url reject-dict
 ^https:\/\/api\.pinduoduo\.com\/api\/aristotle\/query_order_list_tabs_element url reject-dict
@@ -38,10 +42,6 @@ ip-cidr, 101.35.212.35/32, reject
 ^https:\/\/api\.pinduoduo\.com\/api\/engels\/reviews\/require\/append url reject-dict
 ^https:\/\/api\.pinduoduo\.com\/api\/caterham\/v3\/query\/my_order_group url reject-dict
 ^https:\/\/api\.pinduoduo\.com\/api\/caterham\/v3\/query\/likes url reject-dict
-^https:\/\/api\.pinduoduo\.com\/search url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/Pinduoduo.js
-^https:\/\/api\.pinduoduo\.com\/api\/philo\/personal\/hub url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/Pinduoduo.js
-^https:\/\/api\.pinduoduo\.com\/api\/alexa\/homepage\/hub url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/Pinduoduo.js
-^https:\/\/api\.pinduoduo\.com\/api\/oak\/integration\/render url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/Pinduoduo.js
 
 
 
