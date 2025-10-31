@@ -1,6 +1,6 @@
 #!name = 拼多多净化页面布局
 #!author = 怎么肥事 walala
-#!update = 2025-10-22
+#!update = 2025-11-01
 #!版本号：7.79.0
 
 //pdd
@@ -44,7 +44,7 @@ host, ta-a.pinduoduo.com, reject
 host, meta.pinduoduo.com, reject
 host, apm-a.pinduoduo.com, reject
 host, m.pinduoduo.net, reject
-
+^https:\/\/api\.pinduoduo\.com\/api\/engels\/wait\/receive\/review url reject-dict
 ^https:\/\/api\.pinduoduo\.com\/api\/alexa\/homepage\/hub url jsonjq-response-body 'del(.result.icon_set, .result.search_bar_hot_query, .result.dy_module.irregular_banner_dy,.result.dy_module.recommend_fresh_info) | if .result.bottom_tabs then .result.bottom_tabs |= map(select(.link == "index.html" or .link == "chat_list.html" or .link == "personal.html")) else . end'
 ^https:\/\/api\.pinduoduo\.com\/search url jsonjq-response-body 'del(.expansion)'
 ^https:\/\/api\.pinduoduo\.com\/api\/philo\/personal\/hub url jsonjq-response-body 'del(.monthly_card_entrance, .personal_center_style_v2_vo, .icon_set.icons, .icon_set.top_personal_icons)'
