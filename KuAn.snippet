@@ -1,13 +1,17 @@
 #!name = 酷安全面净化
 #!author = 怎么肥事、walala
-#!update = 2024-07-19 00:45
+#!update = 2025-11-01
 
-^https:\/\/api\.coolapk\.com\/v6\/user\/profile url jsonjq-response-body '.data.level = 20|.data.fans =99999|.data.experience =94575543|.data.next_level_experience =200000000'
+^https:\/\/api\.coolapk\.com\/v6\/user\/profile url jsonjq-response-body '.data.level = 20 | .data.fans = 99999 | .data.experience = 94575543 | .data.next_level_experience = 200000000'
+
 https:\/\/api\.coolapk\.com\/v6\/search\?.*type=hotSearch url reject-dict
-^https:\/\/api\.coolapk\.com\/v6\/main\/init url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/KuAn.js
-^https:\/\/api\.coolapk\.com\/v6\/main\/indexV8 url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/KuAn.js
-^https:\/\/api\.coolapk\.com\/v6\/page\/dataList url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/KuAn.js
-^https:\/\/api\.coolapk\.com\/v6\/account\/loadConfig\?key=my_page_card_config url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/KuAn.js
+
+^https:\/\/api\.coolapk\.com\/v6\/main\/init url jsonjq-response-body 'del(.data[]? | select(.entityId == 944 or .entityId == 945 or .entityId == 24455 or .entityId == 36839 or .entityId == 1635 or .title == "关注")) | .data |= map(if .entities then .entities |= map(select(.entityId != 1635 and .entityId != 2261 and .entityId != 1633 and .entityId != 413 and .entityId != 417 and .entityId != 1754 and .entityId != 1966 and .entityId != 2274 and .entityId != 1170 and .entityId != 1175 and .entityId != 1190 and .entityId != 2258 and .title != "关注")) else . end)'
+
+^https:\/\/api\.coolapk\.com\/v6\/main\/indexV8 url jsonjq-response-body '.data |= map(select((.entityId != 32557 and .entityId != 29349 and .entityId != 28621) and (.title | test("值得买|红包") | not)))'
+^https:\/\/api\.coolapk\.com\/v6\/page\/dataList url jsonjq-response-body '.data |= map(select(.title != "话题热议" and (.entityId != 36104 and .entityId != 24309 and .entityId != 12889 and .entityId != 21063 and .entityId != 35730 and .entityId != 35846 and .entityId != 28374 and .entityId != 28375 and .entityId != 27332 and .entityId != 20090 and .entityId != 28773 and .entityId != 29343 and .entityId != 21106)) | if .entities then (.entities |= map(select(.title != "睡个好觉需要什么？"))) else . end)'
+
+^https:\/\/api\.coolapk\.com\/v6\/account\/loadConfig\?key=my_page_card_config url jsonjq-response-body '.data |= map(select(.entityType != "textLink" and (.entityId != 1001 and .entityId != 1003 and .entityId != 1004 and .entityId != 1005)) | if .entities then .entities |= map(select(.entityType != "textLink")) else . end)'
 
 
 
