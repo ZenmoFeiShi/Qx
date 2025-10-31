@@ -4,31 +4,36 @@
 #!版本号：7.79.0
 
 //pdd
-ip-cidr, 114.110.98.3/32, reject
-ip-cidr, 114.110.98.2/32, reject
-ip-cidr, 36.152.46.3/32, reject
-ip-cidr, 114.110.96.6/32, reject
-ip-cidr, 36.152.46.13/32, reject
-ip-cidr, 121.5.84.85/32, reject
-host, sdk.1rtb.net, reject
+host, cdl-1.pddpic.com, reject
 host, titan.pinduoduo.com, reject
-ip-cidr, 183.194.214.21/32, reject
-ip-cidr, 49.235.102.190/32, reject
-ip-cidr, 81.69.116.33/32, reject
-ip-cidr, 183.194.214.20/32, reject
-ip-cidr, 117.185.244.145/32, reject
-ip-cidr, 101.35.204.35/32, reject
-ip-cidr, 114.110.97.97/32, reject
-ip-cidr, 81.69.104.17/32, reject
+host, cdl-p2.pddpic.com, reject
+host, cd-1.pddpic.com, reject
+host, apm.pinduoduo.com, reject
+host, th-b.pinduoduo.com, reject
+host, file.pinduoduo.com, reject
+host, ta.pinduoduo.com, reject
+host, th.pinduoduo.com, reject
+host, th-a.pinduoduo.com, reject
+host, ta-a.pinduoduo.com, reject
+host, meta.pinduoduo.com, reject
+host, apm-a.pinduoduo.com, reject
 ip-cidr, 117.185.242.187/32, reject
 ip-cidr, 117.185.242.18/32, reject
-ip-cidr, 183.194.214.14/32, reject
+ip-cidr, 49.235.102.190/32, reject
 ip-cidr, 114.110.96.1/32, reject
+ip-cidr, 81.69.104.17/32, reject
+ip-cidr, 81.69.116.33/32, reject
+ip-cidr, 114.110.98.2/32, reject
+ip-cidr, 183.194.214.21/32, reject
+ip-cidr, 114.110.97.97/32, reject
+ip-cidr, 114.110.98.3/32, reject
+ip-cidr, 183.194.214.14/32, reject
+ip-cidr, 36.152.46.3/32, reject
+ip-cidr, 183.194.214.20/32, reject
 ip-cidr, 36.152.46.15/32, reject
-ip-cidr, 114.110.97.30/32, reject
-ip-cidr, 81.69.130.131/32, reject
-ip-cidr, 114.110.96.26/32, reject
-ip-cidr, 101.35.212.35/32, reject
+ip-cidr, 36.152.46.13/32, reject
+ip-cidr, 117.185.244.145/32, reject
+host, m.pinduoduo.net, reject
 
 ^https:\/\/api\.pinduoduo\.com\/api\/alexa\/homepage\/hub url jsonjq-response-body 'del(.result.icon_set, .result.search_bar_hot_query, .result.dy_module.irregular_banner_dy,.result.dy_module.recommend_fresh_info) | if .result.bottom_tabs then .result.bottom_tabs |= map(select(.link == "index.html" or .link == "chat_list.html" or .link == "personal.html")) else . end'
 ^https:\/\/api\.pinduoduo\.com\/search url jsonjq-response-body 'del(.expansion)'
