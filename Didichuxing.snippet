@@ -35,7 +35,6 @@ ip-cidr, 116.85.3.25/32, reject
 ^https:\/\/conf\.diditaxi\.com\.cn\/homepage\/v\d\/core url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/Didichuxing.js
 ^https:\/\/api\.udache\.com\/gulfstream\/pre-sale\/v1\/other\/pGetSceneList url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/Didichuxing.js
 ^https:\/\/conf\.diditaxi\.com\.cn\/ota\/na\/yuantu\/infoList url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/Didichuxing.js
-^https:\/\/api\.udache\.com\/gulfstream\/passenger-center\/v2\/other\/pInTripLayout url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/Didichuxing.js
 ^https:\/\/conf\.diditaxi\.com\.cn\/homepage\/v1\/oversea\/layout url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/Didichuxing.js
 ^https:\/\/conf\.diditaxi\.com\.cn\/homepage\/v1\/other\/slow url reject-dict
 ^https:\/\/mapi\.xiaojukeji\.com\/passenger-wallet\/api\/v6\/wallet\/homepage url jsonjq-response-body 'del(.data.cardList[0].detailData.myCreditLimit, .data.cardList[0].detailData.discountList[3], .data.cardList[0].detailData.discountList[4], .data.cardList[1], .data.cardList[2], .data.cardList[3], .data.cardList[4], .data.cardList[5], .data.cardList[6], .data.cardList[7], .data.cardList[8], .data.cardList[9])'
