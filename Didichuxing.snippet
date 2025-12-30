@@ -41,7 +41,7 @@ ip-cidr, 116.85.3.25/32, reject
 ^https:\/\/mapi\.xiaojukeji\.com\/passenger-wallet\/api\/v6\/wallet\/homepage url jsonjq-response-body 'del(.data.cardList[0].detailData.myCreditLimit, .data.cardList[0].detailData.discountList[3], .data.cardList[0].detailData.discountList[4], .data.cardList[1], .data.cardList[2], .data.cardList[3], .data.cardList[4], .data.cardList[5], .data.cardList[6], .data.cardList[7], .data.cardList[8], .data.cardList[9])'
 ^https:\/\/goblin\.hupu\.com\/d\/d\.d\.d+\/interfaceAd\/getOther\/v3 url jsonjq-response-body '.ad_code = 0'
 ^https:\/\/api\.udache\.com\/gulfstream\/porsche\/v1\/dache_homepage_layout url jsonjq-response-body del(.data.instances["xp-card-01"])
-^https:\/\/api\.udache\.com\/gulfstream\/passenger-center\/v2\/other\/pInTripLayout url jsonjq-response-body del(.data.order_components[8].data)
+^https:\/\/api\.udache\.com\/gulfstream\/passenger-center\/v2\/other\/pInTripLayout url jsonjq-response-body del(.data.order_components[8].data) | .data.order_components |= map(select(.name != "passenger_common_casper"))
 
 
 
