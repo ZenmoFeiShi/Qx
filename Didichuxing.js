@@ -59,7 +59,7 @@ if (url.includes("/ota/na/yuantu/infoList")) {
     obj.data.disorder_cards.top_banner_card.data.shift();
   }
 }
-
+/*
 // ✅ 乘客中心处理
 if (url.includes("/gulfstream/passenger-center/v2/other/pInTripLayout")) {
   const namesToRemove = ["passenger_common_casper"];
@@ -69,6 +69,7 @@ if (url.includes("/gulfstream/passenger-center/v2/other/pInTripLayout")) {
     );
   }
 }
+*/
 
 // ✅ 用户中心处理
 if (url.includes("/usercenter/me")) {
