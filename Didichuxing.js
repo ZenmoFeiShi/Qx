@@ -59,17 +59,6 @@ if (url.includes("/ota/na/yuantu/infoList")) {
     obj.data.disorder_cards.top_banner_card.data.shift();
   }
 }
-/*
-// ✅ 乘客中心处理
-if (url.includes("/gulfstream/passenger-center/v2/other/pInTripLayout")) {
-  const namesToRemove = ["passenger_common_casper"];
-  if (obj.data?.order_components) {
-    obj.data.order_components = obj.data.order_components.filter(
-      component => !namesToRemove.includes(component.name)
-    );
-  }
-}
-*/
 
 // ✅ 用户中心处理
 if (url.includes("/usercenter/me")) {
@@ -89,16 +78,6 @@ if (url.includes("/usercenter/me")) {
         }
       }
     });
-  }
-}
-
-// ✅ 用户中心 layout 组件处理
-if (url.includes("/v5/usercenter/layout")) {
-  if (obj?.data?.instances) {
-    delete obj.data.instances.center_widget_list;
-    // delete obj.data.instances.center_wallet_finance_card;
-    delete obj.data.instances.center_tool_card;
-    delete obj.data.instances.center_marketing_card;
   }
 }
 
