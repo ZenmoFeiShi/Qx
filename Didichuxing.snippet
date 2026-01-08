@@ -1,7 +1,7 @@
 
 #!name = 滴滴出行
 #!author = 怎么肥事
-#!update = 2025-12-30
+#!update = 2026-1-9
 
 //滴滴
 ip-cidr, 139.199.244.6/32, reject
@@ -32,7 +32,6 @@ ip-cidr, 116.85.3.25/32, reject
 ^https:\/\/conf\.diditaxi\.com\.cn\/dynamic\/conf url reject-dict
 ^https:\/\/api\.udache\.com\/gulfstream\/watson\/v1\/bubble\/getBubble url reject-dict
 ^https:\/\/res\.xiaojukeji\.com\/resapi\/activity\/getInsActivityV2 url reject-dict
-^https:\/\/common\.diditaxi\.com\.cn\/common\/v5\/usercenter\/layout url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/Didichuxing.js
 ^https:\/\/common\.diditaxi\.com\.cn\/common\/v\d\/usercenter\/me url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/Didichuxing.js
 ^https:\/\/conf\.diditaxi\.com\.cn\/homepage\/v\d\/core url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/Didichuxing.js
 ^https:\/\/api\.udache\.com\/gulfstream\/pre-sale\/v1\/other\/pGetSceneList url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/Didichuxing.js
@@ -43,7 +42,7 @@ ip-cidr, 116.85.3.25/32, reject
 ^https:\/\/goblin\.hupu\.com\/d\/d\.d\.d+\/interfaceAd\/getOther\/v3 url jsonjq-response-body '.ad_code = 0'
 ^https:\/\/api\.udache\.com\/gulfstream\/porsche\/v1\/dache_homepage_layout url jsonjq-response-body del(.data.instances["xp-card-01"])
 ^https:\/\/api\.udache\.com\/gulfstream\/passenger-center\/v2\/other\/pInTripLayout url jsonjq-response-body del(.data.order_components[8].data) | .data.order_components |= map(select(.name != "passenger_common_casper"))
-
+^https:\/\/common\.diditaxi\.com\.cn\/common\/v5\/usercenter\/layout url jsonjq-response-body if (.data.instances? | type) == "object" then   .data.instances |= del(     .center_widget_list,     .center_tool_card,     .center_marketing_card   ) else   . end | if (.data.instances?.center_wallet_finance_card?.data?.view_info | type) == "array" then   del(     .data.instances.center_wallet_finance_card.data.view_info[3],     .data.instances.center_wallet_finance_card.data.view_info[2],     .data.instances.center_wallet_finance_card.data.view_info[1]   ) elif (.data.instances?.center_wallet_finance_card?.data?.view_info | type) == "object" then   del(     .data.instances.center_wallet_finance_card.data.view_info["3"],     .data.instances.center_wallet_finance_card.data.view_info["2"],     .data.instances.center_wallet_finance_card.data.view_info["1"]   ) else   . end
 
 
 hostname = 113.46.225.*,common.diditaxi.com.cn, freight.xiaojukeji.com, daijia.kuaidadi.com, 162.14.157.*, ct.xiaojukeji.com, res.xiaojukeji.com, conf.diditaxi.com.cn ,api.udache.com ,123.207.209.*, 112.53.55.225,120.241.142.*,120.241.143.*, 116.85.*, 139.199.240.84 
