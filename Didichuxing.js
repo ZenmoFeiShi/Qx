@@ -38,7 +38,7 @@ if (url.includes("/other/pGetSceneList")) {
 
 // ✅ 首页导航处理
 if (url.includes("/homepage/v1/core")) {
-  const keepNavIds = ['dache_anycar', 'driverservice', 'bike', 'carmate'];
+  const keepNavIds = ['dache_anycar', 'driverservice', 'bike', 'carmate','nav_more_v3'];
   if (obj.data?.order_cards?.nav_list_card?.data) {
     obj.data.order_cards.nav_list_card.data = obj.data.order_cards.nav_list_card.data.filter(
       item => keepNavIds.includes(item.nav_id)
