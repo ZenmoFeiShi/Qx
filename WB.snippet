@@ -1,6 +1,12 @@
 #!name = 微博净化Qx版
 #!author = 怎么肥事
-#!update = 2026-1-17
+#!update = 2026-1-18
+#开屏广告参考neishe321
+host, bootpreload.uve.weibo.com, reject
+host,wbapp.uve.weibo.com,reject
+host,sdkapp.uve.weibo.com,reject
+host,bootrealtime.uve.weibo.com,reject
+host-suffix,biz.weibo.com,reject
 
 ^https:\/\/api\.weibo\.cn\/2\/!\/was\/finder\/searchbarchange url reject-dict
 ^https:\/\/api\.weibo\.cn\/2\/search\/container_discover\? url reject-dict
