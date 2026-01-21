@@ -1,6 +1,6 @@
 #!name = 微博净化Qx版
 #!author = 怎么肥事
-#!update = 2026-1-20
+#!update = 2026-1-21
 #开屏广告参考neishe321
 host, bootpreload.uve.weibo.com, reject
 host,wbapp.uve.weibo.com,reject
@@ -36,4 +36,6 @@ host-suffix,biz.weibo.com,reject
 ^https:\/\/api\.weibo\.cn\/2\/profile\/me url jsonjq-response-body def drop_recommend: if (.items | type) == "array" then .items |= map(select((.title?.content? != "为你推荐") and (.itemId? != "mine_attent_title") and (.type? != "mineAttent"))) elif (.items | type) == "object" then .items |= (to_entries | map(select((.value.title?.content? != "为你推荐") and (.value.itemId? != "mine_attent_title") and (.value.type? != "mineAttent"))) | from_entries) else . end; if (.items | type) == "array" then del(.items[0].header.vipView, .items[2].items, .items[3], .items[4], .items[7], .items[6], .items[1].items[4], .items[1].items[5], .items[1].items[6], .items[1].items[7]) | del(.items[3].footer.data) | drop_recommend elif (.items | type) == "object" then del(.items["0"].header.vipView, .items["2"].items, .items["3"], .items["4"], .items["7"], .items["6"], .items["1"].items["4"], .items["1"].items["5"], .items["1"].items["6"], .items["1"].items["7"]) | del(.items["3"].footer.data) | drop_recommend else . end
 
 ^https:\/\/api\.weibo\.cn\/2\/profile\/container_timeline url jsonjq-response-body def str: (. // "") | tostring;  def auth_title:   (     .content_auth_info?.content_auth_title? //     .content_auth_info_dark?.content_auth_title? //     .content_auth_title? //     .data?.content_auth_info?.content_auth_title? //     .data?.content_auth_info_dark?.content_auth_title? //     .data?.content_auth_title?   ) | str;  def is_bad:   (type=="object") and   (     (auth_title=="荐读") or     (auth_title=="广告") or     ((.mblogtypename? | str)=="广告") or     ((.data?.mblogtypename? | str)=="广告") or     ((.data?.dynamic_info?.type? | str)=="ad") or     (.extend_info?.ad? != null) or     (.promotion? != null)   );  def rm:   if type=="array" then     [ .[] | rm | select((.|is_bad)|not) ]   elif type=="object" then     with_entries(.value |= rm)   else     .   end;  rm
+^https:\/\/api\.weibo\.cn\/2\/push\/active url jsonjq-response-body def rdel($k):   if type == "object" then     (to_entries | map(select(.key != $k) | .value |= rdel($k)) | from_entries)   elif type == "array" then     map(rdel($k))   else     .   end;  rdel("ug_red_paper")
+^https:\/\/api\.weibo\.cn\/2\/client\/version url reject-dict
 hostname = api.weibo.cn
