@@ -26,7 +26,17 @@ const Env = (() => {
   }
 
   function notify(title, subTitle, message) {
-    if (typeof $notify !== 'undefined') $notify(title, subTitle, String(message || ''));
+    const t = String(title || '');
+    const s = String(subTitle || '');
+    const m = String(message || '');
+    if (typeof $notify !== 'undefined') {
+      $notify(t, s, m);
+      return;
+    }
+    if (typeof $notification !== 'undefined' && $notification && typeof $notification.post === 'function') {
+      $notification.post(t, s, m);
+      return;
+    }
   }
 
   function done(value) {
