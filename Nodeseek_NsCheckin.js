@@ -1,4 +1,4 @@
-//2026.1.17
+//2026.4.8
 
 /*
 @Name：NS论坛签到
@@ -70,7 +70,7 @@ if (isGetHeader) {
   const raw = $prefs.valueForKey(NS_HEADER_KEY);
   if (!raw) {
     $notify("NS签到结果", "无法签到", "本地没有已保存的请求头，请先抓包访问一次 个人页面。");
-    return $done();
+    $done();
   }
 
   let savedHeaders = {};
@@ -79,7 +79,7 @@ if (isGetHeader) {
   } catch (e) {
     console.log("[NS] parse saved headers failed:", e);
     $notify("NS签到结果", "无法签到", "本地保存的请求头数据损坏，请重新访问一次个人页面。");
-    return $done();
+    $done();
   }
 
   const url = `https://www.nodeseek.com/api/attendance?random=true`;
