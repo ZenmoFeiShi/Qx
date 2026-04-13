@@ -1,6 +1,6 @@
 #!author=@ZenmoFeiShi
 #!name=YouTube 强制简体中文字幕
-^https://www\.youtube\.com/api/timedtext\?.*_ytzhsub=1 url script-request-header yt-sub-clean.js
-^https://www\.youtube\.com/api/timedtext\? url script-response-body yt-zh-sub.js
+^https://www\.youtube\.com/api/timedtext\?.*_ytzhsub=1 url script-request-header https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/yt-sub-clean.js
+^https://www\.youtube\.com/api/timedtext\? url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/yt-zh-sub.js
 
 hostname = www.youtube.com
