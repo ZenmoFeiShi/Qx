@@ -1,18 +1,44 @@
 #!name = 什么值得买净化
 #!author = 怎么肥事
-#!update = 2024-02-11 01:02
-^https:\/\/haojia\.m\.smzdm\.com\/detail_modul\/other_modul\? url reject-dict
-^https:\/\/app-api\.smzdm\.com\/util\/loading url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/Smzdm.js
-^https:\/\/haojia-api\.smzdm\.com\/home\/list url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/Smzdm.js
-^https:\/\/app-api\.smzdm\.com\/util\/update url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/Smzdm.js
-^https:\/\/homepage-api\.smzdm\.com\/v3\/home url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/Smzdm.js
-^https:\/\/s-api\.smzdm\.com\/sou\/list_v10 url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/Smzdm.js
-^https:\/\/user-api\.smzdm\.com\/vip url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/Smzdm.js
-^https:\/\/user-api\.smzdm\.com\/vip\/bottom_card_list url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/Smzdm.js
-^https:\/\/article-api\.smzdm\.com\/publish\/get_bubble url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/Smzdm.js
-^https:\/\/qianbao\.smzdm\.com\/v\d\/app\/home url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/Smzdm.js
-^https:\/\/s3\.zdmimg\.com\/third\/index url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/Smzdm.js
-^https:\/\/haojia\.m\.smzdm\.com\/detail_modul\/user_related_modul url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/Smzdm.js
-^https:\/\/post\.m\.smzdm\.com\/ajax_app\/ajax_get_footer_list url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/Smzdm.js
-^https:\/\/haojia\.m\.smzdm\.com\/detail_modul\/(other_modul|wiki_related_modul)|^https:\/\/s3\.zdmimg\.com\/third\/index|^https:\/\/app-api\.smzdm\.com\/util\/loading url reject-dict
-hostname = haojia-api.smzdm.com, s-api.smzdm.com,homepage-api.smzdm.com, app-api.smzdm.com, user-api.smzdm.com, article-api.smzdm.com ,qianbao.smzdm.com,s3.zdmimg.com,post.m.smzdm.com,haojia.m.smzdm.com
+#!update = 2026-4-14
+
+// 广告拦截
+^https:\/\/haojia\.m\.smzdm\.com\/detail_modul\/(other_modul|wiki_related_modul) url reject-dict
+^https:\/\/s3\.zdmimg\.com\/third\/index url reject-dict
+^https:\/\/app-api\.smzdm\.com\/util\/loading url reject-dict
+
+// 开屏 loading - 清空数据 (已 reject-dict，此条备用)
+// ^https:\/\/app-api\.smzdm\.com\/util\/loading url jsonjq-response-body '.data = null'
+
+// 好价列表 - 移除横幅广告 + 过滤广告行 + 移除挂件
+^https:\/\/haojia-api\.smzdm\.com\/home\/list url jsonjq-response-body 'del(.data.banner_v2, .data.widget) | if .data.rows then .data.rows |= map(select(has("ad_banner_id") | not) | select(.ad != "ad_campaign_id_" and .ad != "ad_campaign_name" and .ad != "abs_position")) else . end'
+
+// 应用更新 - 移除广告黑名单/浮窗/好价挂件
+^https:\/\/app-api\.smzdm\.com\/util\/update url jsonjq-response-body 'del(.data.ad_black_list, .data.operation_float, .data.haojia_widget)'
+
+// 首页 - 递归移除广告cell + 精简功能入口 + 精简组件 + 移除浮窗
+^https:\/\/homepage-api\.smzdm\.com\/v3\/home url jsonjq-response-body 'def clean: if type == "array" then map(clean) | map(select(. != null)) elif type == "object" then if .cell_type == "23008" or .cell_type == "23005" or .cell_type == "23024" then null else with_entries(.value |= clean) end else . end; .data |= clean | .data.functions |= map(select(.type == "message")) | .data.component |= map(select(.zz_type == "circular_banner" or .zz_type == "fixed_banner" or .zz_type == "filter" or .zz_type == "list")) | del(.data.widget, .data.operation_float_screen)'
+
+// 搜索结果 - 过滤广告
+^https:\/\/s-api\.smzdm\.com\/sou\/list_v10 url jsonjq-response-body 'if .data.rows then .data.rows |= map(select(.model_type != "ads" and .article_tag != "广告" and .tag != "广告" and .left_tag != "广告" and .expose_sct != "广告" and .promotion_type != 3)) else . end'
+
+// VIP页 - 移除横幅和邀请晒物
+^https:\/\/user-api\.smzdm\.com\/vip url jsonjq-response-body 'del(.data.big_banner, .data.top_banner, .data.yaoqingshaiwu)'
+
+// VIP底部卡片 - 清空
+^https:\/\/user-api\.smzdm\.com\/vip\/bottom_card_list url jsonjq-response-body 'del(.data.rows)'
+
+// 发布气泡 - 清空数据
+^https:\/\/article-api\.smzdm\.com\/publish\/get_bubble url jsonjq-response-body '.data = null'
+
+// 钱包首页 - 只保留核心功能(余额/优惠券)
+^https:\/\/qianbao\.smzdm\.com\/v\d\/app\/home url jsonjq-response-body '.data |= map(select(.id == "40" or .id == "20"))'
+
+// 详情页用户相关 - 移除超级优惠券
+^https:\/\/haojia\.m\.smzdm\.com\/detail_modul\/user_related_modul url jsonjq-response-body 'del(.data.super_coupon)'
+
+// 文章底部列表 - 移除活动横幅图片
+^https:\/\/post\.m\.smzdm\.com\/ajax_app\/ajax_get_footer_list url jsonjq-response-body 'if .data.activity_banner.hot_widget then .data.activity_banner.hot_widget |= map(del(.pic_url)) else . end'
+
+
+hostname = haojia-api.smzdm.com, s-api.smzdm.com, homepage-api.smzdm.com, app-api.smzdm.com, user-api.smzdm.com, article-api.smzdm.com, qianbao.smzdm.com, s3.zdmimg.com, post.m.smzdm.com, haojia.m.smzdm.com
