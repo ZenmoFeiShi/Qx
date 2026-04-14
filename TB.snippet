@@ -1,18 +1,31 @@
 #!name = 贴吧净化
 #!author = 怎么肥事、app2smile、可莉
-#!update = 2025-03-23 09:52
+#!update = 2026-4-14
 
+// 分流
 host, afd.baidu.com, reject
 host, mobads.baidu.com, reject
 
+// 聊天订阅 & 搜索发现 & 吧引导
 ^https:\/\/tiebac\.baidu\.com\/c\/u\/chat\/getChatSubscriptionList url reject-dict
 ^https:\/\/tiebac\.baidu\.com\/c\/f\/search\/discover url reject-dict
 ^https:\/\/tiebac\.baidu\.com\/c\/f\/forum\/forumGuide url reject-dict
-^https:\/\/tiebac\.baidu\.com\/livefeed\/feed url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/TB.js
-^https:\/\/tiebac\.baidu\.com\/c\/f\/sidebar\/home url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/TB.js
-^https:\/\/tiebac\.baidu\.com\/c\/u\/user\/profile url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/TB.js 
-^https:\/\/tieba\.baidu\.com\/c\/f\/frs\/frsBottom url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/TB.js
+
+// 直播Feed - 移除横幅
+^https:\/\/tiebac\.baidu\.com\/livefeed\/feed url jsonjq-response-body 'del(.data.banner.items)'
+
+// 侧边栏 - 移除VIP横幅和工具
+^https:\/\/tiebac\.baidu\.com\/c\/f\/sidebar\/home url jsonjq-response-body 'del(.vip_banner, .tools)'
+
+// 用户资料 - 移除广告/推广/多余功能区
+^https:\/\/tiebac\.baidu\.com\/c\/u\/user\/profile url jsonjq-response-body 'del(.banner, .duxiaoman_entry, .recom_naws_list, .vip_banner, .namoaixud_entry, .user.user_growth, .zone_info[1].commerce, .zone_info[2].banner, .zone_info[0].common_func, .zone_info[3].game, .zone_info[4].auxiliary_func) | .custom_grid |= map(select(.type != 60 and .type != 53 and .type != 58 and .type != 50 and .type != 10 and .type != 64 and .type != 51 and .type != 52 and .type != 55 and .type != 57 and .type != 62))'
+
+// 吧底部 - 移除活动卡片和AI聊天引导
+^https:\/\/tieba\.baidu\.com\/c\/f\/frs\/frsBottom url jsonjq-response-body 'del(.card_activity.small_card, .card_activity.big_card, .ai_chatroom_guide)'
+
+// 贴吧去广告(app2smile JSON版)
 ^http(s:\/\/tiebac|:\/\/c\.tieba)\.baidu\.com\/(c\/f\/(frs\/(page|threadlist|generalTabList)|pb\/page|excellent\/personalized)$|tiebaads\/commonbatch|c\/s\/sync$) url script-response-body https://raw.githubusercontent.com/app2smile/rules/master/js/tieba-json.js
+// 贴吧去广告(app2smile Proto版)
 ^http(s:\/\/tiebac|:\/\/c\.tieba)\.baidu\.com\/c\/f\/(frs\/(page|threadlist|generalTabList)|pb\/page|excellent\/personalized)\?cmd url script-response-body https://raw.githubusercontent.com/app2smile/rules/master/js/tieba-proto.js
 
 
