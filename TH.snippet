@@ -1,16 +1,19 @@
 #!name = 途虎养车净化
 #!author = 怎么肥事
-#!update = 2024-07-05 15:15
+#!update = 2026-4-14
 
+// 营销弹窗 & 横幅 & 超级会员 & 推荐 & 搜索热词
 ^https:\/\/mkt-gateway\.tuhu\.cn\/mkt-scene-marketing-service\/api\/scene\/queryScheme url reject-dict
 ^https:\/\/mkt-gateway\.tuhu\.cn\/mkt-push-message-box\/banner\/cms\/getIndexBanner url reject-dict
 ^https:\/\/cl-gateway\.tuhu\.cn\/cl-common-api\/api\/personalCenter\/getAutoSuperConfig url reject-dict
 ^https:\/\/mkt-gateway\.tuhu\.cn\/mkt-cms\/circle\/recommend\/v3 url reject-dict
-^https:\/\/cl-gateway\.tuhu\.cn\/cl-shop-api\/shopTab\/getModuleForC url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/TH.js
 ^https:\/\/mkt-gateway\.tuhu\.cn\/mlp-product-search-api\/search\/helper\/defaultAndHotWord url reject-dict
-^https:\/\/cl-gateway\.tuhu\.cn\/cl-common-api\/api\/personalCenter\/getCmsModuleList url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/TH.js
 
+// 门店Tab - 移除横幅 + 过滤推广模块
+^https:\/\/cl-gateway\.tuhu\.cn\/cl-shop-api\/shopTab\/getModuleForC url jsonjq-response-body 'del(.data.bannersList) | .data.cmsList |= map(select(.bottomMargin != 12))'
 
+// 个人中心模块 - 移除多余入口
+^https:\/\/cl-gateway\.tuhu\.cn\/cl-common-api\/api\/personalCenter\/getCmsModuleList url jsonjq-response-body '.data.cmsList |= map(select(.moduleTypeId != 90 and .moduleTypeId != 17 and .moduleTypeId != 13 and .moduleTypeId != 35 and .moduleTypeId != 10 and .moduleTypeId != 7 and .mainTitle != "保养超值卡" and .mainTitle != "特价团购" and .mainTitle != "合作加盟" and .mainTitle != "抖音团购券兑换" and .mainTitle != "集团客户" and .mainTitle != "美团兑换" and .mainTitle != "评价途虎"))'
 
 
 hostname = mkt-gateway.tuhu.cn, cl-gateway.tuhu.cn
