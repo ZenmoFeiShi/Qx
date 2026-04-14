@@ -1,10 +1,12 @@
 #!name = 畅玩空间
 #!author = 怎么肥事
-#!update = 2024-04-26 23:08
+#!update = 2026-4-14
 
-^https:\/\/play\.wo1wan\.com\/nextgame\/igwuser\/(userinfo|useropeninfo) url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/Cwkj.js
+// 用户信息 - 修改等级/VIP
+^https:\/\/play\.wo1wan\.com\/nextgame\/igwuser\/userinfo url jsonjq-response-body '.info.LevelInfo.Level = 999 | .info.LevelInfo.VipLevel = 8 | .info.LevelInfo.Svip = 8 | .info.LevelInfo.VipExpires = "2099-01-01T00:00:00Z" | .info.LevelInfo.SVipExpires = "2099-01-01T00:00:00Z"'
 
-
+// 用户公开信息 - 修改等级/VIP
+^https:\/\/play\.wo1wan\.com\/nextgame\/igwuser\/useropeninfo url jsonjq-response-body '.data.LevelInfo.Level = 999 | .data.LevelInfo.VipLevel = 8 | .data.LevelInfo.Svip = 8 | .data.LevelInfo.VipExpires = "2099-01-01T00:00:00Z" | .data.LevelInfo.SVipExpires = "2099-01-01T00:00:00Z"'
 
 
 hostname = play.wo1wan.com
