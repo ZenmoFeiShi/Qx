@@ -1,23 +1,50 @@
 #!name = Soul净化
 #!author = 怎么肥事  感谢@可莉对去除开屏广告提供的帮助
-#!update = 2024-08-15 19:00
+#!update = 2026-4-14
 
-^https:\/\/api-a\.soulapp\.cn\/v2\/post\/gift\/list url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/Soul.js
-^https:\/\/post\.soulapp\.cn\/hot\/soul\/rank url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/Soul.js
-^https:\/\/gateway-mobile-gray\.soulapp\.cn\/mobile\/app\/version\/queryIos url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/Soul.js
-^https:\/\/api-chat\.soulapp\.cn\/chat\/limitInfo url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/Soul.js
-^https:\/\/post\.soulapp\.cn\/v\d\/post\/homepage\/guide\/card url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/Soul.js
-^https:\/\/api-user\.soulapp\.cn\/furion\/position\/content url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/Soul.js
-^https:\/\/api-account\.soulapp\.cn\/teenager\/config url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/Soul.js
+// 广告 & 聊天菜单
 ^https:\/\/ssp\.soulapp\.cn\/api\/q url reject-dict
 ^https:\/\/api-chat\.soulapp\.cn\/chat\/quick\/menu\/v2 url reject-dict
 ^https:\/\/api-chat\.soulapp\.cn\/chat\/guide\/defaultWord url reject-dict
 ^https:\/\/api-chat\.soulapp\.cn\/chat\/attach\/menu url reject-dict
 ^https:\/\/api-chat\.soulapp\.cn\/chat\/entrance\/first url reject-dict
-^https:\/\/47\.110\.187\.87\/winterfell\/(?:v2\/)?getIpByDomain url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/Soul.js
-^https:\/\/chat-live\.soulapp\.cn\/chatroom\/chatClassifyRoomList url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/Soul.js
-^https:\/\/api-user\.soulapp\.cn\/v6\/planet\/config url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/Soul.js
 ^https:\/\/chat-live\.soulapp\.cn\/live\/planet\/recListV2 url reject-200
-^https:\/\/api-a\.soulapp\.cn\/official\/scene\/module url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/Soul.js
-^https:\/\/post\.soulapp\.cn\/v2\/post\/recSquare\/subTabs url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/Soul.js
-hostname = api-account.soulapp.cn, chat-live.soulapp.cn, api-a.soulapp.cn, api-pay.soulapp.cn, gateway-mobile-gray.soulapp.cn, api-chat.soulapp.cn, 120.55.55.115, 120.55.62.124, 121.196.203.183, 47.96.20.45, 47.98.54.106, 118.31.112.221, 8.210.3.170, 47.75.72.47, post.soulapp.cn, api-user.soulapp.cn,api-account.soulapp.cn,ssp.soulapp.cn,47.110.187.87
+
+// 礼物列表 - 清空数据
+^https:\/\/api-a\.soulapp\.cn\/v2\/post\/gift\/list url jsonjq-response-body '.data = null'
+
+// 热门排行 - 清空数据
+^https:\/\/post\.soulapp\.cn\/hot\/soul\/rank url jsonjq-response-body '.data = null'
+
+// 版本更新 - 清空数据
+^https:\/\/gateway-mobile-gray\.soulapp\.cn\/mobile\/app\/version\/queryIos url jsonjq-response-body '.data = null'
+
+// 聊天限制 - 解除限制
+^https:\/\/api-chat\.soulapp\.cn\/chat\/limitInfo url jsonjq-response-body '.data.limit = false'
+
+// 首页引导卡片 - 清空数据
+^https:\/\/post\.soulapp\.cn\/v\d\/post\/homepage\/guide\/card url jsonjq-response-body '.data = null'
+
+// 位置内容 - 清空数据
+^https:\/\/api-user\.soulapp\.cn\/furion\/position\/content url jsonjq-response-body '.data = null'
+
+// 青少年模式 - 清空数据
+^https:\/\/api-account\.soulapp\.cn\/teenager\/config url jsonjq-response-body '.data = null'
+
+// DNS劫持 - 清空数据
+^https:\/\/47\.110\.187\.87\/winterfell\/(?:v2\/)?getIpByDomain url jsonjq-response-body '.data = null'
+
+// 官方场景模块 - 清空数据
+^https:\/\/api-a\.soulapp\.cn\/official\/scene\/module url jsonjq-response-body '.data = null'
+
+// 聊天室列表 - 清空房间
+^https:\/\/chat-live\.soulapp\.cn\/chatroom\/chatClassifyRoomList url jsonjq-response-body '.data.roomList = []'
+
+// 星球配置 - 移除指定游戏/功能入口 + 样式修正
+^https:\/\/api-user\.soulapp\.cn\/v6\/planet\/config url jsonjq-response-body '.data.gameInfo.gameCards |= map(select(.title != "异世界回响" and .title != "狼人魅影" and .title != "梦想海岛王" and .title != "幻想星球" and .title != "爆弹喵" and .title != "星球实验室" and .title != "兴趣群组" and .title != "群聊派对")) | .data.coreCards |= map(select(.title != "异世界回响" and .title != "狼人魅影" and .title != "梦想海岛王" and .title != "幻想星球" and .title != "爆弹喵" and .title != "星球实验室" and .title != "兴趣群组" and .title != "群聊派对") | if .secondCards then .secondCards |= map(select(.title != "异世界回响" and .title != "狼人魅影" and .title != "梦想海岛王" and .title != "幻想星球" and .title != "爆弹喵" and .title != "星球实验室" and .title != "兴趣群组" and .title != "群聊派对")) else . end | if .style == 2 then .style = 1 else . end)'
+
+// 推荐广场Tab - 只保留指定类型
+^https:\/\/post\.soulapp\.cn\/v2\/post\/recSquare\/subTabs url jsonjq-response-body '.data |= map(select(.tabType == 7 or .tabType == 6 or .tabType == 2))'
+
+
+hostname = api-account.soulapp.cn, chat-live.soulapp.cn, api-a.soulapp.cn, api-pay.soulapp.cn, gateway-mobile-gray.soulapp.cn, api-chat.soulapp.cn, 120.55.55.115, 120.55.62.124, 121.196.203.183, 47.96.20.45, 47.98.54.106, 118.31.112.221, 8.210.3.170, 47.75.72.47, post.soulapp.cn, api-user.soulapp.cn, ssp.soulapp.cn, 47.110.187.87
