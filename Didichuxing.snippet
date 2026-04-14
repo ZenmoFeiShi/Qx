@@ -1,9 +1,8 @@
-
 #!name = 滴滴出行
 #!author = 怎么肥事
-#!update = 2026-1-9
+#!update = 2026-4-14
 
-//滴滴
+// 滴滴分流
 host, gwp.xiaojukeji.com, reject
 ip-cidr, 139.199.244.6/32, reject
 ip-cidr, 113.46.225.9/32, reject
@@ -21,7 +20,7 @@ ip-cidr, 116.85.1.17/32, reject
 ip-cidr, 116.85.1.22/32, reject
 ip-cidr, 116.85.3.25/32, reject
 
-# 小程序首页横幅
+// 小程序 & 广告拦截
 ^https:\/\/res\.xiaojukeji\.com\/resapi\/activity\/getMulti\? url reject-dict
 ^https:\/\/res\.xiaojukeji\.com\/resapi\/activity\/xpget url reject-dict
 ^https:\/\/ct\.xiaojukeji\.com\/agent\/v3\/feeds url reject-dict
@@ -32,17 +31,34 @@ ip-cidr, 116.85.3.25/32, reject
 ^https:\/\/conf\.diditaxi\.com\.cn\/dynamic\/conf url reject-dict
 ^https:\/\/api\.udache\.com\/gulfstream\/watson\/v1\/bubble\/getBubble url reject-dict
 ^https:\/\/res\.xiaojukeji\.com\/resapi\/activity\/getInsActivityV2 url reject-dict
-^https:\/\/common\.diditaxi\.com\.cn\/common\/v\d\/usercenter\/me url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/Didichuxing.js
-^https:\/\/conf\.diditaxi\.com\.cn\/homepage\/v\d\/core url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/Didichuxing.js
-^https:\/\/api\.udache\.com\/gulfstream\/pre-sale\/v1\/other\/pGetSceneList url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/Didichuxing.js
-^https:\/\/conf\.diditaxi\.com\.cn\/ota\/na\/yuantu\/infoList url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/Didichuxing.js
-^https:\/\/conf\.diditaxi\.com\.cn\/homepage\/v1\/oversea\/layout url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/Didichuxing.js
 ^https:\/\/conf\.diditaxi\.com\.cn\/homepage\/v1\/other\/slow url reject-dict
-^https:\/\/mapi\.xiaojukeji\.com\/passenger-wallet\/api\/v6\/wallet\/homepage url jsonjq-response-body 'del(.data.cardList[0].detailData.myCreditLimit, .data.cardList[0].detailData.discountList[3], .data.cardList[0].detailData.discountList[4], .data.cardList[1], .data.cardList[2], .data.cardList[3], .data.cardList[4], .data.cardList[5], .data.cardList[6], .data.cardList[7], .data.cardList[8], .data.cardList[9])'
-^https:\/\/goblin\.hupu\.com\/d\/d\.d\.d+\/interfaceAd\/getOther\/v3 url jsonjq-response-body '.ad_code = 0'
-^https:\/\/api\.udache\.com\/gulfstream\/porsche\/v1\/dache_homepage_layout url jsonjq-response-body del(.data.instances["xp-card-01"])
-^https:\/\/api\.udache\.com\/gulfstream\/passenger-center\/v2\/other\/pInTripLayout url jsonjq-response-body del(.data.order_components[8].data) | .data.order_components |= map(select(.name != "passenger_common_casper"))
-^https:\/\/common\.diditaxi\.com\.cn\/common\/v5\/usercenter\/layout url jsonjq-response-body if (.data.instances? | type) == "object" then   .data.instances |= del(     .center_widget_list,     .center_tool_card,     .center_marketing_card   ) else   . end | if (.data.instances?.center_wallet_finance_card?.data?.view_info | type) == "array" then   del(     .data.instances.center_wallet_finance_card.data.view_info[3],     .data.instances.center_wallet_finance_card.data.view_info[2],     .data.instances.center_wallet_finance_card.data.view_info[1]   ) elif (.data.instances?.center_wallet_finance_card?.data?.view_info | type) == "object" then   del(     .data.instances.center_wallet_finance_card.data.view_info["3"],     .data.instances.center_wallet_finance_card.data.view_info["2"],     .data.instances.center_wallet_finance_card.data.view_info["1"]   ) else   . end
+
+// 用户中心 - 移除多余卡片，钱包只保留优惠券/省钱套餐/出行里程
+^https:\/\/common\.diditaxi\.com\.cn\/common\/v\d\/usercenter\/me url jsonjq-response-body '.data.cards |= (map(select(.title != "天天领福利" and .title != "金融服务" and .title != "更多服务" and .title != "企业服务" and .title != "安全中心")) | map(if .tag == "wallet" then (.items |= map(select(.title == "优惠券"))) | (if .card_type == 4 then .bottom_items |= map(select(.title == "省钱套餐" or .title == "出行里程")) else . end) else . end))'
+
+// 首页导航 - 只保留打车/代驾/骑行/车生活/更多
+^https:\/\/conf\.diditaxi\.com\.cn\/homepage\/v\d\/core url jsonjq-response-body '.data.order_cards.nav_list_card.data |= map(select(.nav_id == "dache_anycar" or .nav_id == "driverservice" or .nav_id == "bike" or .nav_id == "carmate" or .nav_id == "nav_more_v3")) | .data.disorder_cards.bottom_nav_list.data |= map(select(.id == "v6x_home" or .id == "home_page" or .id == "user_center"))'
+
+// 场景列表 - 移除优惠商城
+^https:\/\/api\.udache\.com\/gulfstream\/pre-sale\/v1\/other\/pGetSceneList url jsonjq-response-body '.data.scene_list |= map(select(.text != "优惠商城")) | .data.show_data |= map(.scene_ids |= map(select(. != "scene_coupon_mall")))'
+
+// 顶部横幅 - 移除元图广告
+^https:\/\/conf\.diditaxi\.com\.cn\/ota\/na\/yuantu\/infoList url jsonjq-response-body 'if .data.disorder_cards.top_banner_card.data[0].T == "yuentu_top_banner" then .data.disorder_cards.top_banner_card.data |= .[1:] else . end'
+
+// 海外布局 - 移除主横幅广告
+^https:\/\/conf\.diditaxi\.com\.cn\/homepage\/v1\/oversea\/layout url jsonjq-response-body 'del(.data.instances.oversea_main_banner)'
+
+// 首页布局 - 移除推广卡片
+^https:\/\/api\.udache\.com\/gulfstream\/porsche\/v1\/dache_homepage_layout url jsonjq-response-body 'del(.data.instances["xp-card-01"])'
+
+// 行程中 - 移除广告组件
+^https:\/\/api\.udache\.com\/gulfstream\/passenger-center\/v2\/other\/pInTripLayout url jsonjq-response-body 'del(.data.order_components[8].data) | .data.order_components |= map(select(.name != "passenger_common_casper"))'
+
+// 钱包首页 - 精简卡片
+^https:\/\/mapi\.xiaojukeji\.com\/passenger-wallet\/api\/v6\/wallet\/homepage url jsonjq-response-body '.data.cardList |= [.[0] | del(.detailData.myCreditLimit) | .detailData.discountList |= .[:3]]'
+
+// 个人中心布局 - 移除营销/工具/推广
+^https:\/\/common\.diditaxi\.com\.cn\/common\/v5\/usercenter\/layout url jsonjq-response-body 'if (.data.instances | type) == "object" then .data.instances |= del(.center_widget_list, .center_tool_card, .center_marketing_card) else . end | if (.data.instances.center_wallet_finance_card.data.view_info | type) == "array" then .data.instances.center_wallet_finance_card.data.view_info |= .[:1] else . end'
 
 
-hostname = 113.46.225.*,common.diditaxi.com.cn, freight.xiaojukeji.com, daijia.kuaidadi.com, 162.14.157.*, ct.xiaojukeji.com, res.xiaojukeji.com, conf.diditaxi.com.cn ,api.udache.com ,123.207.209.*, 112.53.55.225,120.241.142.*,120.241.143.*, 116.85.*, 139.199.240.84 
+hostname = 113.46.225.*, common.diditaxi.com.cn, freight.xiaojukeji.com, daijia.kuaidadi.com, 162.14.157.*, ct.xiaojukeji.com, res.xiaojukeji.com, conf.diditaxi.com.cn, api.udache.com, 123.207.209.*, 112.53.55.225, 120.241.142.*, 120.241.143.*, 116.85.*, 139.199.240.84, mapi.xiaojukeji.com
