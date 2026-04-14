@@ -1,24 +1,34 @@
 #!name = T3出行
 #!author = 怎么肥事
-#!update = 2024-10-22 22:04
+#!update = 2026-4-14
 
+// 广告弹窗 & 推送 & 负一屏 & 活动
 ^https:\/\/passenger\.t3go\.cn(:\d+)?\/passenger-activity-api\/api\/ad\/act\/v1\/notoken\/popup url reject-dict
 ^https:\/\/passenger\.t3go\.cn(:\d+)?\/passenger-activity-api\/api\/ad\/act\/v1\/notoken\/negativeScreen url reject-dict
 ^https:\/\/passenger\.t3go\.cn(:\d+)?\/open-app-api\/api\/intime\/push\/offline\/pull url reject-dict
 ^https:\/\/passenger\.t3go\.cn(:\d+)?\/passenger-activity-api\/api\/ad\/act\/v1\/notoken\/addressUp url reject-dict
-^https:\/\/passenger\.t3go\.cn(:\d+)?\/open-app-api\/api\/intime\/push\/offline\/pull url reject-dict
 ^https:\/\/passenger\.t3go\.cn(:\d+)?\/passenger-activity-api\/api\/v1\/ad\/getNotices url reject-dict
 ^https:\/\/passenger\.t3go\.cn(:\d+)?\/passenger-activity-api\/notoken\/api\/v1\/resource\/getPageSceneListData url reject-dict
 ^https:\/\/passenger\.t3go\.cn(:\d+)?\/passenger-activity-api\/api\/v1\/resource\/getTripRemind url reject-dict
 ^https:\/\/passenger\.t3go\.cn(:\d+)?\/common-app-api\/api\/passenger\/v1\/getCardInfo url reject-dict
 ^https:\/\/passenger\.t3go\.cn(:\d+)?\/passenger-activity-api\/api\/v3\/resource\/bottom url reject-dict
 ^https:\/\/passenger\.t3go\.cn(:\d+)?\/passenger-app-api\/notoken\/api\/home\/v\d\/leftmenu url reject-dict
-^https:\/\/passenger\.t3go\.cn(:\d+)?\/solution-passenger-api\/notoken\/trip\/api\/solution\/passenger\/open\/getHomeMenuList url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/T3.js
-^https:\/\/passenger\.t3go\.cn(:\d+)?\/passenger-activity-api\/notoken\/api\/v\d\/ad\/getNegativescreen url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/T3.js
-^https:\/\/passenger\.t3go\.cn(:\d+)?\/passenger-activity-api\/notoken\/api\/v\d\/ad\/getActivityPopup url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/T3.js
-^https:\/\/passenger\.t3go\.cn(:\d+)?\/passenger-activity-api\/notoken\/api\/v\d\/ad\/getNotices url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/T3.js
-^https:\/\/passenger\.t3go\.cn(:\d+)?\/passenger-activity-api\/notoken\/api\/v\d\/resourceLocation\/floating url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/T3.js
 ^http:\/\/.+\/resolve url reject
 
+// 首页菜单 - 只保留打车/预约车/优惠券
+^https:\/\/passenger\.t3go\.cn(:\d+)?\/solution-passenger-api\/notoken\/trip\/api\/solution\/passenger\/open\/getHomeMenuList url jsonjq-response-body '.data.baseMenuList |= map(select(.menuId == "100001" or .menuId == "100018" or .menuId == "100046")) | .data.subMenuList = []'
 
-hostname = *.t3go.cn,124.71.144.189, 123.60.34.69, 121.36.220.180, 121.37.134.39
+// 负一屏广告 - 清空数据
+^https:\/\/passenger\.t3go\.cn(:\d+)?\/passenger-activity-api\/notoken\/api\/v\d\/ad\/getNegativescreen url jsonjq-response-body '.data = null'
+
+// 活动弹窗 - 清空数据
+^https:\/\/passenger\.t3go\.cn(:\d+)?\/passenger-activity-api\/notoken\/api\/v\d\/ad\/getActivityPopup url jsonjq-response-body '.data = null'
+
+// 公告通知 - 清空数据
+^https:\/\/passenger\.t3go\.cn(:\d+)?\/passenger-activity-api\/notoken\/api\/v\d\/ad\/getNotices url jsonjq-response-body '.data = null'
+
+// 浮窗广告 - 清空数据
+^https:\/\/passenger\.t3go\.cn(:\d+)?\/passenger-activity-api\/notoken\/api\/v\d\/resourceLocation\/floating url jsonjq-response-body '.data = null'
+
+
+hostname = *.t3go.cn, 124.71.144.189, 123.60.34.69, 121.36.220.180, 121.37.134.39
