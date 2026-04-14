@@ -1,31 +1,37 @@
 #!name = 虎扑净化
 #!author = 怎么肥事
-#!update = 2024-07-18 14:13
+#!update = 2026-4-14
 
+// 图库模块
 ^https:\/\/fairy\.mobileapi\.hupu\.com\/gallery\/getmod2 url reject-200
 
+// 红点提示
 ^https:\/\/games\.mobileapi\.hupu\.com\/\d\/\d\.\d\.\d+\/bplapi\/reddot\/v1\/app\/getReddot url reject-dict
 
-^https:\/\/fairy\.mobileapi\.hupu\.com\/mang\/preview\/banners url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/HP.js
-
+// 热门标签 & 排行榜
 ^https:\/\/bbs\.mobileapi\.hupu\.com\/\d\/\d\.\d\.\d+\/(bbsallapi\/tag\/v1\/heatTag|bbsrankapi\/v1\/rating\/list) url reject-dict
 
-^https:\/\/bbs\.mobileapi\.hupu\.com\/\d\/\d\.\d\.\d+\/bbsallapi\/lego\/data url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/HP.js
-
+// 搜索提示 & 热搜
 ^https:\/\/games\.mobileapi\.hupu\.com\/\d\/\d\.\d\.\d+\/search\/v2\/(hintkeylist|hotkeylist) url reject-dict
 
-^https:\/\/goblin\.hupu\.com\/\d\/\d\.\d\.\d+\/interfaceAd\/getOther\/v\d url reject-dict
+// 插屏广告
+^https:\/\/goblin\.hupu\.com\/\d\/\d\.\d\.\d+\/interfaceAd\/getOther\/(v\d|batch) url reject-dict
 
-^https:\/\/goblin\.hupu\.com\/\d\/\d\.\d\.\d+\/interfaceAd\/getOther\/batch url reject-dict
-
+// 比分Tab & 横幅
 ^https:\/\/games\.mobileapi\.hupu\.com\/3\/8\.0\.86\/bplcommentapi\/bpl\/score_tab\/groups url reject-dict
-
 ^https:\/\/games\.mobileapi\.hupu\.com\/3\/8\.0\.86\/bplapi\/banner\/getLocationBanners url reject-dict
 
-^https:\/\/games\.mobileapi\.hupu\.com\/\d\/\d\.\d\.\d+\/buffer\/hotList url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/HP.js
+// 预览横幅 - 清空数据
+^https:\/\/fairy\.mobileapi\.hupu\.com\/mang\/preview\/banners url jsonjq-response-body '.data = null'
 
-^https:\/\/games\.mobileapi\.hupu\.com\/\d\/\d\.\d\.\d+\/bplapi\/user\/v1\/more url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/HP.js
+// 热门列表 - 移除顶部横幅
+^https:\/\/games\.mobileapi\.hupu\.com\/\d\/\d\.\d\.\d+\/buffer\/hotList url jsonjq-response-body 'del(.result.topBanner)'
 
+// 论坛功能入口 - 移除多余图标 & "我的应用"卡片
+^https:\/\/bbs\.mobileapi\.hupu\.com\/\d\/\d\.\d\.\d+\/bbsallapi\/lego\/data url jsonjq-response-body '.data.cards |= map(if .code == "multiIcon" then .components |= map(select(.data.title != "个性换肤" and .data.title != "专家预测" and .data.title != "邀请好友" and .data.title != "版主中心" and .data.title != "JRs战术板" and .data.title != "草稿箱" and .data.title != "58同城")) else . end) | .data.cards |= map(select(.components | if type == "array" then all(.data.title != "我的应用") else true end))'
+
+// 用户页 - 移除VIP信息
+^https:\/\/games\.mobileapi\.hupu\.com\/\d\/\d\.\d\.\d+\/bplapi\/user\/v1\/more url jsonjq-response-body 'del(.result.vipInfo)'
 
 
 hostname = *.hupu.com
