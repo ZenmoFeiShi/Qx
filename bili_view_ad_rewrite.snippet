@@ -2,14 +2,14 @@
 #!author = 怎么肥事
 #!update = 2026-04-15
 #   1. 相关推荐列表中的广告卡片（游戏推广等）
-#   2. 视频详情页底部的广告控制模块
+#   2. 视频详情页底部的广告控制模块//此处处理之后qx不支持mitm2会导致弹幕，评论区无法加载，暂时注释掉不要使用
 #   3. 搜索框预填充的推荐搜索词
 #   4. 热门页面的UP主推荐关注卡片
 #    5. 关注页面的"你可能感兴趣的UP主"卡片
 #   6. 广告转化追踪请求
 #   7. 广告数据上报
 
-^https:\/\/app\.bilibili\.com\/bilibili\.app\.viewunite\.v1\.View\/View$ url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/bili_view_ad.js
+//^https:\/\/app\.bilibili\.com\/bilibili\.app\.viewunite\.v1\.View\/View$ url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/bili_view_ad.js
 ^https:\/\/app\.bilibili\.com\/bilibili\.app\.interface\.v1\.Search\/DefaultWords$ url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/bili_view_ad.js
 ^https:\/\/app\.bilibili\.com\/bilibili\.app\.show\.v1\.Popular\/Index$ url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/bili_view_ad.js
 ^https:\/\/app\.bilibili\.com\/bilibili\.app\.dynamic\.v2\.Dynamic\/DynAll$ url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/bili_view_ad.js
