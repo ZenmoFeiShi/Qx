@@ -1,9 +1,10 @@
 #!name = 黑料不打烊净化
 #!author = 怎么肥事
-#!update = 2026-04-14
-^https?:\/\/(?:www\.)?hl(?:wxx|cx\d*)\.com\/(?:$|\?|archives\/|category\/|memora|search|index\.htm) url request-header (\r\n)Accept-Encoding:.+(\r\n) request-header $1Accept-Encoding: identity$2
-^https?:\/\/(?:www\.)?hl(?:wxx|cx\d*)\.com\/(?:$|\?|archives\/|category\/|memora|search|index\.htm) url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/hlwxx_remove_ads.js
+#!update = 2026-04-18
+^https?:\/\/(?:www\.)?(?:heiliao|hlwxx|hlcx\d*)\.com\/(?!static\/|favicon|api\/|index\/statistics|uploads\/) url request-header (\r\n)Accept-Encoding:.+(\r\n) request-header $1Accept-Encoding: identity$2
+^https?:\/\/(?:www\.)?(?:heiliao|hlwxx|hlcx\d*)\.com\/(?!static\/|favicon|api\/|index\/statistics|uploads\/) url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/hlwxx_remove_ads.js
 ^https?:\/\/stats\.kwvprfcr\.xyz url reject
 ^https?:\/\/mc\.yandex\.ru url reject
+^https?:\/\/api1\.cghhqca\.cc\/api\/eventTracking url reject-dict
 
-hostname = *.hlwxx.com, *.hlcx16.com, stats.kwvprfcr.xyz, mc.yandex.ru,hlwxx.com
+hostname = *heiliao*, *hlwxx*, *hlcx*, stats.kwvprfcr.xyz, mc.yandex.ru, api1.cghhqca.cc
