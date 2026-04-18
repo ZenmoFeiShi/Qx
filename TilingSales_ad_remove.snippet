@@ -1,6 +1,6 @@
 #!name = 瓜子影视净化
 #!author = 怎么肥事
-#!update = 2026-4-18
+#!update = 2026-4-19
 
 ^https?:\/\/api\.(ainitpz|4hnovel|1000gxf)\.com\/App\/Ad\/splashInfo url reject-dict
 ^https?:\/\/api\.(ainitpz|4hnovel|1000gxf)\.com\/App\/Ad\/noticeInfo url reject-dict
@@ -14,15 +14,16 @@
 ^https?:\/\/api\.(ainitpz|4hnovel|1000gxf)\.com\/App\/Ad\/bannerInfo url reject-dict
 ^https?:\/\/api\.(ainitpz|4hnovel|1000gxf)\.com\/App\/Ad\/bardCacheAdInfo url reject-dict
 ^https?:\/\/api\.(ainitpz|4hnovel|1000gxf)\.com\/App\/Ad\/barsIndexAdInfo url reject-dict
-^https?:\/\/api\.(ainitpz|4hnovel|1000gxf)\.com\/App\/Ad\/barsPlayAdInfo url reject-dict
 ^https?:\/\/api\.(ainitpz|4hnovel|1000gxf)\.com\/App\/Ad\/comicAdInfo url reject-dict
 ^https?:\/\/api\.(ainitpz|4hnovel|1000gxf)\.com\/App\/Ad\/liveEventAdInfo url reject-dict
 ^https?:\/\/api\.(ainitpz|4hnovel|1000gxf)\.com\/App\/Ad\/novelAdInfo url reject-dict
-^https?:\/\/api\.(ainitpz|4hnovel|1000gxf)\.com\/App\/Ad\/playAdInfo url reject-dict
 ^https?:\/\/api\.(ainitpz|4hnovel|1000gxf)\.com\/App\/Ad\/sportAdInfo url reject-dict
-^https?:\/\/api\.(ainitpz|4hnovel|1000gxf)\.com\/App\/IndexPlay\/vodAdvertisement url reject-dict
 ^https?:\/\/api\.(ainitpz|4hnovel|1000gxf)\.com\/App\/Resource\/CommentAd\/show url reject-dict
 ^https?:\/\/rg829\.8f3m24\.com\/v0\.1\/public\/codepush\/update_check url reject-dict
 ^https?:\/\/api\.(ainitpz|4hnovel|1000gxf)\.com\/App\/Resource\/Config\/getNav url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/TilingSales_getNav.js
-
+^https?:\/\/api\.(ainitpz|4hnovel|1000gxf)\.com\/App\/Ad\/barsPlayAdInfo url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/TilingSales_getNav.js
+^https?:\/\/api\.(ainitpz|4hnovel|1000gxf)\.com\/App\/Ad\/playAdInfo url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/TilingSales_getNav.js
+^https?:\/\/api\.(ainitpz|4hnovel|1000gxf)\.com\/App\/IndexPlay\/vodAdvertisement url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/TilingSales_getNav.js
+^https?:\/\/api\.(ainitpz|4hnovel|1000gxf)\.com\/App\/Resource\/Vod\/showOne url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/TilingSales_getNav.js
+^https?:\/\/api\.(ainitpz|4hnovel|1000gxf)\.com\/App\/Resource\/Vod\/vurlDetail url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/TilingSales_getNav.js
 hostname = api.ainitpz.com, api.4hnovel.com, api.1000gxf.com, rg829.8f3m24.com
