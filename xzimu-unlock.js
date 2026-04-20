@@ -17,6 +17,8 @@ if (url.includes("/user/updateStatus") && isResponse) {
     saveRequestBody();
 } else if (url.includes("/task/offline/post") && isResponse) {
     handleOfflinePost();
+} else if (url.includes("/task/runSegment") && !isResponse) {
+    handleRunSegment();
 } else {
     $done({});
 }
@@ -75,34 +77,41 @@ function handleOfflinePost() {
 
             const newToken = regData.data.accesstoken;
             const uid = regData.data.uid || "";
-            console.log("[XZ] 新账号注册成功");
 
             const actResp = await http("POST", `${BASE}/apps/activate`,
                 `appKey=${APPKEY}&accesstoken=${newToken}&deviceId=${uid}`);
             const actData = JSON.parse(actResp.body);
             const newDeviceId = actData.data && actData.data.deviceId ? actData.data.deviceId : uid;
-            console.log("[XZ] 激活成功, deviceId=" + newDeviceId);
 
             let newBody = savedBody;
             newBody = newBody.replace(/accesstoken=[^&]+/, `accesstoken=${newToken}`);
             newBody = newBody.replace(/deviceId=[^&]+/, `deviceId=${newDeviceId}`);
 
             const retryResp = await http("POST", url, newBody);
-            const retryData = JSON.parse(retryResp.body);
-
-            if (retryData.errcode === 0) {
-                console.log("[XZ] ✅ 翻译任务提交成功！");
-            } else {
-                console.log("[XZ] 重发: errcode=" + retryData.errcode + " " + (retryData.errmsg || ""));
-            }
-
+            console.log("[XZ] ✅ 换号重发完成");
             $done({ body: retryResp.body });
-
         } catch (e) {
             console.log("[XZ] ❌ " + e);
             $done({});
         }
     })();
+}
+
+function handleRunSegment() {
+    let obj;
+    try { obj = JSON.parse($request.body); } catch (e) { $done({}); return; }
+
+    const LIMIT = 300000; 
+    if (obj.start >= LIMIT) {
+        const duration = obj.end - obj.start;
+        const fakeStart = (obj.segmentIndex * 1000) % LIMIT;
+        obj.start = fakeStart;
+        obj.end = fakeStart + duration;
+        console.log(`[XZ] runSegment seg=${obj.segmentIndex}: start/end 已伪装为 ${obj.start}-${obj.end}`);
+        $done({ body: JSON.stringify(obj) });
+    } else {
+        $done({});
+    }
 }
 
 function http(method, url, body) {
@@ -114,3 +123,4 @@ function http(method, url, body) {
         }).then(resolve, reject);
     });
 }
+
