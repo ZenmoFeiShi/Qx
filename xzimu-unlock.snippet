@@ -1,0 +1,9 @@
+#!name = X字幕 (xzimu) 无限翻译次数
+#!author = 怎么肥事
+#!update = 2026-4-20
+
+^http://apps\.tltgame\.com/api/user/updateStatus url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/xzimu-unlock.js
+^http://apps\.tltgame\.com/api/task/offline/post url script-request-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/xzimu-unlock.js
+^http://apps\.tltgame\.com/api/task/offline/post url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/xzimu-unlock.js
+
+hostname = apps.tltgame.com
