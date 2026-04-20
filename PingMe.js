@@ -1,4 +1,4 @@
-//2026/04/16
+//2026/04/20
 /*
 @Name：PingMe 自动化签到+视频奖励
 @Author：怎么肥事
@@ -14,10 +14,17 @@ hostname = api.pingmeapp.net
 */
 
 const scriptName = 'PingMe';
-const ckKey = 'pingme_capture_v3';
+const storeKey = 'pingme_accounts_v1';
 const SECRET = '0fOiukQq7jXZV2GRi9LGlO';
 const MAX_VIDEO = 5;
 const VIDEO_DELAY = 8000;
+const ACCOUNT_GAP = 3500;
+
+const IOS_VERSIONS = ['17.5.1','17.6.1','17.4.1','17.2.1','16.7.8','17.6','17.3.1','18.0.1','17.1.2','16.6.1'];
+const IOS_SCALES = ['2.00','3.00','3.00','2.00','3.00'];
+const IPHONE_MODELS = ['iPhone14,3','iPhone13,3','iPhone15,3','iPhone16,1','iPhone14,7','iPhone13,2','iPhone15,2','iPhone12,1'];
+const CFN_VERS = ['1410.0.3','1494.0.7','1568.100.1','1209.1','1474.0.4','1568.200.2'];
+const DARWIN_VERS = ['22.6.0','23.5.0','23.6.0','24.0.0','22.4.0'];
 
 function MD5(string) {
   function RotateLeft(lValue, iShiftBits) { return (lValue << iShiftBits) | (lValue >>> (32 - iShiftBits)); }
@@ -118,6 +125,52 @@ function parseRawQuery(url) {
   return rawMap;
 }
 
+function fingerprintOf(paramsRaw) {
+  const drop = { sign:1, signDate:1, timestamp:1, ts:1, nonce:1, random:1, reqTime:1, reqId:1, requestId:1 };
+  const base = Object.keys(paramsRaw || {}).filter(k => !drop[k]).sort().map(k => `${k}=${paramsRaw[k]}`).join('&');
+  return MD5(base).slice(0, 12);
+}
+
+function loadStore() {
+  const raw = $prefs.valueForKey(storeKey);
+  if (!raw) return { version: 1, accounts: {}, order: [] };
+  try {
+    const obj = JSON.parse(raw);
+    if (!obj.accounts) obj.accounts = {};
+    if (!Array.isArray(obj.order)) obj.order = Object.keys(obj.accounts);
+    return obj;
+  } catch (e) {
+    return { version: 1, accounts: {}, order: [] };
+  }
+}
+
+function saveStore(store) {
+  $prefs.setValueForKey(JSON.stringify(store), storeKey);
+}
+
+function pickItem(arr, seed) {
+  return arr[seed % arr.length];
+}
+
+function buildUA(baseUA, seed) {
+  const iosVer = pickItem(IOS_VERSIONS, seed);
+  const scale = pickItem(IOS_SCALES, seed + 1);
+  const model = pickItem(IPHONE_MODELS, seed + 2);
+  const cfn = pickItem(CFN_VERS, seed + 3);
+  const darwin = pickItem(DARWIN_VERS, seed + 4);
+  if (baseUA && typeof baseUA === 'string') {
+    let ua = baseUA;
+    let changed = false;
+    if (/iOS \d+(\.\d+){0,2}/.test(ua)) { ua = ua.replace(/iOS \d+(\.\d+){0,2}/, `iOS ${iosVer}`); changed = true; }
+    if (/Scale\/\d+(\.\d+)?/.test(ua)) { ua = ua.replace(/Scale\/\d+(\.\d+)?/, `Scale/${scale}`); changed = true; }
+    if (/iPhone\d+,\d+/.test(ua)) { ua = ua.replace(/iPhone\d+,\d+/, model); changed = true; }
+    if (/CFNetwork\/[\d.]+/.test(ua)) { ua = ua.replace(/CFNetwork\/[\d.]+/, `CFNetwork/${cfn}`); changed = true; }
+    if (/Darwin\/[\d.]+/.test(ua)) { ua = ua.replace(/Darwin\/[\d.]+/, `Darwin/${darwin}`); changed = true; }
+    if (changed) return ua;
+  }
+  return `PingMe/1.0.0 (${model}; iOS ${iosVer}; Scale/${scale}) CFNetwork/${cfn} Darwin/${darwin}`;
+}
+
 function buildSignedParamsRaw(capture) {
   const params = {};
   Object.keys(capture.paramsRaw || {}).forEach(k => {
@@ -141,111 +194,143 @@ function cloneHeaders(headers) {
   return out;
 }
 
-function buildHeaders(capture) {
+function buildHeaders(capture, ua) {
   const headers = cloneHeaders(capture.headers || {});
   delete headers['Content-Length']; delete headers['content-length'];
   delete headers[':authority']; delete headers[':method']; delete headers[':path']; delete headers[':scheme'];
   headers['Host'] = 'api.pingmeapp.net';
   headers['Accept'] = headers['Accept'] || 'application/json';
+  Object.keys(headers).forEach(k => { if (k.toLowerCase() === 'user-agent') delete headers[k]; });
+  headers['User-Agent'] = ua;
   return headers;
 }
 
-function notifyDone(title, body) {
+function notify(title, body) {
   $notify(scriptName, title, body);
 }
 
-if (typeof $request !== 'undefined' && $request) {
-  const capture = {
-    url: $request.url,
-    paramsRaw: parseRawQuery($request.url),
-    headers: normalizeHeaderNameMap($request.headers || {})
-  };
-  $prefs.setValueForKey(JSON.stringify(capture), ckKey);
-  const keys = Object.keys(capture.paramsRaw).filter(k => k !== 'sign').join(', ');
-  notifyDone('✅ 参数抓取成功', `已保存请求头+参数`);
-  console.log(`【${scriptName}】capture:\n${JSON.stringify(capture, null, 2)}`);
-  $done({});
-} else {
-  const raw = $prefs.valueForKey(ckKey);
-  if (!raw) {
-    notifyDone('⚠️ 未抓到参数', '先打开 PingMe 触发一次 ');
-    $done();
-  } else {
-    let capture;
-    try { capture = JSON.parse(raw); } catch (e) {
-      notifyDone('⚠️ 参数损坏', '请重新打开 PingMe 抓参');
-      $done();
-      return;
-    }
+function sleep(ms) {
+  return new Promise(r => setTimeout(r, ms));
+}
 
-    const headers = buildHeaders(capture);
-    const msgs = [];
+function runAccount(acc, index, total) {
+  const tag = `[账号${index+1}/${total} ${acc.alias || acc.id}]`;
+  const ua = buildUA(acc.baseUA, acc.uaSeed);
+  const headers = buildHeaders(acc.capture, ua);
+  const msgs = [tag];
 
-    function fetchApi(path) {
-      return $task.fetch({ url: buildUrl(path, capture), method: 'GET', headers });
-    }
+  function fetchApi(path) {
+    return $task.fetch({ url: buildUrl(path, acc.capture), method: 'GET', headers });
+  }
 
-    function doVideoLoop(count) {
-      let i = 0;
-      function next() {
-        if (i >= count) return Promise.resolve();
-        return new Promise(resolve => {
-          setTimeout(() => {
-            i++;
-            fetchApi('videoBonus').then(res => {
-              try {
-                const d = JSON.parse(res.body);
-                if (d.retcode === 0) {
-                  msgs.push(`🎬 视频${i}：+${d.result?.bonus || '?'} Coins`);
-                  resolve(next());
-                } else {
-                  msgs.push(`⏸ 视频${i}：${d.retmsg}`);
-                  resolve();
-                }
-              } catch (e) {
-                msgs.push(`❌ 视频${i}：解析失败`);
+  function doVideoLoop(count) {
+    let i = 0;
+    function next() {
+      if (i >= count) return Promise.resolve();
+      return new Promise(resolve => {
+        setTimeout(() => {
+          i++;
+          fetchApi('videoBonus').then(res => {
+            try {
+              const d = JSON.parse(res.body);
+              if (d.retcode === 0) {
+                msgs.push(`🎬 视频${i}：+${d.result?.bonus || '?'} Coins`);
+                resolve(next());
+              } else {
+                msgs.push(`⏸ 视频${i}：${d.retmsg}`);
                 resolve();
               }
-            }).catch(err => {
-              msgs.push(`❌ 视频${i}：${err.error || '请求失败'}`);
+            } catch (e) {
+              msgs.push(`❌ 视频${i}：解析失败`);
               resolve();
-            });
-          }, i === 0 ? 1500 : VIDEO_DELAY);
-        });
-      }
-      return next();
+            }
+          }).catch(err => {
+            msgs.push(`❌ 视频${i}：${err.error || '请求失败'}`);
+            resolve();
+          });
+        }, i === 0 ? 1500 : VIDEO_DELAY);
+      });
     }
+    return next();
+  }
 
-    fetchApi('queryBalanceAndBonus').then(res => {
-      try {
-        const d = JSON.parse(res.body);
-        if (d.retcode === 0) msgs.push(`💰 余额：${d.result.balance} Coins`);
-        else msgs.push(`⚠️ 查询：${d.retmsg}`);
-      } catch (e) {
-        msgs.push('❌ 查询：解析失败');
-      }
-      return fetchApi('checkIn');
-    }).then(res => {
-      try {
-        const d = JSON.parse(res.body);
-        if (d.retcode === 0) msgs.push(`✅ 签到：${(d.result?.bonusHint || d.retmsg || '').replace(/\n/g, ' ')}`);
-        else msgs.push(`⚠️ 签到：${d.retmsg}`);
-      } catch (e) {
-        msgs.push('❌ 签到：解析失败');
-      }
-      return doVideoLoop(MAX_VIDEO);
-    }).then(() => {
-      return fetchApi('queryBalanceAndBonus');
-    }).then(res => {
-      try {
-        const d = JSON.parse(res.body);
-        if (d.retcode === 0) msgs.push(`💰 最新余额：${d.result.balance} Coins`);
-      } catch (e) {}
-      notifyDone('🎉 任务完成', msgs.join('\n'));
+  return fetchApi('queryBalanceAndBonus').then(res => {
+    try {
+      const d = JSON.parse(res.body);
+      if (d.retcode === 0) msgs.push(`💰 余额：${d.result.balance} Coins`);
+      else msgs.push(`⚠️ 查询：${d.retmsg}`);
+    } catch (e) { msgs.push('❌ 查询：解析失败'); }
+    return fetchApi('checkIn');
+  }).then(res => {
+    try {
+      const d = JSON.parse(res.body);
+      if (d.retcode === 0) msgs.push(`✅ 签到：${(d.result?.bonusHint || d.retmsg || '').replace(/\n/g, ' ')}`);
+      else msgs.push(`⚠️ 签到：${d.retmsg}`);
+    } catch (e) { msgs.push('❌ 签到：解析失败'); }
+    return doVideoLoop(MAX_VIDEO);
+  }).then(() => fetchApi('queryBalanceAndBonus')).then(res => {
+    try {
+      const d = JSON.parse(res.body);
+      if (d.retcode === 0) msgs.push(`💰 最新余额：${d.result.balance} Coins`);
+    } catch (e) {}
+    return msgs.join('\n');
+  }).catch(err => {
+    msgs.push(`❌ 异常：${err.error || String(err)}`);
+    return msgs.join('\n');
+  });
+}
+
+if (typeof $request !== 'undefined' && $request) {
+  const paramsRaw = parseRawQuery($request.url);
+  const headersMap = normalizeHeaderNameMap($request.headers || {});
+  let baseUA = '';
+  Object.keys(headersMap).forEach(k => { if (k.toLowerCase() === 'user-agent') baseUA = headersMap[k]; });
+
+  const store = loadStore();
+  const fp = fingerprintOf(paramsRaw);
+  const now = Date.now();
+  const existed = !!store.accounts[fp];
+  const uaSeed = existed ? store.accounts[fp].uaSeed : store.order.length;
+  const alias = existed ? store.accounts[fp].alias : `账号${store.order.length + 1}`;
+
+  store.accounts[fp] = {
+    id: fp,
+    alias,
+    uaSeed,
+    baseUA,
+    capture: { url: $request.url, paramsRaw, headers: headersMap },
+    createdAt: existed ? store.accounts[fp].createdAt : now,
+    updatedAt: now
+  };
+  if (!existed) store.order.push(fp);
+  saveStore(store);
+
+  const total = store.order.length;
+  notify(existed ? '🔄 账号参数已更新' : '✅ 新账号已入库', `${alias}（id:${fp}）\n当前账号总数：${total}`);
+  console.log(`【${scriptName}】${existed ? 'update' : 'add'} account ${fp}\n${JSON.stringify(store.accounts[fp], null, 2)}`);
+  $done({});
+} else {
+  const store = loadStore();
+  const ids = store.order.filter(id => store.accounts[id]);
+  if (!ids.length) {
+    notify('⚠️ 未抓到任何账号', '请先打开 PingMe 触发抓包');
+    $done();
+  } else {
+    const total = ids.length;
+    const results = [];
+    let chain = Promise.resolve();
+    ids.forEach((id, idx) => {
+      chain = chain.then(() => runAccount(store.accounts[id], idx, total))
+        .then(text => { results.push(text); })
+        .then(() => idx < ids.length - 1 ? sleep(ACCOUNT_GAP) : null);
+    });
+    chain.then(() => {
+      notify(`🎉 全部完成 (${total}个账号)`, results.join('\n———\n'));
       $done();
     }).catch(err => {
-      notifyDone('❌ 任务失败', msgs.join('\n') + '\n' + (err.error || String(err)));
+      notify('❌ 任务异常', results.join('\n———\n') + '\n' + (err.error || String(err)));
       $done();
     });
   }
 }
+
