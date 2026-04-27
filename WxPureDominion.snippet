@@ -1,4 +1,5 @@
-//          2026/4/27
+
+//          2025/9/29
 //小桔充电
 ^https:\/\/energy\.xiaojukeji\.com\/mission\/api\/page\/activityInfo url reject-dict
 ^https:\/\/energy\.xiaojukeji\.com\/mission\/api\/page\/getPageDetail url reject-dict
@@ -8,7 +9,8 @@
 ^https:\/\/gw3\.ykccn\.com\/api\/omp\/mt\/enterpriseWeChatConfig\/app\/queryCityConfig url reject-dict
 ^https:\/\/gw3\.ykccn\.com\/api\/omp\/mt\/appAdvertising\/queryAdvertisingByParams url reject-dict
 ^https:\/\/gw3\.ykccn\.com\/api\/omp\/mt\/charge\/activity\/package\/newest url reject-dict
-//同程旅行
+ //同程旅行
+^https:\/\/wx\.17u\.cn\/wxorderextend\/banner\/get url reject-dict
 ^https:\/\/wx\.17u\.cn\/wxorderextend\/banner\/get url reject-dict
 ^https:\/\/wx\.17u\.cn\/xcxhomeapi\/aggregator\/index url reject-dict
 ^https:\/\/wx\.17u\.cn\/mytourapi\/mytrip\/blankflight url reject-dict
@@ -19,6 +21,7 @@
 ^https:\/\/wx\.17u\.cn\/mytourapi\/blankpage\/recommendList url reject-dict
 ^https:\/\/wx\.17u\.cn\/homemarketapi\/aggregator\/index url reject-dict
 ^https:\/\/wx\.17u\.cn\/wxocbdapi\/adService\/getAd url reject-dict
+^https:\/\/wx\.17u\.cn\/homemarketapi\/aggregator\/index url reject-dict
 ^https:\/\/wx\.17u\.cn\/xcxhomeapi\/home\/converge url reject-dict
 ^https:\/\/wx\.17u\.cn\/platformpubapi\/customer\/lead\/getInfo url reject-dict
 ^https:\/\/wx\.17u\.cn\/mytourapi\/mytrip\/toptips url reject-dict
@@ -26,28 +29,12 @@
 ^https:\/\/wx\.17u\.cn\/wireless\/monitor\/wx\/common\/compressevent url reject-dict
 ^https:\/\/wx\.17u\.cn\/wechatmypubapi\/myInfo\/listIcons url reject-dict
 ^https:\/\/a1d5b283e-wx621112590b635086\.sh\.wxgateway\.com\/xcxhomeapi\/home\/screen url reject-dict
-//大众点评广告
+//美团
 ^https:\/\/mapi\.dianping\.com\/baymax\/adrec\/getrecads url reject-dict
 ^https:\/\/mapi\.dianping\.com\/baymax\/getSlotAds url reject-dict
-//美团 - 首页
-^https:\/\/web\.meituan\.com\/api\/miniprogram\/index\/aggregate url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/MeiTuanNoAd.js
-^https:\/\/web\.meituan\.com\/api\/miniprogram\/index\/popWindow url reject-dict
-^https:\/\/web\.meituan\.com\/api\/miniprogram\/index\/couponInfo url reject-dict
-^https:\/\/web\.meituan\.com\/api\/miniprogram\/index\/cust\/arenaResult url reject-dict
-//美团 - 底部标签栏
 ^https:\/\/web\.meituan\.com\/api\/miniprogram\/tabbar\/all\/query url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/MeiTuanNoAd.js
-//美团 - 我的页面
-^https:\/\/web\.meituan\.com\/api\/miniprogram\/my\/novelZone url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/MeiTuanNoAd.js
-^https:\/\/web\.meituan\.com\/api\/miniprogram\/my\/resources url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/MeiTuanNoAd.js
-^https:\/\/npay\.meituan\.com\/conch\/flow\/mypage-wallet-info url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/MeiTuanNoAd.js
-^https:\/\/npay\.meituan\.com\/conch\/verify\/queryInfo url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/MeiTuanNoAd.js
+^https:\/\/web\.meituan\.com\/api\/miniprogram\/index\/aggregate url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/MeiTuanNoAd.js
+^https:\/\/web\.meituan\.com\/api\/miniprogram\/my\/novelZone url reject-dict
+^https:\/\/web\.meituan\.com\/api\/miniprogram\/my\/resources url reject-dict
+^https:\/\/npay\.meituan\.com\/conch\/flow\/mypage-wallet-info url reject-dict
 ^https:\/\/web\.meituan\.com\/newUser\/returnMoney\/popWindow url reject-dict
-^https:\/\/npay\.meituan\.com\/conch\/walletv3\/wechat-pop-window url reject-dict
-//美团 - 搜索
-^https:\/\/apimobile\.meituan\.com\/group\/v1\/deal\/searchpage\/defaultword url reject-dict
-//京东
-^https:\/\/api\.m\.jd\.com\/\?loginType=11 url reject-dict
-
-
-
-hostname= energy.xiaojukeji.com,gw3.ykccn.com,wx.17u.cn,web.meituan.com,npay.meituan.com,mapi.dianping.com,a1d5b283e-wx621112590b635086.sh.wxgateway.com,apimobile.meituan.com
