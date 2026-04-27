@@ -1,4 +1,4 @@
-//2026/04/21
+//2026/04/27
 /*
 @Name：WeTalk 自动化签到+视频奖励
 @Author：TG@ZenMoFiShi
@@ -126,22 +126,63 @@ function parseRawQuery(url) {
   return rawMap;
 }
 
+function safeDecode(v) {
+  if (v == null) return '';
+  try { return decodeURIComponent(String(v)); } catch (e) { return String(v); }
+}
+
+// 账号唯一键：以邮箱为准（小写 + 去空白 + url 解码）。
+// 抓不到邮箱时回退到旧 fingerprint，避免存储破碎。
+function emailKeyOf(paramsRaw) {
+  const raw = (paramsRaw || {}).email;
+  if (!raw) return '';
+  return safeDecode(raw).trim().toLowerCase();
+}
+
 function fingerprintOf(paramsRaw) {
+  const email = emailKeyOf(paramsRaw);
+  if (email) return email;
   const drop = { sign:1, signDate:1, timestamp:1, ts:1, nonce:1, random:1, reqTime:1, reqId:1, requestId:1 };
   const base = Object.keys(paramsRaw || {}).filter(k => !drop[k]).sort().map(k => `${k}=${paramsRaw[k]}`).join('&');
-  return MD5(base).slice(0, 12);
+  return 'fp_' + MD5(base).slice(0, 12);
+}
+
+// 兼容老版本：把以 MD5 fingerprint 为 key 的账号迁移成以 email 为 key。
+function migrateStore(store) {
+  if (!store || !store.accounts) return store;
+  const newAccounts = {};
+  const newOrder = [];
+  let migrated = false;
+  (store.order || Object.keys(store.accounts)).forEach(oldId => {
+    const acc = store.accounts[oldId];
+    if (!acc) return;
+    const email = emailKeyOf(acc.capture && acc.capture.paramsRaw);
+    const newId = email || oldId;
+    if (newId !== oldId) migrated = true;
+    // 后到的同邮箱覆盖（用更新的 capture）
+    const prev = newAccounts[newId];
+    if (!prev || (acc.updatedAt || 0) >= (prev.updatedAt || 0)) {
+      newAccounts[newId] = Object.assign({}, acc, { id: newId, alias: acc.alias || email || newId });
+      if (newOrder.indexOf(newId) < 0) newOrder.push(newId);
+    }
+  });
+  if (migrated) {
+    store.accounts = newAccounts;
+    store.order = newOrder;
+  }
+  return store;
 }
 
 function loadStore() {
   const raw = $prefs.valueForKey(storeKey);
-  if (!raw) return { version: 1, accounts: {}, order: [] };
+  if (!raw) return { version: 2, accounts: {}, order: [] };
   try {
     const obj = JSON.parse(raw);
     if (!obj.accounts) obj.accounts = {};
     if (!Array.isArray(obj.order)) obj.order = Object.keys(obj.accounts);
-    return obj;
+    return migrateStore(obj);
   } catch (e) {
-    return { version: 1, accounts: {}, order: [] };
+    return { version: 2, accounts: {}, order: [] };
   }
 }
 
@@ -215,7 +256,7 @@ function sleep(ms) {
 }
 
 function runAccount(acc, index, total) {
-  const tag = `[账号${index+1}/${total} ${acc.alias || acc.id}]`;
+  const tag = `[账号${index+1}/${total} ${acc.alias || acc.email || acc.id}]`;
   const ua = buildUA(acc.baseUA, acc.uaSeed);
   const headers = buildHeaders(acc.capture, ua);
   const msgs = [tag];
@@ -287,29 +328,36 @@ if (typeof $request !== 'undefined' && $request) {
   let baseUA = '';
   Object.keys(headersMap).forEach(k => { if (k.toLowerCase() === 'user-agent') baseUA = headersMap[k]; });
 
-  const store = loadStore();
-  const fp = fingerprintOf(paramsRaw);
-  const now = Date.now();
-  const existed = !!store.accounts[fp];
-  const uaSeed = existed ? store.accounts[fp].uaSeed : store.order.length;
-  const alias = existed ? store.accounts[fp].alias : `账号${store.order.length + 1}`;
+  const email = emailKeyOf(paramsRaw);
+  if (!email) {
+    notify('⚠️ 抓取失败', '请求里未取到 email 参数，无法识别账号。请确认已登录后再触发抓包。');
+    $done({});
+  } else {
+    const store = loadStore();
+    const accId = email; // 以邮箱作为账号唯一标识
+    const now = Date.now();
+    const existed = !!store.accounts[accId];
+    const uaSeed = existed ? store.accounts[accId].uaSeed : store.order.length;
+    const alias = existed ? (store.accounts[accId].alias || email) : email;
 
-  store.accounts[fp] = {
-    id: fp,
-    alias,
-    uaSeed,
-    baseUA,
-    capture: { url: $request.url, paramsRaw, headers: headersMap },
-    createdAt: existed ? store.accounts[fp].createdAt : now,
-    updatedAt: now
-  };
-  if (!existed) store.order.push(fp);
-  saveStore(store);
+    store.accounts[accId] = {
+      id: accId,
+      email: email,
+      alias,
+      uaSeed,
+      baseUA,
+      capture: { url: $request.url, paramsRaw, headers: headersMap },
+      createdAt: existed ? store.accounts[accId].createdAt : now,
+      updatedAt: now
+    };
+    if (!existed) store.order.push(accId);
+    saveStore(store);
 
-  const total = store.order.length;
-  notify(existed ? '🔄 账号参数已更新' : '✅ 新账号已入库', `${alias}（id:${fp}）\n当前账号总数：${total}`);
-  console.log(`【${scriptName}】${existed ? 'update' : 'add'} account ${fp}\n${JSON.stringify(store.accounts[fp], null, 2)}`);
-  $done({});
+    const total = store.order.length;
+    notify(existed ? '🔄 账号参数已更新' : '✅ 新账号已入库', `${email}\n当前账号总数：${total}`);
+    console.log(`【${scriptName}】${existed ? 'update' : 'add'} account ${email}\n${JSON.stringify(store.accounts[accId], null, 2)}`);
+    $done({});
+  }
 } else {
   const store = loadStore();
   const ids = store.order.filter(id => store.accounts[id]);
