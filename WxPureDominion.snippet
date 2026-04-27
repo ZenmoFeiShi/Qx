@@ -30,17 +30,17 @@
 ^https:\/\/mapi\.dianping\.com\/baymax\/adrec\/getrecads url reject-dict
 ^https:\/\/mapi\.dianping\.com\/baymax\/getSlotAds url reject-dict
 //美团 - 首页
-^https:\/\/web\.meituan\.com\/api\/miniprogram\/index\/aggregate url script-response-body MeiTuanClean.js
+^https:\/\/web\.meituan\.com\/api\/miniprogram\/index\/aggregate url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/MeiTuanNoAd.js
 ^https:\/\/web\.meituan\.com\/api\/miniprogram\/index\/popWindow url reject-dict
 ^https:\/\/web\.meituan\.com\/api\/miniprogram\/index\/couponInfo url reject-dict
 ^https:\/\/web\.meituan\.com\/api\/miniprogram\/index\/cust\/arenaResult url reject-dict
 //美团 - 底部标签栏
-^https:\/\/web\.meituan\.com\/api\/miniprogram\/tabbar\/all\/query url script-response-body MeiTuanClean.js
+^https:\/\/web\.meituan\.com\/api\/miniprogram\/tabbar\/all\/query url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/MeiTuanNoAd.js
 //美团 - 我的页面
-^https:\/\/web\.meituan\.com\/api\/miniprogram\/my\/novelZone url script-response-body MeiTuanClean.js
-^https:\/\/web\.meituan\.com\/api\/miniprogram\/my\/resources url script-response-body MeiTuanClean.js
-^https:\/\/npay\.meituan\.com\/conch\/flow\/mypage-wallet-info url script-response-body MeiTuanClean.js
-^https:\/\/npay\.meituan\.com\/conch\/verify\/queryInfo url script-response-body MeiTuanClean.js
+^https:\/\/web\.meituan\.com\/api\/miniprogram\/my\/novelZone url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/MeiTuanNoAd.js
+^https:\/\/web\.meituan\.com\/api\/miniprogram\/my\/resources url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/MeiTuanNoAd.js
+^https:\/\/npay\.meituan\.com\/conch\/flow\/mypage-wallet-info url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/MeiTuanNoAd.js
+^https:\/\/npay\.meituan\.com\/conch\/verify\/queryInfo url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/MeiTuanNoAd.js
 ^https:\/\/web\.meituan\.com\/newUser\/returnMoney\/popWindow url reject-dict
 ^https:\/\/npay\.meituan\.com\/conch\/walletv3\/wechat-pop-window url reject-dict
 //美团 - 搜索
