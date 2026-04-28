@@ -5,8 +5,6 @@ function azHasShoppingText(l){try{return/(shopping_(timely|description|carousel|
 function azBytesContainPagead(l){let e=[112,97,103,101,97,100],t=l.length,n=e.length;for(let i=0;i<=t-n;i++){let r=!0;for(let c=0;c<n;c++)if(l[i+c]!==e[c]){r=!1;break}if(r)return!0}return!1}function azBytesMatch(l,e,t){for(let n=0;n<e.length;n++)if(l[t+n]!==e[n])return!1;return!0}function azHasLibraryJunk(l){let e=[[83,80,117,110,108,105,109,105,116,101,100],[70,69,109,121,95,118,105,100,101,111,115],[70,69,115,116,111,114,101,102,114,111,110,116]],t=[48602820,79129962];try{let n=f.list(l);if(!n||!n.length)return!1;let i=n[0];if(!i||t.indexOf(i.no)<0)return!1;if(i.wireType!==2||!i.data||i.data.length<10)return!1;let r=i.data,c=r.length;for(let a=0;a<e.length;a++){let o=e[a],s=o.length;for(let u=0;u<=c-s;u++)if(azBytesMatch(r,o,u))return!0}return!1}catch(n){return!1}}
 function azDropPagedAdFromSectionList(l){l.iterate(l.message,"sectionListRenderer",e=>{let t=e.sectionListRenderer;if(!t)return;let n=f.list(t);if(!n||!n.length)return;let i=[],r=!1;for(let c=0;c<n.length;c++){let a=n[c];if(a.wireType===2&&a.data&&a.data.length>20&&azBytesContainPagead(a.data)){r=!0;continue}i.push(a)}if(r){t[f.symbol]=i,l.needProcess=!0}})}
 function azStripShoppingFromBytes(buf){
-  // 贪婪策略：在 buf 里搜 needle 字符串，用 protobuf wire 解析重写顶层字段，
-  // 凡是 LD value 字节里包含 needle 的字段（递归视情况进 sub-message）一律剔除。
   const NEEDLES = ["shopping_timely_shelf","shopping_timely_shelf_content","shopping_timely_shelf_split_content","styled_product_carousel","styled_product_carousel_item","single_product_item","shopping_description_shelf","shopping_description_shelf_deprecated","shopping_description_item","alternating_shopping_content","shopping_carousel","shopping_carousel_transition","shopping_item_card","shopping_content_line","shopping_content_line_item","shopping_stacked_image","shopping_binary_transition","shopping_expand_transition","shopping_event_carousel_item","product_image_shelf","merchandise_shelf","paid_product_placement","gstatic.com/shopping","link.coupang.com","utm_medium=product_shelf"];
   function bufIndexOfStr(b, str){
     const m=str.length, n=b.length; if(n<m) return -1;
@@ -63,16 +61,14 @@ function azStripShoppingFromBytes(buf){
         const valStart=p2, valEnd=p2+len;
         const value=buf.subarray?buf.subarray(valStart,valEnd):buf.slice(valStart,valEnd);
         if(containsAny(value)){
-          // 尝试递归裁更细
           const sub=strip(value, depth+1);
           if(!sub.parseFail && sub.modified && !containsAny(sub.bytes)){
-            // 写回新 LD
             modified=true;
             for(let i=tagStart;i<p1;i++) out.push(buf[i]); // tag
             writeVarint(out,sub.bytes.length);
             for(let i=0;i<sub.bytes.length;i++) out.push(sub.bytes[i]);
           } else {
-            // 整段丢弃（贪婪）
+            // 整段丢弃
             modified=true;
           }
         } else {
