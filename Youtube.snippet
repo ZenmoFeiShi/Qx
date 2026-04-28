@@ -1,6 +1,6 @@
 #!author=DivineEngine + app2smile + Maasea + ddgksf2013 + Aioneas + Oneasai + ZenmoFeiShi
 #!name=YouTube去广告隐藏Shorts版@Aioneas
-#!desc=基于稳定版，额外去除首页Shorts，去除首页shorts区块
+#!desc=基于稳定版，额外去除首页Shorts，去除首页shorts区块，去除视频播内嵌购推荐卡
 ^https?:\/\/[\w-]+\.googlevideo\.com\/(?!dclk_video_ads).+?&ctier=L(&.+?),ctier,(.+) url 302 https://$1$2$3
 ^https?:\/\/[\w-]+\.googlevideo\.com\/(?!(dclk_video_ads|videoplayback\?)).+&oad url reject-200
 ^https?:\/\/(www|s)\.youtube\.com\/api\/stats\/ads url reject-200
