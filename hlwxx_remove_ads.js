@@ -21,18 +21,23 @@ var css = '<style id="hl-adblock">'
 
 var js = '<script id="hl-adblock-js">'
   + '!function(){'
-  + 'function clean(){'
-  + 'document.querySelectorAll(".video-item").forEach(function(e){'
+  + 'function isAdItem(e){'
   + 'var a=e.querySelector("a");'
-  + 'if(a&&(a.classList.contains("gotoclick")||a.classList.contains("tjtagmanager")||a.hasAttribute("adv_id")))e.remove()});'
+  + 'if(a&&(a.classList.contains("gotoclick")||a.classList.contains("tjtagmanager")||a.hasAttribute("adv_id")))return true;'
+  + 'var h2=e.querySelector("h2.title");'
+  + 'var dt=e.querySelector("div.title");'
+  + 'if(!h2&&dt&&!dt.textContent.trim())return true;'
+  + 'return false}'
+  + 'function clean(){'
+  + 'document.querySelectorAll(".video-item").forEach(function(e){if(isAdItem(e))e.remove()});'
   + '["notice_container"].forEach(function(i){var e=document.getElementById(i);if(e)e.remove()});'
   + '[".application-popup",".event-notice",".addbox",".download",".infomation",".post-content",'
   + '".list-sec-top",".list-sec","#copy-img",".slider-banners",".footer"]'
   + '.forEach(function(s){document.querySelectorAll(s).forEach(function(e){e.remove()})});'
   + 'document.querySelectorAll("script").forEach(function(s){'
   + 'var r=s.getAttribute("src")||"";'
-  + 'if(r.indexOf("stats.kwvprfcr.xyz")>-1||r.indexOf("yandex.ru")>-1||r.indexOf("googletagmanager.com")>-1||r.indexOf("gtag/js")>-1||r.indexOf("cghhqca.cc")>-1)s.remove()});'
-  + 'try{window.plausible=function(){};window.gtag=function(){};window.ym=function(){};window.dataLayer=[]}catch(e){}'
+  + 'if(r.indexOf("stats.kwvprfcr.xyz")>-1||r.indexOf("yandex.ru")>-1||r.indexOf("googletagmanager.com")>-1||r.indexOf("gtag/js")>-1||r.indexOf("cghhqca.cc")>-1||r.indexOf("cloudflareinsights.com")>-1||r.indexOf("shuifeng.cc")>-1||r.indexOf("zyudkkup.com")>-1)s.remove()});'
+  + 'try{window.plausible=function(){};window.gtag=function(){};window.ym=function(){};window.dataLayer=[];window.tjDataLayer=[];window.tjtag=function(){};window.tjtag2=function(){}}catch(e){}'
   + '}'
   + 'if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",clean);else clean();'
   + 'setTimeout(clean,1500);setTimeout(clean,4000);setTimeout(clean,8000)'
@@ -45,6 +50,9 @@ body = body.replace('</body>', js + '</body>');
 body = body.replace(/<script[^>]+stats\.kwvprfcr\.xyz[^>]*><\/script>/gi, '');
 body = body.replace(/<script[^>]+yandex\.ru\/metrika[^>]*><\/script>/gi, '');
 body = body.replace(/<script[^>]+googletagmanager\.com\/gtag[^>]*><\/script>/gi, '');
+body = body.replace(/<script[^>]+cloudflareinsights\.com[^>]*><\/script>/gi, '');
+body = body.replace(/<script[^>]+shuifeng\.cc[^>]*><\/script>/gi, '');
+body = body.replace(/<script[^>]+zyudkkup\.com[^>]*><\/script>/gi, '');
 
 $done({ body: body });
 }
