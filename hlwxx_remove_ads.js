@@ -1,3 +1,4 @@
+//2026/5/2
 var body = $response.body;
 
 if (!body || (body.indexOf('<!doctype') === -1 && body.indexOf('<!DOCTYPE') === -1 && body.indexOf('<html') === -1)) {
@@ -24,9 +25,8 @@ var js = '<script id="hl-adblock-js">'
   + 'function isAdItem(e){'
   + 'var a=e.querySelector("a");'
   + 'if(a&&(a.classList.contains("gotoclick")||a.classList.contains("tjtagmanager")||a.hasAttribute("adv_id")))return true;'
-  + 'var h2=e.querySelector("h2.title");'
-  + 'var dt=e.querySelector("div.title");'
-  + 'if(!h2&&dt&&!dt.textContent.trim())return true;'
+  + 'var t=e.querySelector("h2.title,div.title");'
+  + 'if(t&&!t.textContent.trim())return true;'
   + 'return false}'
   + 'function clean(){'
   + 'document.querySelectorAll(".video-item").forEach(function(e){if(isAdItem(e))e.remove()});'
