@@ -1,6 +1,6 @@
 #!name = B站gRPC数据包净化
 #!author = 怎么肥事
-#!update = 2026-04-15
+#!update = 2026-05-09
 #   1. 相关推荐列表中的广告卡片（游戏推广等）
 #   2. 视频详情页底部的广告控制模块（此处处理之后qx不支持mitm2会导致弹幕，评论区无法加载，暂时注释掉不要使用）
 #   3. 搜索框预填充的推荐搜索词
@@ -16,5 +16,7 @@
 ^https:\/\/cm\.bilibili\.com\/cm\/api\/(conversion|fees)\/ url reject-dict
 ^https:\/\/dataflow\.biliapi\.com\/log\/pbmobile\/ url reject-200
 ^https:\/\/api-pt\.chuangyuejoy\.com\/ad\/ url reject-dict
+^https?:\/\/api\.bilibili\.com\/x\/vip\/window\/list\? url jsonjq-response-body .data.list = []
+^https?:\/\/api\.bilibili\.com\/x\/vip\/web\/vip_center\/(v2|modules) url jsonjq-response-body .data.benefits = [] | .data.welfare = null | .data.free_welfare = null | .data.draw_cards_welfare = null | .data.draw_cards_welfare_v2 = null
 
 hostname = *bili*,api-pt.chuangyuejoy.com,
