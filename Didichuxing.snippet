@@ -1,6 +1,6 @@
 #!name = 滴滴出行
 #!author = 怎么肥事
-#!update = 2026-4-14
+#!update = 2026-5-11
 
 // 滴滴分流
 host, gwp.xiaojukeji.com, reject
@@ -54,11 +54,19 @@ ip-cidr, 116.85.3.25/32, reject
 // 行程中 - 移除广告组件
 ^https:\/\/api\.udache\.com\/gulfstream\/passenger-center\/v2\/other\/pInTripLayout url jsonjq-response-body 'del(.data.order_components[8].data) | .data.order_components |= map(select(.name != "passenger_common_casper"))'
 
-// 钱包首页 - 精简卡片
-^https:\/\/mapi\.xiaojukeji\.com\/passenger-wallet\/api\/v6\/wallet\/homepage url jsonjq-response-body '.data.cardList |= [.[0] | del(.detailData.myCreditLimit) | .detailData.discountList |= .[:3]]'
+// 钱包首页 - 只保留资产卡片，干掉借钱/信用卡/支付立减/滴滴保等所有推广卡
+^https:\/\/mapi\.xiaojukeji\.com\/passenger-wallet\/api\/v[\d.]+\/wallet\/homepage url jsonjq-response-body '.data.cardList |= (map(if .mcode == "index_assets_v6" then .detailData |= (del(.myCreditLimit) | .discountList |= .[:3] | del(.noticeList)) else . end) | map(select(.mcode == "index_assets_v6")))'
 
-// 个人中心布局 - 移除营销/工具/推广
-^https:\/\/common\.diditaxi\.com\.cn\/common\/v5\/usercenter\/layout url jsonjq-response-body 'if (.data.instances | type) == "object" then .data.instances |= del(.center_widget_list, .center_tool_card, .center_marketing_card) else . end | if (.data.instances.center_wallet_finance_card.data.view_info | type) == "array" then .data.instances.center_wallet_finance_card.data.view_info |= .[:1] else . end'
+// 我的资产页 - 删除"我的额度"(借钱/信用卡/领神券)、"我的保障"、banner
+^https:\/\/manhattan\.webapp\.xiaojukeji\.com\/zootopia\/api\/my-assets\/get-assets-data url jsonjq-response-body 'del(.data.myQuotaModularRes, .data.assetsData.myQuotaModularRes, .data.banner, .data.assetsData.banner, .data.myGuaranteeModularRes, .data.assetsData.myGuaranteeModularRes)'
+
+// 我的资产页模块开关
+^https:\/\/manhattan\.webapp\.xiaojukeji\.com\/zootopia\/api\/my-assets\/module-is-show url jsonjq-response-body '.data = []'
+
+// 零钱页底部"支付立减 5-20 元"等 banner
+^https:\/\/ddpay\.xiaojukeji\.com\/ddpay\/api\/manhattan-small-change\/get-all-config url jsonjq-response-body '.data.result = []'
+
+^https:\/\/ddpay\.xiaojukeji\.com\/ddpay\/api\/manhattan-small-change\/get-apollo-config url jsonjq-response-body '.data.result.hideList = []'
 
 
-hostname = 117.51.168.*,113.46.225.*, common.diditaxi.com.cn, freight.xiaojukeji.com, daijia.kuaidadi.com, 162.14.157.*, ct.xiaojukeji.com, res.xiaojukeji.com, conf.diditaxi.com.cn, api.udache.com, 123.207.209.*, 112.53.55.225, 120.241.142.*, 120.241.143.*, 116.85.*, 139.199.240.84, mapi.xiaojukeji.com
+hostname = 117.51.168.*, 113.46.225.*, common.diditaxi.com.cn, freight.xiaojukeji.com, daijia.kuaidadi.com, 162.14.157.*, ct.xiaojukeji.com, res.xiaojukeji.com, conf.diditaxi.com.cn, api.udache.com, 123.207.209.*, 112.53.55.225, 120.241.142.*, 120.241.143.*, 116.85.*, 139.199.240.84, mapi.xiaojukeji.com, manhattan.webapp.xiaojukeji.com, ddpay.xiaojukeji.com
