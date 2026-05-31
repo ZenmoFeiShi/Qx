@@ -1,6 +1,6 @@
-//2026/5/29
+//2026/5/31
 const AUTH = {
-  userToken: "nlps6ED19D0AD8FDDA56A910",
+  userToken: "nlpsDFE0F729D453874D754D",
   userId:    "1245377469",
   passId:    "395831016729557547",
   userNum:   "NTDrsyM1kTO5YTNwcTNxYDO",
@@ -8,11 +8,11 @@ const AUTH = {
   carrierCode: "CM",
   areaId: "551",
   cityId: "0551",
-  expiredOn: "1785205515000",
-  sign:      "0C6178FD293C20A1D225981FA43E6F2F",
+  expiredOn: "1785428352000",
+  sign:      "BD34A413A150FE91AED7241A9A03E3A4",
   clientId:  "809f891b829f43ad8105bfd7e82335fb",
-  l_s:       "c95cacd40ef8d36c56945c1f1f8fa3b1",
-  l_t:       "1780021514",
+  l_s:       "49192dbaa7c6b70f42a07906fbc6200b",
+  l_t:       "1780244351",
   csid_suffix: "478679DA-BEF3-458E-996F-C965F27F369D"
 };
 const MIGU_UID = "2377a93d-03c8-447b-a82d-84687dd522ac";
