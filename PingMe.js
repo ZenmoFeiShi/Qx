@@ -1,4 +1,4 @@
-//2026/05/11
+//2026/06/02
 /*
 @Name：PingMe 自动化签到+视频奖励
 @Author：怎么肥事
@@ -213,8 +213,12 @@ function buildHeaders(capture, ua) {
   delete headers[':authority']; delete headers[':method']; delete headers[':path']; delete headers[':scheme'];
   headers['Host'] = 'api.pingmeapp.net';
   headers['Accept'] = headers['Accept'] || 'application/json';
-  Object.keys(headers).forEach(k => { if (k.toLowerCase() === 'user-agent') delete headers[k]; });
+  Object.keys(headers).forEach(k => {
+    const lk = k.toLowerCase();
+    if (lk === 'user-agent' || lk === 'connection' || lk === 'proxy-connection' || lk === 'keep-alive') delete headers[k];
+  });
   headers['User-Agent'] = ua;
+  headers['Connection'] = 'close';
   return headers;
 }
 
