@@ -239,7 +239,15 @@ function runAccount(acc, index, total) {
 
   function fetchApi(path, useFakeId) {
     const overrideId = useFakeId ? fakeDeviceId : null;
-    return $task.fetch({ url: buildUrl(path, acc.capture, overrideId), method: 'GET', headers });
+    const attempt = (n) => $task.fetch({ url: buildUrl(path, acc.capture, overrideId), method: 'GET', headers })
+      .catch(err => {
+        const m = err && (err.error || String(err));
+        if (n < 3 && /SSL|SSLSessionState|timeout|timed out|reset|connection|network|stream closed|closed|EOF/i.test(m || '')) {
+          return sleep(1500).then(() => attempt(n + 1));
+        }
+        throw err;
+      });
+    return attempt(1);
   }
 
   function doVideoLoop(count) {
