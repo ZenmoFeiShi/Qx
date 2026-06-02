@@ -265,8 +265,15 @@ function runAccount(acc, index, total) {
   const headers = buildHeaders(acc.capture, ua);
   const msgs = [tag];
 
-  function fetchApi(path) {
-    return $task.fetch({ url: buildUrl(path, acc.capture), method: 'GET', headers });
+  function fetchApi(path, retry) {
+    retry = (retry === undefined) ? 3 : retry;
+    return $task.fetch({ url: buildUrl(path, acc.capture), method: 'GET', headers }).catch(err => {
+      const m = (err && (err.error || String(err))) || '';
+      if (retry > 0 && /stream closed|SSL|SSLSessionState|reset|timeout|closed|EOF|connection/i.test(m)) {
+        return new Promise(r => setTimeout(r, 1200)).then(() => fetchApi(path, retry - 1));
+      }
+      return Promise.reject(err);
+    });
   }
 
   function doVideoLoop(count) {
