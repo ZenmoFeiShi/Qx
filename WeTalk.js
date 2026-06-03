@@ -1,4 +1,4 @@
-//2026/06/02
+//2026/06/03
 /*
 @Name：WeTalk 自动化签到+视频奖励
 @Author：TG@ZenMoFiShi
@@ -213,21 +213,34 @@ function buildUA(baseUA, seed) {
   return `WeTalk/30.6.0 (com.innovationworks.wetalk; build:28; iOS ${iosVer}) Alamofire/5.4.3`;
 }
 
-function buildSignedParamsRaw(capture) {
+function buildSignedParamsRaw(capture, overrideDeviceId) {
   const params = {};
   Object.keys(capture.paramsRaw || {}).forEach(k => {
     if (k !== 'sign' && k !== 'signDate') params[k] = capture.paramsRaw[k];
   });
+  if (overrideDeviceId && params.uniquedeviceid) {
+    params.uniquedeviceid = overrideDeviceId;
+  }
   params.signDate = getUTCSignDate();
   const signBase = Object.keys(params).sort().map(k => `${k}=${params[k]}`).join('&');
   params.sign = MD5(signBase + SECRET);
   return params;
 }
 
-function buildUrl(path, capture) {
-  const params = buildSignedParamsRaw(capture);
+function buildUrl(path, capture, overrideDeviceId) {
+  const params = buildSignedParamsRaw(capture, overrideDeviceId);
   const qs = Object.keys(params).map(k => `${k}=${encodeURIComponent(params[k])}`).join('&');
   return `https://${API_HOST}/app/${path}?${qs}`;
+}
+
+function randHex(n) {
+  let s = '';
+  for (let i = 0; i < n; i++) s += Math.floor(Math.random() * 16).toString(16);
+  return s.toUpperCase();
+}
+
+function genFakeDeviceId() {
+  return `${randHex(8)}-${randHex(4)}-${randHex(4)}-${randHex(4)}-${randHex(12)}WeTalkIOS`;
 }
 
 function cloneHeaders(headers) {
@@ -263,14 +276,16 @@ function runAccount(acc, index, total) {
   const tag = `[账号${index+1}/${total} ${acc.alias || acc.email || acc.id}]`;
   const ua = buildUA(acc.baseUA, acc.uaSeed);
   const headers = buildHeaders(acc.capture, ua);
+  const fakeDeviceId = genFakeDeviceId();
   const msgs = [tag];
 
-  function fetchApi(path, retry) {
+  function fetchApi(path, useFakeId, retry) {
     retry = (retry === undefined) ? 3 : retry;
-    return $task.fetch({ url: buildUrl(path, acc.capture), method: 'GET', headers }).catch(err => {
+    const overrideId = useFakeId ? fakeDeviceId : null;
+    return $task.fetch({ url: buildUrl(path, acc.capture, overrideId), method: 'GET', headers }).catch(err => {
       const m = (err && (err.error || String(err))) || '';
       if (retry > 0 && /stream closed|SSL|SSLSessionState|reset|timeout|closed|EOF|connection/i.test(m)) {
-        return new Promise(r => setTimeout(r, 1200)).then(() => fetchApi(path, retry - 1));
+        return new Promise(r => setTimeout(r, 1200)).then(() => fetchApi(path, useFakeId, retry - 1));
       }
       return Promise.reject(err);
     });
@@ -283,7 +298,7 @@ function runAccount(acc, index, total) {
       return new Promise(resolve => {
         setTimeout(() => {
           i++;
-          fetchApi('videoBonus').then(res => {
+          fetchApi('videoBonus', true).then(res => {
             try {
               const d = JSON.parse(res.body);
               if (d.retcode === 0) {
