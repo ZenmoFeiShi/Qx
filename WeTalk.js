@@ -284,7 +284,7 @@ function runAccount(acc, index, total) {
     const overrideId = useFakeId ? fakeDeviceId : null;
     return $task.fetch({ url: buildUrl(path, acc.capture, overrideId), method: 'GET', headers }).catch(err => {
       const m = (err && (err.error || String(err))) || '';
-      if (retry > 0 && /stream closed|SSL|SSLSessionState|reset|timeout|closed|EOF|connection/i.test(m)) {
+      if (retry > 0 && /SSL|SSLSessionState|timeout|timed out|reset|connection|network|stream closed|closed|EOF/i.test(m)) {
         return new Promise(r => setTimeout(r, 1200)).then(() => fetchApi(path, useFakeId, retry - 1));
       }
       return Promise.reject(err);
