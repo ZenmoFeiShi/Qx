@@ -7,7 +7,7 @@
 ^https?:\/\/app\.mixcapp\.com\/mixc\/gateway url script-request-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/mixc_signin.js
 
 [task_local]
-30 8,20 * * * ^https?:\/\/app\.mixcapp\.com\/mixc\/gateway url script-request-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/mixc_signin.js, tag=一点万象签到, enabled=true
+1 0 * * * ^https?:\/\/app\.mixcapp\.com\/mixc\/gateway url script-request-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/mixc_signin.js, tag=一点万象签到, enabled=true
 
 [MITM]
 hostname = app.mixcapp.com 
