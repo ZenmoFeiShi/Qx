@@ -1,4 +1,4 @@
-//2026/06/13
+//2026/06/13  //15:43
 /*
 @Name：一点万象app 自动化签到
 @Author：怎么肥事
@@ -42,6 +42,10 @@ function notify(title, sub, body) {
 }
 
 function finish() { $done(); }
+
+function passthrough() {
+  if (typeof $done === "function") $done({});
+}
 
 function httpPost(url, headers, body, cb) {
   if ($env.isQX) {
@@ -147,9 +151,9 @@ const KEEP = ["X-Mixc-Swimlane", "appId", "appVersion", "deviceParams", "imei", 
 
 function doCapture() {
   const url = $request.url || "";
-  if (url.indexOf("/mixc/gateway") < 0) { finish(); return; }
+  if (url.indexOf("/mixc/gateway") < 0) { passthrough(); return; }
   const form = parseForm($request.body || "");
-  if (form.platform !== "h5" || !form.token || !form.deviceParams) { finish(); return; }
+  if (form.platform !== "h5" || !form.token || !form.deviceParams) { passthrough(); return; }
   const saved = {};
   for (let i = 0; i < KEEP.length; i++) {
     const k = KEEP[i];
@@ -162,7 +166,7 @@ function doCapture() {
   const changed = !prev || prev.token !== saved.token || prev.mallNo !== saved.mallNo;
   writeStore(saved);
   if (changed) notify("万象星签到", "参数已更新 ✅", "商场 " + saved.mallNo + " · token 已保存，可定时签到");
-  finish();
+  passthrough();
 }
 
 function buildBody(p) {
@@ -257,4 +261,5 @@ if (typeof $request !== "undefined" && $request && $request.url) {
   doCapture();
 } else {
   doSign();
+}
 }
