@@ -1,6 +1,6 @@
 #!name = 滴滴出行
 #!author = 怎么肥事
-#!update = 2026-5-14
+#!update = 2026-6-13
 
 host, gwp.xiaojukeji.com, reject
 ip-cidr, 139.199.244.6/32, reject
@@ -36,7 +36,7 @@ ip-cidr, 116.85.3.25/32, reject
 
 ^https:\/\/common\.diditaxi\.com\.cn\/common\/v\d\/usercenter\/me url jsonjq-response-body '.data.cards |= (map(select(.title != "天天领福利" and .title != "金融服务" and .title != "更多服务" and .title != "企业服务" and .title != "安全中心")) | map(if .tag == "wallet" then (.items |= map(select(.title == "优惠券"))) | (if .card_type == 4 then .bottom_items |= map(select(.title == "省钱套餐" or .title == "出行里程")) else . end) else . end))'
 
-^https:\/\/conf\.diditaxi\.com\.cn\/homepage\/v\d\/core url jsonjq-response-body '.data.order_cards.nav_list_card.data |= map(select(.nav_id == "dache_anycar" or .nav_id == "driverservice" or .nav_id == "bike" or .nav_id == "carmate" or .nav_id == "nav_more_v3")) | .data.disorder_cards.bottom_nav_list.data |= map(select(.id == "v6x_home" or .id == "home_page" or .id == "user_center"))'
+^https:\/\/conf\.diditaxi\.com\.cn\/homepage\/v\d\/core url jsonjq-response-body '.data.order_cards.nav_list_card.data |= map(select(.nav_id == "dache_anycar" or .nav_id == "driverservice" or .nav_id == "bike" or .nav_id == "carmate" or .nav_id == "nav_more_v3")) | .data.disorder_cards.bottom_nav_list.data |= map(select(.id == "v6x_home" or .id == "home_page" or .id == "user_center")) | .data.disorder_cards.top_nav_list.data.top_nav_info |= map(select(.name != "旅行" and .name != "车主"))'
 
 ^https:\/\/api\.udache\.com\/gulfstream\/pre-sale\/v1\/other\/pGetSceneList url jsonjq-response-body '.data.scene_list |= map(select(.text != "优惠商城")) | .data.show_data |= map(.scene_ids |= map(select(. != "scene_coupon_mall")))'
 
