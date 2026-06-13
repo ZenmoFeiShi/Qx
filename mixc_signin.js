@@ -262,4 +262,3 @@ if (typeof $request !== "undefined" && $request && $request.url) {
 } else {
   doSign();
 }
-}
