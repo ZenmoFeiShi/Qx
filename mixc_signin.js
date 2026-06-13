@@ -1,4 +1,4 @@
-//2026/06/13  //16:02
+//2026/06/13  //16:08
 /*
 @Name：一点万象app 自动化签到
 @Author：怎么肥事
@@ -170,7 +170,7 @@ function doCapture() {
   const prev = readStore();
   const changed = !prev || prev.token !== saved.token || prev.mallNo !== saved.mallNo;
   writeStore(saved);
-  if (changed) notify("万象星签到", "参数已更新 ✅", "商场 " + saved.mallNo + " · token 已保存，可定时签到");
+  notify("万象星签到", changed ? "参数已更新 ✅" : "参数已捕获 ✅", "商场 " + saved.mallNo + " · token 已保存，可定时签到");
   passthrough();
 }
 
