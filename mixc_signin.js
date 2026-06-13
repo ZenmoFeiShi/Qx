@@ -1,4 +1,4 @@
-//2026/06/13  //15:55
+//2026/06/13  //16:02
 /*
 @Name：一点万象app 自动化签到
 @Author：怎么肥事
@@ -37,8 +37,13 @@ function writeStore(obj) {
 }
 
 function notify(title, sub, body) {
-  if ($env.isQX) $notify(title, sub, body);
-  else $notify(title, sub, body);
+  if ($env.isQX && typeof $notify === "function") {
+    $notify(title, sub, body);
+  } else if (typeof $notification !== "undefined" && $notification.post) {
+    $notification.post(title, sub, body);
+  } else if (typeof $notify === "function") {
+    $notify(title, sub, body);
+  }
 }
 
 function finish() { $done(); }
