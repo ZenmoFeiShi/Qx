@@ -1,4 +1,4 @@
-//2026/06/02
+//2026/06/14
 /*
 @Name：PingMe 自动化签到+视频奖励
 @Author：怎么肥事
@@ -226,6 +226,23 @@ function notify(title, body) {
   $notify(scriptName, title, body);
 }
 
+function isDeregistered(msg) {
+  return typeof msg === 'string' && msg.indexOf('已被注销') !== -1;
+}
+
+function removeAccounts(store, ids) {
+  const removed = [];
+  ids.forEach(id => {
+    if (store.accounts[id]) {
+      removed.push(store.accounts[id].alias || id);
+      delete store.accounts[id];
+    }
+    const pos = store.order.indexOf(id);
+    if (pos !== -1) store.order.splice(pos, 1);
+  });
+  return removed;
+}
+
 function sleep(ms) {
   return new Promise(r => setTimeout(r, ms));
 }
@@ -236,6 +253,7 @@ function runAccount(acc, index, total) {
   const headers = buildHeaders(acc.capture, ua);
   const fakeDeviceId = genFakeDeviceId();
   const msgs = [tag];
+  const flag = { deregistered: false };
 
   function fetchApi(path, useFakeId) {
     const overrideId = useFakeId ? fakeDeviceId : null;
@@ -285,25 +303,42 @@ function runAccount(acc, index, total) {
     try {
       const d = JSON.parse(res.body);
       if (d.retcode === 0) msgs.push(`💰 余额：${d.result.balance} Coins`);
-      else msgs.push(`⚠️ 查询：${d.retmsg}`);
+      else {
+        msgs.push(`⚠️ 查询：${d.retmsg}`);
+        if (isDeregistered(d.retmsg)) flag.deregistered = true;
+      }
     } catch (e) { msgs.push('❌ 查询：解析失败'); }
+    if (flag.deregistered) return null;
     return fetchApi('checkIn');
   }).then(res => {
+    if (flag.deregistered || !res) return null;
     try {
       const d = JSON.parse(res.body);
       if (d.retcode === 0) msgs.push(`✅ 签到：${(d.result?.bonusHint || d.retmsg || '').replace(/\n/g, ' ')}`);
-      else msgs.push(`⚠️ 签到：${d.retmsg}`);
+      else {
+        msgs.push(`⚠️ 签到：${d.retmsg}`);
+        if (isDeregistered(d.retmsg)) flag.deregistered = true;
+      }
     } catch (e) { msgs.push('❌ 签到：解析失败'); }
+    if (flag.deregistered) return null;
     return doVideoLoop(MAX_VIDEO);
-  }).then(() => fetchApi('queryBalanceAndBonus')).then(res => {
-    try {
-      const d = JSON.parse(res.body);
-      if (d.retcode === 0) msgs.push(`💰 最新余额：${d.result.balance} Coins`);
-    } catch (e) {}
-    return msgs.join('\n');
+  }).then(() => {
+    if (flag.deregistered) {
+      msgs.push('🗑 该账号已注销，将从存储中移除');
+      return null;
+    }
+    return fetchApi('queryBalanceAndBonus');
+  }).then(res => {
+    if (res) {
+      try {
+        const d = JSON.parse(res.body);
+        if (d.retcode === 0) msgs.push(`💰 最新余额：${d.result.balance} Coins`);
+      } catch (e) {}
+    }
+    return { text: msgs.join('\n'), deregistered: flag.deregistered };
   }).catch(err => {
     msgs.push(`❌ 异常：${err.error || String(err)}`);
-    return msgs.join('\n');
+    return { text: msgs.join('\n'), deregistered: false };
   });
 }
 
@@ -345,14 +380,25 @@ if (typeof $request !== 'undefined' && $request) {
   } else {
     const total = ids.length;
     const results = [];
+    const deadIds = [];
     let chain = Promise.resolve();
     ids.forEach((id, idx) => {
       chain = chain.then(() => runAccount(store.accounts[id], idx, total))
-        .then(text => { results.push(text); })
+        .then(r => {
+          results.push(r.text);
+          if (r.deregistered) deadIds.push(id);
+        })
         .then(() => idx < ids.length - 1 ? sleep(ACCOUNT_GAP) : null);
     });
     chain.then(() => {
-      notify(`🎉 全部完成 (${total}个账号)`, results.join('\n———\n'));
+      let extra = '';
+      if (deadIds.length) {
+        const freshStore = loadStore();
+        const removed = removeAccounts(freshStore, deadIds);
+        saveStore(freshStore);
+        if (removed.length) extra = `\n———\n🗑 已移除注销账号：${removed.join('、')}（剩余${freshStore.order.length}个）`;
+      }
+      notify(`🎉 全部完成 (${total}个账号)`, results.join('\n———\n') + extra);
       $done();
     }).catch(err => {
       notify('❌ 任务异常', results.join('\n———\n') + '\n' + (err.error || String(err)));
