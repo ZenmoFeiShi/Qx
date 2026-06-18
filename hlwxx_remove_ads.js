@@ -1,4 +1,4 @@
-//2026/5/2
+//2026/6/18
 var body = $response.body;
 
 if (!body || (body.indexOf('<!doctype') === -1 && body.indexOf('<!DOCTYPE') === -1 && body.indexOf('<html') === -1)) {
@@ -53,6 +53,13 @@ body = body.replace(/<script[^>]+googletagmanager\.com\/gtag[^>]*><\/script>/gi,
 body = body.replace(/<script[^>]+cloudflareinsights\.com[^>]*><\/script>/gi, '');
 body = body.replace(/<script[^>]+shuifeng\.cc[^>]*><\/script>/gi, '');
 body = body.replace(/<script[^>]+zyudkkup\.com[^>]*><\/script>/gi, '');
+
+body = body.replace(/"video_ads_url":\s*\[[^\]]*\]/g, '"video_ads_url":[]');
+body = body.replace(/"video_ads_url_h":\s*\[[^\]]*\]/g, '"video_ads_url_h":[]');
+body = body.replace(/"backend_video_ads_url":\s*\[[^\]]*\]/g, '"backend_video_ads_url":[]');
+body = body.replace(/"backend_video_ads_url_h":\s*\[[^\]]*\]/g, '"backend_video_ads_url_h":[]');
+body = body.replace(/"ads_jump_url":\s*\[[^\]]*\]/g, '"ads_jump_url":[]');
+body = body.replace(/"backend_ads_jump_url":\s*\[[^\]]*\]/g, '"backend_ads_jump_url":[]');
 
 $done({ body: body });
 }
