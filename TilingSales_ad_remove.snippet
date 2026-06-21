@@ -1,29 +1,28 @@
 #!name = 瓜子影视净化
 #!author = 怎么肥事
-#!update = 2026-4-22
+#!update = 2026-06-21
 
-^https?:\/\/api\.(ainitpz|4hnovel|1000gxf)\.com\/App\/Ad\/splashInfo url reject-dict
-^https?:\/\/api\.(ainitpz|4hnovel|1000gxf)\.com\/App\/Ad\/noticeInfo url reject-dict
-^https?:\/\/api\.(ainitpz|4hnovel|1000gxf)\.com\/App\/IndexList\/homeFloatAd url reject-dict
-^https?:\/\/api\.(ainitpz|4hnovel|1000gxf)\.com\/App\/Ad\/activityInfo url reject-dict
-^https?:\/\/api\.(ainitpz|4hnovel|1000gxf)\.com\/App\/Ad\/skitAdInfo url reject-dict
-^https?:\/\/api\.(ainitpz|4hnovel|1000gxf)\.com\/App\/Ad\/countPopTotal url reject-dict
-^https?:\/\/api\.(ainitpz|4hnovel|1000gxf)\.com\/App\/Ad\/barsUserAdInfo url reject-dict
-^https?:\/\/api\.(ainitpz|4hnovel|1000gxf)\.com\/App\/ad\/config url reject-dict
-^https?:\/\/api\.(ainitpz|4hnovel|1000gxf)\.com\/App\/Ad\/vajraInfo url reject-dict
-^https?:\/\/api\.(ainitpz|4hnovel|1000gxf)\.com\/App\/Ad\/bannerInfo url reject-dict
-^https?:\/\/api\.(ainitpz|4hnovel|1000gxf)\.com\/App\/Ad\/bardCacheAdInfo url reject-dict
-^https?:\/\/api\.(ainitpz|4hnovel|1000gxf)\.com\/App\/Ad\/barsIndexAdInfo url reject-dict
-^https?:\/\/api\.(ainitpz|4hnovel|1000gxf)\.com\/App\/Ad\/comicAdInfo url reject-dict
-^https?:\/\/api\.(ainitpz|4hnovel|1000gxf)\.com\/App\/Ad\/liveEventAdInfo url reject-dict
-^https?:\/\/api\.(ainitpz|4hnovel|1000gxf)\.com\/App\/Ad\/novelAdInfo url reject-dict
-^https?:\/\/api\.(ainitpz|4hnovel|1000gxf)\.com\/App\/Ad\/sportAdInfo url reject-dict
-^https?:\/\/api\.(ainitpz|4hnovel|1000gxf)\.com\/App\/Resource\/CommentAd\/show url reject-dict
-^https?:\/\/api\.(ainitpz|4hnovel|1000gxf)\.com\/App\/Resource\/Config\/getNav url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/TilingSales_getNav.js
-^https?:\/\/api\.(ainitpz|4hnovel|1000gxf)\.com\/App\/Ad\/barsPlayAdInfo url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/TilingSales_getNav.js
-^https?:\/\/api\.(ainitpz|4hnovel|1000gxf)\.com\/App\/Ad\/playAdInfo url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/TilingSales_getNav.js
-^https?:\/\/api\.(ainitpz|4hnovel|1000gxf)\.com\/App\/IndexPlay\/vodAdvertisement url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/TilingSales_getNav.js
-^https?:\/\/api\.(ainitpz|4hnovel|1000gxf)\.com\/App\/Resource\/Vod\/showOne url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/TilingSales_getNav.js
-^https?:\/\/api\.(ainitpz|4hnovel|1000gxf)\.com\/App\/Resource\/Vod\/vurlDetail url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/TilingSales_getNav.js
-^https?:\/\/api\.(ainitpz|4hnovel|1000gxf)\.com\/App\/Resource\/Config\/getNav url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/TilingSales_getNav.js
-hostname = api.ainitpz.com, api.4hnovel.com, api.1000gxf.com
+^https?:\/\/[\w.-]+\/App\/Ad\/splashInfo url reject-dict
+^https?:\/\/[\w.-]+\/App\/Ad\/noticeInfo url reject-dict
+^https?:\/\/[\w.-]+\/App\/IndexList\/homeFloatAd url reject-dict
+^https?:\/\/[\w.-]+\/App\/Ad\/activityInfo url reject-dict
+^https?:\/\/[\w.-]+\/App\/Ad\/skitAdInfo url reject-dict
+^https?:\/\/[\w.-]+\/App\/Ad\/countPopTotal url reject-dict
+^https?:\/\/[\w.-]+\/App\/Ad\/barsUserAdInfo url reject-dict
+^https?:\/\/[\w.-]+\/App\/ad\/config url reject-dict
+^https?:\/\/[\w.-]+\/App\/Ad\/vajraInfo url reject-dict
+^https?:\/\/[\w.-]+\/App\/Ad\/bannerInfo url reject-dict
+^https?:\/\/[\w.-]+\/App\/Ad\/bardCacheAdInfo url reject-dict
+^https?:\/\/[\w.-]+\/App\/Ad\/barsIndexAdInfo url reject-dict
+^https?:\/\/[\w.-]+\/App\/Ad\/comicAdInfo url reject-dict
+^https?:\/\/[\w.-]+\/App\/Ad\/liveEventAdInfo url reject-dict
+^https?:\/\/[\w.-]+\/App\/Ad\/novelAdInfo url reject-dict
+^https?:\/\/[\w.-]+\/App\/Ad\/sportAdInfo url reject-dict
+^https?:\/\/[\w.-]+\/App\/Resource\/CommentAd\/show url reject-dict
+^https?:\/\/[\w.-]+\/App\/Resource\/Config\/getNav url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/TilingSales_getNav.js
+^https?:\/\/[\w.-]+\/App\/Ad\/barsPlayAdInfo url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/TilingSales_getNav.js
+^https?:\/\/[\w.-]+\/App\/Ad\/playAdInfo url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/TilingSales_getNav.js
+^https?:\/\/[\w.-]+\/App\/IndexPlay\/vodAdvertisement url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/TilingSales_getNav.js
+^https?:\/\/[\w.-]+\/App\/Resource\/Vod\/showOne url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/TilingSales_getNav.js
+^https?:\/\/[\w.-]+\/App\/Resource\/Vod\/vurlDetail url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/TilingSales_getNav.js
+hostname = apinew.n3yje.icu, apinew.8hpt2duq.com, apinew.fzmfbdmg.com, api.7gmsut2m.com, api.gq89em.com
