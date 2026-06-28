@@ -1,4 +1,4 @@
-//2026/06/14
+//2026/06/29
 /*
 @Name：PingMe 自动化签到+视频奖励
 @Author：怎么肥事
@@ -222,7 +222,14 @@ function buildHeaders(capture, ua) {
   return headers;
 }
 
+function getEmail(acc) {
+  if (acc && acc.email) return acc.email;
+  const raw = acc && acc.capture && acc.capture.paramsRaw ? (acc.capture.paramsRaw.email || '') : '';
+  try { return decodeURIComponent(raw); } catch (e) { return raw; }
+}
+
 function notify(title, body) {
+  console.log(`【${scriptName} 通知】${title}\n${body}`);
   $notify(scriptName, title, body);
 }
 
@@ -234,7 +241,8 @@ function removeAccounts(store, ids) {
   const removed = [];
   ids.forEach(id => {
     if (store.accounts[id]) {
-      removed.push(store.accounts[id].alias || id);
+      const em = getEmail(store.accounts[id]);
+      removed.push((store.accounts[id].alias || id) + (em ? `(${em})` : ''));
       delete store.accounts[id];
     }
     const pos = store.order.indexOf(id);
@@ -248,11 +256,12 @@ function sleep(ms) {
 }
 
 function runAccount(acc, index, total) {
+  const email = getEmail(acc);
   const tag = `[账号${index+1}/${total} ${acc.alias || acc.id}]`;
   const ua = buildUA(acc.baseUA, acc.uaSeed);
   const headers = buildHeaders(acc.capture, ua);
   const fakeDeviceId = genFakeDeviceId();
-  const msgs = [tag];
+  const msgs = [`${tag}${email ? `\n📧 ${email}` : ''}`];
   const flag = { deregistered: false };
 
   function fetchApi(path, useFakeId) {
@@ -354,10 +363,13 @@ if (typeof $request !== 'undefined' && $request) {
   const existed = !!store.accounts[fp];
   const uaSeed = existed ? store.accounts[fp].uaSeed : store.order.length;
   const alias = existed ? store.accounts[fp].alias : `账号${store.order.length + 1}`;
+  let email = '';
+  try { email = decodeURIComponent(paramsRaw.email || ''); } catch (e) { email = paramsRaw.email || ''; }
 
   store.accounts[fp] = {
     id: fp,
     alias,
+    email,
     uaSeed,
     baseUA,
     capture: { url: $request.url, paramsRaw, headers: headersMap },
@@ -368,7 +380,7 @@ if (typeof $request !== 'undefined' && $request) {
   saveStore(store);
 
   const total = store.order.length;
-  notify(existed ? '🔄 账号参数已更新' : '✅ 新账号已入库', `${alias}（id:${fp}）\n当前账号总数：${total}`);
+  notify(existed ? '🔄 账号参数已更新' : '✅ 新账号已入库', `${alias}（id:${fp}）${email ? `\n📧 ${email}` : ''}\n当前账号总数：${total}`);
   console.log(`【${scriptName}】${existed ? 'update' : 'add'} account ${fp}\n${JSON.stringify(store.accounts[fp], null, 2)}`);
   $done({});
 } else {
