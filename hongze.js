@@ -3,7 +3,7 @@
 @Name：洪泽论坛 每日签到
 @Author：怎么肥事
 [rewrite_local]
-^https:\/\/app\.hongze\.net\/mag\/user\/v1\/user\/deviceLogin url script-request-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/hongze.js
+^https:\/\/app\.hongze\.net\/mag\/user\/v1\/User\/getUserInfo url script-request-header https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/hongze.js
 
 [task_local]
 8 1 * * * https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/hongze.js, tag=洪泽论坛签到, enabled=true
@@ -13,150 +13,82 @@ hostname = app.hongze.net
 
 */
 
-const ckKey = "hzlt_device_login";
-const BASE = "https://app.hongze.net";
+const ckKey = "hongze_signin_headers";
 
 if ($request) {
-  const headers = $request.headers || {};
+  const headers = $request.headers;
 
   const cookie = headers["Cookie"] || headers["cookie"] || "";
   const ua = headers["User-Agent"] || headers["user-agent"] || "";
 
-  if (!cookie && !$request.body) {
+  const persist = cookie
+    .split(";")
+    .map(s => s.trim())
+    .filter(s => /^[a-f0-9]{32}=[a-f0-9]{32}$/i.test(s))
+    .join("; ");
+
+  if (!persist) {
     $done({});
   } else {
     const ckObj = {
-      url: $request.url,
-      method: $request.method || "POST",
-      headers: headers,
-      body: typeof $request.body === "string" ? $request.body : ""
+      "User-Agent": ua || "MAGAPPX",
+      "Cookie": persist
     };
 
     $prefs.setValueForKey(JSON.stringify(ckObj), ckKey);
 
-    console.log(`【洪泽论坛】设备登录凭证获取成功：\nUA：${ua}\nCookie：${cookie}`);
+    console.log(`【洪泽论坛】长效Cookie获取成功：\n${persist}`);
 
-    $notify("洪泽论坛签到", "设备凭证获取成功", "已保存，后续自动续期签到");
+    $notify("洪泽论坛签到", "Cookie获取成功", "已保存长效凭证，后续自动签到");
     $done({});
   }
 } else {
-  const raw = $prefs.valueForKey(ckKey);
+  const headersRaw = $prefs.valueForKey(ckKey);
 
-  if (!raw) {
-    $notify("洪泽论坛签到", "⚠️ 未获取到设备凭证", "请打开App进入「我的」页面触发获取");
-    console.log("【洪泽论坛】未获取到设备凭证，无法执行签到");
+  if (!headersRaw) {
+    $notify("洪泽论坛签到", "⚠️ 未获取到Cookie", "请先打开App进入「我的」页面触发获取");
+    console.log("【洪泽论坛】未获取到Cookie，无法执行签到");
     $done();
     return;
   }
 
-  const dev = JSON.parse(raw);
+  const ckObj = JSON.parse(headersRaw);
 
-  function lower(o) {
-    const r = {};
-    for (const k in o) r[k.toLowerCase()] = o[k];
-    return r;
-  }
-
-  function parseSetCookie(hs) {
-    const h = lower(hs);
-    const raw = h["set-cookie"];
-    if (!raw) return {};
-    const out = {};
-    const segs = Array.isArray(raw) ? raw : String(raw).split(/,(?=[^;]+=[^;]+)/);
-    for (const seg of segs) {
-      const first = String(seg).split(";")[0].trim();
-      const i = first.indexOf("=");
-      if (i <= 0) continue;
-      const name = first.slice(0, i).trim();
-      if (/^(expires|max-age|path|domain|httponly|secure|samesite)$/i.test(name)) continue;
-      out[name] = first.slice(i + 1).trim();
-    }
-    return out;
-  }
-
-  function mergeCookie(oldCk, patch) {
-    const map = {};
-    String(oldCk || "").split(";").forEach(p => {
-      const i = p.indexOf("=");
-      if (i > 0) map[p.slice(0, i).trim()] = p.slice(i + 1).trim();
-    });
-    Object.assign(map, patch);
-    return Object.entries(map).map(([k, v]) => `${k}=${v}`).join("; ");
-  }
-
-  const ua = lower(dev.headers)["user-agent"] || "MAGAPPX";
-
-  function fetchP(opt) {
-    return new Promise((resolve, reject) => {
-      $task.fetch(opt).then(
-        r => resolve({ status: r.statusCode, headers: r.headers || {}, body: r.body || "" }),
-        e => reject(e && e.error ? e.error : e)
-      );
-    });
-  }
-
-  function req(cookie, path, method, form) {
-    const headers = {
+  const request = {
+    url: "https://app.hongze.net/mag/sign/v1/sign/sign",
+    method: "GET",
+    headers: {
       "Host": "app.hongze.net",
-      "Cookie": cookie,
+      "User-Agent": ckObj["User-Agent"],
+      "Cookie": ckObj["Cookie"],
       "Accept": "*/*",
       "Accept-Encoding": "gzip, deflate, br",
       "Accept-Language": "zh-CN,zh-Hans;q=0.9",
-      "User-Agent": ua,
       "X-Requested-With": "XMLHttpRequest"
-    };
-    let body;
-    if (form) {
-      headers["Content-Type"] = "application/x-www-form-urlencoded";
-      body = Object.entries(form).map(([k, v]) => `${k}=${encodeURIComponent(v)}`).join("&");
     }
-    const o = { url: BASE + path, method: method || "GET", headers };
-    if (body != null) o.body = body;
-    return fetchP(o).then(r => {
-      try { return JSON.parse(r.body); } catch { return { _raw: r.body }; }
-    });
-  }
+  };
 
-  (async () => {
+  $task.fetch(request).then(res => {
+    console.log(`【洪泽论坛】签到响应：\n状态码：${res.statusCode}\n返回内容：\n${res.body}`);
+
     try {
-      const dh = Object.assign({}, dev.headers);
-      delete dh["Content-Length"];
-      delete dh["content-length"];
-      const opt = { url: dev.url, method: dev.method || "POST", headers: dh };
-      if (dev.body) opt.body = dev.body;
+      const data = JSON.parse(res.body);
 
-      const res = await fetchP(opt);
-      const patch = parseSetCookie(res.headers);
-      const baseCk = lower(dev.headers)["cookie"] || "";
-      const cookie = mergeCookie(baseCk, patch);
-
-      console.log(`【洪泽论坛】续期完成，新Cookie：${cookie}`);
-
-      const info1 = await req(cookie, "/mag/user/v1/user/myCenter");
-      const name = (info1 && info1.data && info1.data.name) || "用户";
-      const scoreBefore = info1 && info1.data ? Number(info1.data.score) : null;
-
-      const signRes = await req(cookie, "/mag/sign/v1/sign/sign");
-      const signMsg = (signRes && (signRes.msg || (signRes.data && signRes.data.des))) || "已处理";
-
-      const cid = 1000 + Math.floor(Math.random() * 89000);
-      await req(cookie, "/mag/circle/v1/show/contentAddApplaud", "POST", { content_id: cid });
-
-      for (let i = 0; i < 5; i++) await req(cookie, "/mag/user/v1/share/successCallBack");
-      await req(cookie, "/mag/user/v1/GradeScore/getScoreTaskReward?id=2141772");
-
-      const info2 = await req(cookie, "/mag/user/v1/user/myCenter");
-      const scoreAfter = info2 && info2.data ? Number(info2.data.score) : null;
-      const delta = scoreBefore != null && scoreAfter != null ? scoreAfter - scoreBefore : null;
-
-      const sub = `${name} 积分：${scoreAfter != null ? scoreAfter : "-"}${delta != null ? `（+${delta}）` : ""}`;
-      $notify("洪泽论坛签到成功", sub, `签到：${signMsg}`);
-      console.log(`【洪泽论坛】${sub}\n签到：${signMsg}`);
-      $done();
+      if (data.success === true || data.code === 100 || data.code === 0) {
+        const des = data.data?.des || "签到成功";
+        const cont = data.data?.continue_des || "";
+        $notify("洪泽论坛签到成功", des, cont);
+      } else {
+        $notify("洪泽论坛签到提示", "", data.msg || res.body);
+      }
     } catch (e) {
-      console.log(`【洪泽论坛】签到异常：${e}`);
-      $notify("洪泽论坛签到", "⚠️ 签到失败", String(e));
-      $done();
+      console.log(`【洪泽论坛】解析失败：${e}\n原始响应：${res.body}`);
+      $notify("洪泽论坛签到", "⚠️ 解析失败", "Cookie可能已失效，请重新打开App");
     }
-  })();
+    $done();
+  }, err => {
+    console.log(`【洪泽论坛】请求失败：${err.error}`);
+    $notify("洪泽论坛签到", "⚠️ 请求失败", err.error || "");
+    $done();
+  });
 }
