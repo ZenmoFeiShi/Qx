@@ -55,6 +55,7 @@ Quantumult X 脚本与重写规则合集，覆盖签到、净化、解锁等实�
 | `Cwkj.snippet` | 畅玩空间 |
 | `hlwxx_remove_ads.js` / `hlwxx_remove_ads.snippet` | 黑料不打烊净化 |
 | `TilingSales_ad_remove.snippet` | 瓜子影视净化 |
+| `TilingSales_getNav.js` | 瓜子影视导航净化 |
 | `WxPureDominion.snippet` | 微信相关净化 |
 | `Youtube.snippet` / `youtube.response.js` | YouTube 去广告 / 隐藏 Shorts |
 | `Yt-zh.snippet` / `yt-zh-sub.js` / `yt-sub-clean.js` | YouTube 强制简体中文字幕 |
@@ -69,15 +70,14 @@ Quantumult X 脚本与重写规则合集，覆盖签到、净化、解锁等实�
 | `migu_vip.js` / `migu_vip_share.snippet` | 咪咕视频解锁会员 |
 | `gyrfalcon_unlock.js` | GyrfalconVPN 解锁 VIP 节点 |
 | `xzimu-unlock.js` / `xzimu-unlock.snippet` | X 字幕无限翻译次数 |
+| `xTerm256.snippet` | xTerm256 调试解锁会员 |
 | `MeiTuanNoAd.js` | 美团相关处理 |
 
-### 其它
+### Task 任务
 
 | 脚本 | 说明 |
 |---|---|
 | `TaskHotBiliVideo.js` | B 站星榜全网热播 |
-| `TilingSales_getNav.js` | 瓜子影视相关导航 |
-| `xTerm256.snippet` | 终端配色相关 |
 
 ## 订阅示例
 
