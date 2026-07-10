@@ -41,6 +41,7 @@ Quantumult X 脚本与重写规则合集，覆盖签到、净化、解锁等实�
 | 脚本 | 说明 |
 |---|---|
 | `bili_view_ad.js` / `bili_view_ad_rewrite.snippet` | B 站 gRPC 数据包净化 |
+| `WB.snippet` | 微博净化 |
 | `Soul.snippet` | Soul 净化 |
 | `Keep.snippet` | Keep 净化 |
 | `Smzdm.snippet` | 什么值得买净化 |
