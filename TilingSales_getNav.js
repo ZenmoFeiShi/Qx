@@ -72,14 +72,14 @@ var window = (typeof window !== "undefined") ? window : {};
 
   try {
     var root = parseJSON(body);
-    if (!root) $done({ body: body });
+    if (!root) return $done({ body: body });
 
     if (/\/App\/Resource\/Config\/getNav(?:\?|$)/.test(url)) {
       var dec0 = decryptData(root.data);
       var arr0 = dec0.plain;
       if (Array.isArray(arr0)) {
         arr0 = arr0.filter(function (x) {
-          return x && ['read', 'game', 'micro'].indexOf(x.type) === -1;
+          return x && ['read', 'game', 'micro', 'music'].indexOf(x.type) === -1;
         });
       }
       return $done({ body: wrapEncrypted(root, arr0, dec0.aes) });
