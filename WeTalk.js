@@ -1,13 +1,13 @@
-//2026/06/29
+//2026/09/15
 /*
-@Name：WeTalk 自动化签到+视频奖励
-@Author：TG@ZenMoFiShi
+@Name：WeTalk 自动签到与视频奖励（30.6.3）
+@Based on：TG@ZenMoFiShi
 
 [rewrite_local]
-^https:\/\/api\.wetalkapp\.com\/app\/queryBalanceAndBonus url script-request-header https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/WeTalk.js
+^https:\/\/api\.wetalkapp\.com\/app\/(?:queryBalanceAndBonus|checkIn|videoBonus) url script-request-header WeTalk_2026-09-15.js
 
 [task_local]
-20 8,20 * * * https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/WeTalk.js, tag=WeTalk签到, enabled=true
+20 8,20 * * * WeTalk_2026-09-15.js, tag=WeTalk签到, enabled=true
 
 [MITM]
 hostname = api.wetalkapp.com
@@ -17,15 +17,12 @@ const scriptName = 'WeTalk';
 const storeKey = 'wetalk_accounts_v1';
 const SECRET = '0fOiukQq7jXZV2GRi9LGlO';
 const API_HOST = 'api.wetalkapp.com';
-const MAX_VIDEO = 5;
+const MAX_VIDEO = 1;
+const VIDEO_FIRST_DELAY = 3000;
 const VIDEO_DELAY = 8000;
-const ACCOUNT_GAP = 3500;
-
-const IOS_VERSIONS = ['17.5.1','17.6.1','17.4.1','17.2.1','16.7.8','17.6','17.3.1','18.0.1','17.1.2','16.6.1'];
-const IOS_SCALES = ['2.00','3.00','3.00','2.00','3.00'];
-const IPHONE_MODELS = ['iPhone14,3','iPhone13,3','iPhone15,3','iPhone16,1','iPhone14,7','iPhone13,2','iPhone15,2','iPhone12,1'];
-const CFN_VERS = ['1410.0.3','1494.0.7','1568.100.1','1209.1','1474.0.4','1568.200.2'];
-const DARWIN_VERS = ['22.6.0','23.5.0','23.6.0','24.0.0','22.4.0'];
+const VIDEO_LIMIT_CODE = 200007;
+const ACCOUNT_GAP = 5000;
+const NETWORK_RETRIES = 1;
 
 function MD5(string) {
   function RotateLeft(lValue, iShiftBits) { return (lValue << iShiftBits) | (lValue >>> (32 - iShiftBits)); }
@@ -112,18 +109,18 @@ function normalizeHeaderNameMap(headers) {
   return out;
 }
 
-function parseRawQuery(url) {
+function parseQuery(url) {
   const query = (url.split('?')[1] || '').split('#')[0];
-  const rawMap = {};
+  const params = {};
   query.split('&').forEach(pair => {
     if (!pair) return;
     const idx = pair.indexOf('=');
     if (idx < 0) return;
-    const k = pair.slice(0, idx);
-    const v = pair.slice(idx + 1);
-    rawMap[k] = v;
+    const key = safeDecode(pair.slice(0, idx).replace(/\+/g, ' '));
+    const value = safeDecode(pair.slice(idx + 1).replace(/\+/g, ' '));
+    params[key] = value;
   });
-  return rawMap;
+  return params;
 }
 
 function safeDecode(v) {
@@ -131,19 +128,16 @@ function safeDecode(v) {
   try { return decodeURIComponent(String(v)); } catch (e) { return String(v); }
 }
 
-// 账号唯一键：以邮箱为准（小写 + 去空白 + url 解码）。
-// 抓不到邮箱时回退到旧 fingerprint，避免存储破碎。
-function emailKeyOf(paramsRaw) {
-  const raw = (paramsRaw || {}).email;
-  if (!raw) return '';
-  return safeDecode(raw).trim().toLowerCase();
+function emailKeyOf(params) {
+  const email = (params || {}).email;
+  return email ? safeDecode(email).trim().toLowerCase() : '';
 }
 
-function fingerprintOf(paramsRaw) {
-  const email = emailKeyOf(paramsRaw);
+function fingerprintOf(params) {
+  const email = emailKeyOf(params);
   if (email) return email;
   const drop = { sign:1, signDate:1, timestamp:1, ts:1, nonce:1, random:1, reqTime:1, reqId:1, requestId:1 };
-  const base = Object.keys(paramsRaw || {}).filter(k => !drop[k]).sort().map(k => `${k}=${paramsRaw[k]}`).join('&');
+  const base = Object.keys(params || {}).filter(k => !drop[k]).sort().map(k => `${k}=${params[k]}`).join('&');
   return 'fp_' + MD5(base).slice(0, 12);
 }
 
@@ -152,37 +146,38 @@ function migrateStore(store) {
   if (!store || !store.accounts) return store;
   const newAccounts = {};
   const newOrder = [];
-  let migrated = false;
   (store.order || Object.keys(store.accounts)).forEach(oldId => {
     const acc = store.accounts[oldId];
     if (!acc) return;
-    const email = emailKeyOf(acc.capture && acc.capture.paramsRaw);
+    if (acc.capture && !acc.capture.params && acc.capture.paramsRaw) {
+      const decoded = {};
+      Object.keys(acc.capture.paramsRaw).forEach(k => decoded[safeDecode(k)] = safeDecode(acc.capture.paramsRaw[k]));
+      acc.capture.params = decoded;
+    }
+    const email = emailKeyOf(acc.capture && (acc.capture.params || acc.capture.paramsRaw));
     const newId = email || oldId;
-    if (newId !== oldId) migrated = true;
-    // 后到的同邮箱覆盖（用更新的 capture）
     const prev = newAccounts[newId];
     if (!prev || (acc.updatedAt || 0) >= (prev.updatedAt || 0)) {
-      newAccounts[newId] = Object.assign({}, acc, { id: newId, alias: acc.alias || email || newId });
+      newAccounts[newId] = Object.assign({}, acc, { id: newId, email: acc.email || email, alias: acc.alias || email || newId });
       if (newOrder.indexOf(newId) < 0) newOrder.push(newId);
     }
   });
-  if (migrated) {
-    store.accounts = newAccounts;
-    store.order = newOrder;
-  }
+  store.version = 3;
+  store.accounts = newAccounts;
+  store.order = newOrder;
   return store;
 }
 
 function loadStore() {
   const raw = $prefs.valueForKey(storeKey);
-  if (!raw) return { version: 2, accounts: {}, order: [] };
+  if (!raw) return { version: 3, accounts: {}, order: [] };
   try {
     const obj = JSON.parse(raw);
     if (!obj.accounts) obj.accounts = {};
     if (!Array.isArray(obj.order)) obj.order = Object.keys(obj.accounts);
     return migrateStore(obj);
   } catch (e) {
-    return { version: 2, accounts: {}, order: [] };
+    return { version: 3, accounts: {}, order: [] };
   }
 }
 
@@ -190,57 +185,23 @@ function saveStore(store) {
   $prefs.setValueForKey(JSON.stringify(store), storeKey);
 }
 
-function pickItem(arr, seed) {
-  return arr[seed % arr.length];
-}
-
-function buildUA(baseUA, seed) {
-  const iosVer = pickItem(IOS_VERSIONS, seed);
-  const scale = pickItem(IOS_SCALES, seed + 1);
-  const model = pickItem(IPHONE_MODELS, seed + 2);
-  const cfn = pickItem(CFN_VERS, seed + 3);
-  const darwin = pickItem(DARWIN_VERS, seed + 4);
-  if (baseUA && typeof baseUA === 'string') {
-    let ua = baseUA;
-    let changed = false;
-    if (/iOS \d+(\.\d+){0,2}/.test(ua)) { ua = ua.replace(/iOS \d+(\.\d+){0,2}/, `iOS ${iosVer}`); changed = true; }
-    if (/Scale\/\d+(\.\d+)?/.test(ua)) { ua = ua.replace(/Scale\/\d+(\.\d+)?/, `Scale/${scale}`); changed = true; }
-    if (/iPhone\d+,\d+/.test(ua)) { ua = ua.replace(/iPhone\d+,\d+/, model); changed = true; }
-    if (/CFNetwork\/[\d.]+/.test(ua)) { ua = ua.replace(/CFNetwork\/[\d.]+/, `CFNetwork/${cfn}`); changed = true; }
-    if (/Darwin\/[\d.]+/.test(ua)) { ua = ua.replace(/Darwin\/[\d.]+/, `Darwin/${darwin}`); changed = true; }
-    if (changed) return ua;
-  }
-  return `WeTalk/30.6.0 (com.innovationworks.wetalk; build:28; iOS ${iosVer}) Alamofire/5.4.3`;
-}
-
-function buildSignedParamsRaw(capture, overrideDeviceId) {
+function buildSignedParams(capture) {
   const params = {};
-  Object.keys(capture.paramsRaw || {}).forEach(k => {
-    if (k !== 'sign' && k !== 'signDate') params[k] = capture.paramsRaw[k];
+  const saved = capture.params || capture.paramsRaw || {};
+  const alreadyDecoded = !!capture.params;
+  Object.keys(saved).forEach(k => {
+    if (k !== 'sign' && k !== 'signDate') params[k] = alreadyDecoded ? String(saved[k]) : safeDecode(saved[k]);
   });
-  if (overrideDeviceId && params.uniquedeviceid) {
-    params.uniquedeviceid = overrideDeviceId;
-  }
   params.signDate = getUTCSignDate();
   const signBase = Object.keys(params).sort().map(k => `${k}=${params[k]}`).join('&');
   params.sign = MD5(signBase + SECRET);
   return params;
 }
 
-function buildUrl(path, capture, overrideDeviceId) {
-  const params = buildSignedParamsRaw(capture, overrideDeviceId);
-  const qs = Object.keys(params).map(k => `${k}=${encodeURIComponent(params[k])}`).join('&');
+function buildUrl(path, capture) {
+  const params = buildSignedParams(capture);
+  const qs = Object.keys(params).sort().map(k => `${encodeURIComponent(k)}=${encodeURIComponent(params[k])}`).join('&');
   return `https://${API_HOST}/app/${path}?${qs}`;
-}
-
-function randHex(n) {
-  let s = '';
-  for (let i = 0; i < n; i++) s += Math.floor(Math.random() * 16).toString(16);
-  return s.toUpperCase();
-}
-
-function genFakeDeviceId() {
-  return `${randHex(8)}-${randHex(4)}-${randHex(4)}-${randHex(4)}-${randHex(12)}WeTalkIOS`;
 }
 
 function cloneHeaders(headers) {
@@ -249,18 +210,15 @@ function cloneHeaders(headers) {
   return out;
 }
 
-function buildHeaders(capture, ua) {
+function buildHeaders(capture) {
   const headers = cloneHeaders(capture.headers || {});
-  delete headers['Content-Length']; delete headers['content-length'];
-  delete headers[':authority']; delete headers[':method']; delete headers[':path']; delete headers[':scheme'];
-  headers['Host'] = API_HOST;
-  headers['Accept'] = headers['Accept'] || 'application/json';
   Object.keys(headers).forEach(k => {
     const lk = k.toLowerCase();
-    if (lk === 'user-agent' || lk === 'connection' || lk === 'proxy-connection' || lk === 'keep-alive') delete headers[k];
+    if (lk === 'content-length' || lk === 'host' || lk === ':authority' || lk === ':method' || lk === ':path' || lk === ':scheme' || lk === 'connection' || lk === 'proxy-connection' || lk === 'keep-alive' || lk === 'accept-encoding') delete headers[k];
   });
-  headers['User-Agent'] = ua;
-  headers['Connection'] = 'close';
+  headers['Host'] = API_HOST;
+  if (!Object.keys(headers).some(k => k.toLowerCase() === 'accept')) headers['Accept'] = 'application/json';
+  if (!Object.keys(headers).some(k => k.toLowerCase() === 'user-agent') && capture.baseUA) headers['User-Agent'] = capture.baseUA;
   return headers;
 }
 
@@ -274,89 +232,106 @@ function sleep(ms) {
 }
 
 function runAccount(acc, index, total) {
-  const email = acc.email || (acc.capture && acc.capture.paramsRaw ? emailKeyOf(acc.capture.paramsRaw) : '');
+  const capture = acc.capture || {};
+  const email = acc.email || emailKeyOf(capture.params || capture.paramsRaw);
   const tag = `[账号${index+1}/${total} ${acc.alias || email || acc.id}]`;
-  const ua = buildUA(acc.baseUA, acc.uaSeed);
-  const headers = buildHeaders(acc.capture, ua);
-  const fakeDeviceId = genFakeDeviceId();
+  const headers = buildHeaders(capture);
   const msgs = [`${tag}${email ? `\n📧 ${email}` : ''}`];
+  let initialBalance = null;
 
-  function fetchApi(path, useFakeId, retry) {
-    retry = (retry === undefined) ? 3 : retry;
-    const overrideId = useFakeId ? fakeDeviceId : null;
-    return $task.fetch({ url: buildUrl(path, acc.capture, overrideId), method: 'GET', headers }).catch(err => {
-      const m = (err && (err.error || String(err))) || '';
-      if (retry > 0 && /SSL|SSLSessionState|timeout|timed out|reset|connection|network|stream closed|closed|EOF/i.test(m)) {
-        return new Promise(r => setTimeout(r, 1200)).then(() => fetchApi(path, useFakeId, retry - 1));
+  function fetchApi(path, retry) {
+    retry = retry === undefined ? (path === 'queryBalanceAndBonus' ? NETWORK_RETRIES : 0) : retry;
+    return $task.fetch({ url: buildUrl(path, capture), method: 'GET', headers: cloneHeaders(headers), opts: { 'auto-cookie': false } }).catch(err => {
+      const message = (err && (err.error || String(err))) || '';
+      if (retry > 0 && /SSL|SSLSessionState|timeout|timed out|reset|connection|network|stream closed|closed|EOF/i.test(message)) {
+        return sleep(1500).then(() => fetchApi(path, retry - 1));
       }
       return Promise.reject(err);
     });
   }
 
+  function parseResponse(res) {
+    try { return JSON.parse(res.body || '{}'); } catch (e) { return null; }
+  }
+
   function doVideoLoop(count) {
-    let i = 0;
+    let index = 0;
     function next() {
-      if (i >= count) return Promise.resolve();
-      return new Promise(resolve => {
-        setTimeout(() => {
-          i++;
-          fetchApi('videoBonus', true).then(res => {
-            try {
-              const d = JSON.parse(res.body);
-              if (d.retcode === 0) {
-                msgs.push(`🎬 视频${i}：+${d.result?.bonus || '?'} Coins`);
-                resolve(next());
-              } else {
-                msgs.push(`⏸ 视频${i}：${d.retmsg}`);
-                resolve();
-              }
-            } catch (e) {
-              msgs.push(`❌ 视频${i}：解析失败`);
-              resolve();
-            }
-          }).catch(err => {
-            msgs.push(`❌ 视频${i}：${err.error || '请求失败'}`);
-            resolve();
-          });
-        }, i === 0 ? 1500 : VIDEO_DELAY);
+      if (index >= count) return Promise.resolve();
+      const delay = index === 0 ? VIDEO_FIRST_DELAY : VIDEO_DELAY;
+      return sleep(delay).then(() => {
+        index++;
+        return fetchApi('videoBonus').then(res => {
+          const data = parseResponse(res);
+          if (!data) {
+            msgs.push(`❌ 视频${index}：响应解析失败`);
+            return;
+          }
+          if (data.retcode === 0) {
+            const result = data.result || {};
+            msgs.push(`🎬 视频${index}：+${result.bonus == null ? '?' : result.bonus} Coins`);
+            return next();
+          }
+          const message = data.retmsg || `错误 ${data.retcode}`;
+          msgs.push(`⏸ 视频${index}：${message}${data.retcode === VIDEO_LIMIT_CODE ? '（已停止，避免继续触发限流）' : ''}`);
+        }).catch(err => {
+          msgs.push(`❌ 视频${index}：${err.error || String(err) || '请求失败'}`);
+        });
       });
     }
     return next();
   }
 
   return fetchApi('queryBalanceAndBonus').then(res => {
-    try {
-      const d = JSON.parse(res.body);
-      if (d.retcode === 0) msgs.push(`💰 余额：${d.result.balance} Coins`);
-      else msgs.push(`⚠️ 查询：${d.retmsg}`);
-    } catch (e) { msgs.push('❌ 查询：解析失败'); }
-    return fetchApi('checkIn');
-  }).then(res => {
-    try {
-      const d = JSON.parse(res.body);
-      if (d.retcode === 0) msgs.push(`✅ 签到：${(d.result?.bonusHint || d.retmsg || '').replace(/\n/g, ' ')}`);
-      else msgs.push(`⚠️ 签到：${d.retmsg}`);
-    } catch (e) { msgs.push('❌ 签到：解析失败'); }
+    const data = parseResponse(res);
+    if (!data) throw new Error('查询余额响应解析失败');
+    if (data.retcode !== 0) throw new Error(data.retmsg || `查询失败 ${data.retcode}`);
+    const result = data.result || {};
+    initialBalance = Number(result.balance);
+    msgs.push(`💰 运行前余额：${result.balance} Coins`);
+    if (result.isallowcheckin === false) {
+      msgs.push(`⏭ 签到：${result.notallowcheckinreason || '当前不可签到'}`);
+      return null;
+    }
+    return fetchApi('checkIn').then(checkRes => {
+      const check = parseResponse(checkRes);
+      if (!check) msgs.push('❌ 签到：响应解析失败');
+      else if (check.retcode === 0) msgs.push(`✅ 签到：${((check.result || {}).bonusHint || `+${(check.result || {}).bonus || '?'} Coins`).replace(/\n/g, ' ')}`);
+      else msgs.push(`⚠️ 签到：${check.retmsg || `错误 ${check.retcode}`}`);
+    });
+  }).then(() => fetchApi('queryBalanceAndBonus')).then(res => {
+    const data = parseResponse(res);
+    if (!data || data.retcode !== 0) {
+      msgs.push(`⚠️ 视频资格查询：${data ? (data.retmsg || data.retcode) : '解析失败'}`);
+      return null;
+    }
+    const result = data.result || {};
+    if (result.isallowvideobonus === false) {
+      msgs.push(`⏭ 视频：${result.notallowvideobonusreason || '当前不可领取'}`);
+      return null;
+    }
     return doVideoLoop(MAX_VIDEO);
   }).then(() => fetchApi('queryBalanceAndBonus')).then(res => {
-    try {
-      const d = JSON.parse(res.body);
-      if (d.retcode === 0) msgs.push(`💰 最新余额：${d.result.balance} Coins`);
-    } catch (e) {}
+    const data = parseResponse(res);
+    if (data && data.retcode === 0) {
+      const balance = (data.result || {}).balance;
+      msgs.push(`💰 最新余额：${balance} Coins`);
+      if (Number.isFinite(initialBalance) && Number.isFinite(Number(balance))) msgs.push(`📈 本次增加：${(Number(balance) - initialBalance).toFixed(4)} Coins`);
+    }
     return msgs.join('\n');
   }).catch(err => {
-    msgs.push(`❌ 异常：${err.error || String(err)}`);
+    msgs.push(`❌ 异常：${err.error || err.message || String(err)}`);
     return msgs.join('\n');
   });
 }
 
 if (typeof $request !== 'undefined' && $request) {
-  const paramsRaw = parseRawQuery($request.url);
+  const params = parseQuery($request.url);
   const headersMap = normalizeHeaderNameMap($request.headers || {});
   let baseUA = '';
   Object.keys(headersMap).forEach(k => { if (k.toLowerCase() === 'user-agent') baseUA = headersMap[k]; });
 
-  const email = emailKeyOf(paramsRaw);
+  const email = emailKeyOf(params);
   if (!email) {
     notify('⚠️ 抓取失败', '请求里未取到 email 参数，无法识别账号。请确认已登录后再触发抓包。');
     $done({});
@@ -365,16 +340,14 @@ if (typeof $request !== 'undefined' && $request) {
     const accId = email; // 以邮箱作为账号唯一标识
     const now = Date.now();
     const existed = !!store.accounts[accId];
-    const uaSeed = existed ? store.accounts[accId].uaSeed : store.order.length;
     const alias = existed ? (store.accounts[accId].alias || email) : email;
 
     store.accounts[accId] = {
       id: accId,
       email: email,
       alias,
-      uaSeed,
       baseUA,
-      capture: { url: $request.url, paramsRaw, headers: headersMap },
+      capture: { url: $request.url, params, headers: headersMap, baseUA },
       createdAt: existed ? store.accounts[accId].createdAt : now,
       updatedAt: now
     };
@@ -383,7 +356,7 @@ if (typeof $request !== 'undefined' && $request) {
 
     const total = store.order.length;
     notify(existed ? '🔄 账号参数已更新' : '✅ 新账号已入库', `${email}\n当前账号总数：${total}`);
-    console.log(`【${scriptName}】${existed ? 'update' : 'add'} account ${email}\n${JSON.stringify(store.accounts[accId], null, 2)}`);
+    console.log(`【${scriptName}】${existed ? 'update' : 'add'} account ${email}`);
     $done({});
   }
 } else {
