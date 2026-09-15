@@ -15,7 +15,9 @@ hostname = api.pingmeapp.net
 
 const scriptName = 'PingMe';
 const storeKey = 'pingme_accounts_v1';
-const SECRET = '0fOiukQq7jXZV2GRi9LGlO';
+// Secret must be supplied via persistent store (BoxJs/$prefs key "pingme_secret_key");
+// no default is hardcoded in source to avoid exposing the signing secret to anyone with read access to this script.
+const SECRET = $prefs.valueForKey('pingme_secret_key') || '';
 const MAX_VIDEO = 5;
 const VIDEO_DELAY = 8000;
 const ACCOUNT_GAP = 3500;
