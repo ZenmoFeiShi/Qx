@@ -1,98 +1,77 @@
-var body = $response.body;
+var qx97_body = $response.body;
 
-if (!body || !/(?:<!doctype|<html)/i.test(body)) {
+if (!qx97_body || !/(?:<!doctype|<html)/i.test(qx97_body)) {
   $done({});
 } else {
   try {
-    body = body.replace(/(\bdata-config\s*=\s*')([^']*)(')/gi, function (_, open, raw, close) {
+    var qx97_clear_player_ads = function (match, prefix, quote, raw) {
       try {
-        var config = JSON.parse(raw);
-        var keys = [
-          "pre_ads",
-          "post_ads",
-          "preAds",
-          "postAds",
-          "video_ads_url",
-          "video_ads_url_h",
-          "backend_video_ads_url",
-          "backend_video_ads_url_h",
-          "ads_jump_url",
-          "backend_ads_jump_url"
-        ];
+        var cfg = JSON.parse(raw);
         var changed = false;
-        for (var i = 0; i < keys.length; i++) {
-          if (Object.prototype.hasOwnProperty.call(config, keys[i])) {
-            config[keys[i]] = [];
-            changed = true;
-          }
+        if (cfg && Array.isArray(cfg.pre_ads)) {
+          cfg.pre_ads = [];
+          changed = true;
         }
-        return changed ? open + JSON.stringify(config) + close : _;
+        if (cfg && Array.isArray(cfg.post_ads)) {
+          cfg.post_ads = [];
+          changed = true;
+        }
+        if (cfg && (Object.prototype.hasOwnProperty.call(cfg, 'ads_jump_time') || changed)) {
+          cfg.ads_jump_time = -1;
+          changed = true;
+        }
+        return changed ? prefix + quote + JSON.stringify(cfg) + quote : match;
       } catch (e) {
-        return _;
+        return match;
       }
-    });
+    };
 
-    var css = '<style id="hl-adblock">'
-      + '#notice_container,.event-notice,.application-popup,'
-      + '.addbox,.download,.infomation,.post-content,'
-      + '.list-sec-top,.list-sec,'
-      + '#copy-img,'
-      + '.slider-banners,'
-      + '.footer,'
-      + 'iframe[src*="yandex"],iframe[src*="google"],iframe[src*="kwvprfcr"]'
-      + '{display:none!important;height:0!important;overflow:hidden!important;opacity:0!important}'
-      + '.video-item:has(a.gotoclick),'
-      + '.video-item:has(a.tjtagmanager),'
-      + '.video-item:has(a[adv_id])'
-      + '{display:none!important;height:0!important}'
+    qx97_body = qx97_body.replace(/(\bdata-config\s*=\s*)(['"])([\s\S]*?)\2/gi, qx97_clear_player_ads);
+
+    var qx97_css = '<style id="qx97-adblock">'
+      + '.adspop,.xqbj-component-adfloat,#adFloat,.horizontal-banner,.article-ads-btn,.article-bottom-apps,.ads-title,article.no-mask,article.post-card-ads,.post-card-ads,.bottom-ads,.message-ad-item,'
+      + 'script[src*="adfloat.js"],script[src*="bottom_ad_poll"],script[src*="googletagmanager"],script[src*="google-analytics"],'
+      + 'iframe[src*="yandex"],iframe[src*="googletagmanager"],iframe[src*="google-analytics"]'
+      + '{display:none!important;width:0!important;height:0!important;max-height:0!important;min-height:0!important;overflow:hidden!important;opacity:0!important;pointer-events:none!important}'
       + '</style>';
 
-    var js = '<script id="hl-adblock-js">'
+    var qx97_js = '<script id="qx97-adblock-js">'
       + '!function(){'
-      + 'function isAdItem(e){'
-      + 'var a=e.querySelector("a");'
-      + 'if(a&&(a.classList.contains("gotoclick")||a.classList.contains("tjtagmanager")||a.hasAttribute("adv_id")))return true;'
-      + 'var t=e.querySelector("h2.title,div.title");'
-      + 'if(t&&!t.textContent.trim())return true;'
-      + 'return false}'
-      + 'function clean(){'
-      + 'document.querySelectorAll(".video-item").forEach(function(e){if(isAdItem(e))e.remove()});'
-      + '["notice_container"].forEach(function(i){var e=document.getElementById(i);if(e)e.remove()});'
-      + '[".application-popup",".event-notice",".addbox",".download",".infomation",".post-content",'
-      + '".list-sec-top",".list-sec","#copy-img",".slider-banners",".footer"]'
-      + '.forEach(function(s){document.querySelectorAll(s).forEach(function(e){e.remove()})});'
-      + 'document.querySelectorAll("script").forEach(function(s){'
-      + 'var r=s.getAttribute("src")||"";'
-      + 'if(r.indexOf("stats.kwvprfcr.xyz")>-1||r.indexOf("yandex.ru")>-1||r.indexOf("googletagmanager.com")>-1||r.indexOf("gtag/js")>-1||r.indexOf("cghhqca.cc")>-1||r.indexOf("cloudflareinsights.com")>-1||r.indexOf("shuifeng.cc")>-1||r.indexOf("zyudkkup.com")>-1)s.remove()});'
-      + 'try{window.plausible=function(){};window.gtag=function(){};window.ym=function(){};window.dataLayer=[];window.tjDataLayer=[];window.tjtag=function(){};window.tjtag2=function(){}}catch(e){}'
+      + 'function qx97_clean(){'
+      + 'var s=['
+      + '".adspop",".xqbj-component-adfloat","#adFloat",".horizontal-banner",".article-ads-btn",".article-bottom-apps",".ads-title",'
+      + '"article.no-mask","article.post-card-ads",".post-card-ads",".bottom-ads",".message-ad-item",'
+      + '"[class*=adfloat]","[id*=adFloat]","[data-ad-type]","[data-ad_type]","[data-ad-id]","[data-ad_id]"'
+      + '];'
+      + 's.forEach(function(x){document.querySelectorAll(x).forEach(function(e){e.remove()})});'
+      + 'document.querySelectorAll("script,link,iframe").forEach(function(e){'
+      + 'var u=(e.src||e.href||"").toLowerCase();'
+      + 'if(/adfloat|bottom_ad_poll|popup-feed|googletagmanager|google-analytics|mc\\.yandex|cloudflareinsights|zyudkkup|shuifeng|cghhqca/.test(u))e.remove()'
+      + '});'
+      + 'document.querySelectorAll("a.tjtagmanager").forEach(function(e){'
+      + 'var p=e.closest(".horizontal-banner,.article-ads-btn,.article-bottom-apps,.ads-title,article,.bottom-ads,.message-ad-item");'
+      + 'if(p)p.remove();else e.remove()'
+      + '});'
+      + 'try{window.dataLayer=[];window.tjDataLayer=[];window.gtag=function(){};window.ym=function(){};window.tjtag=function(){}}catch(e){}'
       + '}'
-      + 'if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",clean);else clean();'
-      + 'setTimeout(clean,1500);setTimeout(clean,4000);setTimeout(clean,8000)'
-      + '}();'
-      + '<\/script>';
+      + 'if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",qx97_clean);else qx97_clean();'
+      + 'setTimeout(qx97_clean,500);setTimeout(qx97_clean,1500);setTimeout(qx97_clean,4000);setTimeout(qx97_clean,8000)'
+      + '}();<\/script>';
 
-    if (body.indexOf('id="hl-adblock"') === -1) {
-      body = body.replace(/<\/head>/i, css + '</head>');
-    }
-    if (body.indexOf('id="hl-adblock-js"') === -1) {
-      body = body.replace(/<\/body>/i, js + '</body>');
-    }
-
-    body = body.replace(/<script[^>]+stats\.kwvprfcr\.xyz[^>]*><\/script>/gi, '');
-    body = body.replace(/<script[^>]+yandex\.ru\/metrika[^>]*><\/script>/gi, '');
-    body = body.replace(/<script[^>]+googletagmanager\.com\/gtag[^>]*><\/script>/gi, '');
-    body = body.replace(/<script[^>]+cloudflareinsights\.com[^>]*><\/script>/gi, '');
-    body = body.replace(/<script[^>]+shuifeng\.cc[^>]*><\/script>/gi, '');
-    body = body.replace(/<script[^>]+zyudkkup\.com[^>]*><\/script>/gi, '');
-
-    body = body.replace(/"video_ads_url":\s*\[[^\]]*\]/g, '"video_ads_url":[]');
-    body = body.replace(/"video_ads_url_h":\s*\[[^\]]*\]/g, '"video_ads_url_h":[]');
-    body = body.replace(/"backend_video_ads_url":\s*\[[^\]]*\]/g, '"backend_video_ads_url":[]');
-    body = body.replace(/"backend_video_ads_url_h":\s*\[[^\]]*\]/g, '"backend_video_ads_url_h":[]');
-    body = body.replace(/"ads_jump_url":\s*\[[^\]]*\]/g, '"ads_jump_url":[]');
-    body = body.replace(/"backend_ads_jump_url":\s*\[[^\]]*\]/g, '"backend_ads_jump_url":[]');
-
-    $done({ body: body });
+    qx97_body = qx97_body.replace(/<script[^>]+(?:adfloat\.js|bottom_ad_poll|googletagmanager|google-analytics|mc\.yandex|cloudflareinsights|tjtag)[^>]*>[\s\S]*?<\/script>/gi, '');
+    qx97_body = qx97_body.replace(/<link[^>]+(?:AiSuite|im\.css|googletagmanager|google-analytics)[^>]*>/gi, '');
+    qx97_body = qx97_body.replace(/<iframe[^>]+(?:yandex|googletagmanager|google-analytics)[^>]*>[\s\S]*?<\/iframe>/gi, '');
+    qx97_body = qx97_body.replace(/<article\b[^>]*class=["'][^"']*\bno-mask\b[^"']*["'][^>]*>[\s\S]*?<\/article>/gi, '');
+    qx97_body = qx97_body.replace(/<div\b[^>]*class=["'][^"']*\bhorizontal-banner\b[^"']*["'][^>]*>[\s\S]*?<\/div>/gi, '');
+    qx97_body = qx97_body.replace(/<div\b[^>]*class=["'][^"']*\barticle-ads-btn\b[^"']*["'][^>]*>[\s\S]*?<\/div>/gi, '');
+    qx97_body = qx97_body.replace(/<div\b[^>]*class=["'][^"']*\barticle-bottom-apps\b[^"']*["'][^>]*>[\s\S]*?<\/div>/gi, '');
+    qx97_body = qx97_body.replace(/<div\b[^>]*class=["'][^"']*\bads-title\b[^"']*["'][^>]*>[\s\S]*?<\/div>/gi, '');
+    qx97_body = qx97_body.replace(/<div\b[^>]*class=["'][^"']*\bbottom-ads\b[^"']*["'][^>]*>[\s\S]*?<\/div>/gi, '');
+    qx97_body = qx97_body.replace(/<div\b[^>]*class=["'][^"']*\badspop\b[^"']*["'][^>]*>[\s\S]*?<\/div>/gi, '');
+    qx97_body = qx97_body.replace(/<script[^>]*id=["']qx97-adblock(?:-js)?["'][^>]*>[\s\S]*?<\/script>/gi, '');
+    qx97_body = qx97_body.replace(/<\/head>/i, qx97_css + '</head>');
+    qx97_body = qx97_body.replace(/<\/body>/i, qx97_js + '</body>');
+    $done({ body: qx97_body });
   } catch (e) {
     $done({});
   }
