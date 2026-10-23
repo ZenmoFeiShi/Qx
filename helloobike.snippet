@@ -1,0 +1,14 @@
+#!name = 哈啰净化
+#!author = TG@ZenMoFiShi
+#!update = 2026-10-23
+#!desc = 净化弹窗、首页推荐流、借钱入口与会员领券横条，隐藏我的页推广宫格、推荐、奖励金、接单券提醒及钱包金融整排。
+^https?:\/\/api-htp\.beizi\.biz\/mb\/sdk0\/json(?:\?|$) url reject-200
+^https?:\/\/adservice\.sigmob\.cn\/(?:hb\/v2\/ad|ad\/v4)(?:\?|$) url reject-200
+^https?:\/\/tm\.sigmob\.cn\/(?:waterfall\/v1|strategy\/v6)(?:\?|$) url reject-200
+^https?:\/\/(?:mi|v2mi)\.gdt\.qq\.com\/(?:gdt_mview\.fcg|server_bidding2)(?:\?|$) url reject-200
+^https:\/\/resource\.51downapp\.cn\/f414fbc17c411b4e986ba8891c738a49\.json\?(?:[^#]*&)?md5=e5230c919f7e3f3af3256161fbfaa0e2&(?:[^#]*&)?hbe_qx_ui=1\.3$ url script-echo-response https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/easybike-ad.js
+^https:\/\/api\.hellobike\.com(?::443)?\/secretkey(?:\?|$) url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/easybike-ad.js
+^https?:\/\/(?:api|marketingapi|entertainment)\.hellobike\.com(?::\d+)?\/api(?:\?|$) url script-request-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/easybike-ad.js
+^https?:\/\/(?:api|marketingapi|entertainment)\.hellobike\.com(?::\d+)?\/api(?:\?|$) url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/easybike-ad.js
+
+hostname = api.hellobike.com, marketingapi.hellobike.com, entertainment.hellobike.com, api-htp.beizi.biz, adservice.sigmob.cn, tm.sigmob.cn, mi.gdt.qq.com, v2mi.gdt.qq.com, resource.51downapp.cn
