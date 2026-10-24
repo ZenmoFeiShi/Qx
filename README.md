@@ -40,6 +40,7 @@ Quantumult X 脚本与重写规则合集，覆盖签到、净化、解锁等实�
 
 | 脚本 | 说明 |
 |---|---|
+| [xhey-ad-clean.snippet](xhey-ad-clean.snippet) / [xhey-ad-clean.js](xhey-ad-clean.js) | 今日水印相机（XCamera）3.0.480：开屏、插屏、信息流广告链路拦截；仅静态检查，未做真机验证；作者 TG@ZenMoFiShi |
 | `bili_view_ad.js` / `bili_view_ad_rewrite.snippet` | B 站 gRPC 数据包净化 |
 | `WB.snippet` | 微博净化 |
 | `Soul.snippet` | Soul 净化 |

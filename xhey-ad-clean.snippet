@@ -1,0 +1,13 @@
+#!name=XCamera广告净化合集
+#!desc=XCamera 3.0.480开屏、插屏、信息流与RTB广告净化；作者：TG@ZenMoFiShi
+^https?:\/\/ad\.xhey\.top\/next\/(?:app\/adx\/|promote\/operation\/appstart\/adx\/|ad\/event\/track\/).* url reject
+^https?:\/\/39\.108\.85\.131\/next\/(?:ios\/config\/cache|promote\/operation\/config\/get\/cache)(?:\?.*)?$ url reject
+^https?:\/\/sdk\.1rtb\.net\/sdk\/(?:config\/v2a|req_ad)(?:\?.*)?$ url reject
+^https?:\/\/adx-strategy-api-cn\.statisticslinks\.com\/sdk\/pl_strategy(?:\?.*)?$ url reject
+^https?:\/\/adx-micro\.statisticslinks\.com\/http_bid(?:\?.*)?$ url reject
+^https?:\/\/da\.statisticslinks\.com\/v1\/open\/da(?:\?.*)?$ url reject
+^https?:\/\/tk\.statisticslinks\.com\/v2\/open\/a_tk(?:\?.*)?$ url reject
+^https?:\/\/sdkquic\.e\.qq\.com\/launch(?:\?.*)?$ url reject
+^https?:\/\/als\.baidu\.com\/clog\/glog(?:\?.*)?$ url reject
+^https?:\/\/jt-sdk-ios\.oss-cn-beijing\.aliyuncs\.com\/iOSConfig\.txt(?:\?.*)?$ url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/xhey-ad-clean.js
+hostname = ad.xhey.top, 39.108.85.131, sdk.1rtb.net, adx-strategy-api-cn.statisticslinks.com, adx-micro.statisticslinks.com, da.statisticslinks.com, tk.statisticslinks.com, sdkquic.e.qq.com, als.baidu.com, jt-sdk-ios.oss-cn-beijing.aliyuncs.com
