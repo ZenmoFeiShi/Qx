@@ -11,6 +11,8 @@ host, shark.dianping.com, reject
 host-wildcard, mquic-*.meituan.com, reject
 host, httpdnsmultiapi.meituan.com, reject
 host, httpdnsmultiapivip.meituan.com, reject
+host, httpdns.meituan.com, reject
+host, httpdnsvip.meituan.com, reject
 host, dnspod.meituan.httpdns.qcloud.com, reject
 host, dnspod.meituan.httpdns.start.qcloud.com, reject
 ip-cidr, 202.90.108.13/32, reject
@@ -33,11 +35,22 @@ ip-cidr, 101.50.8.64/32, reject
 ip-cidr, 103.63.160.64/32, reject
 ip-cidr, 103.63.160.69/32, reject
 ip-cidr, 103.37.155.77/32, reject
+ip-cidr, 103.37.155.60/32, reject
+ip-cidr, 111.230.0.200/32, reject
+ip-cidr, 139.9.47.231/32, reject
+ip-cidr, 121.37.4.167/32, reject
+ip-cidr, 119.29.126.219/32, reject
+ip-cidr, 106.55.217.56/32, reject
+ip-cidr, 103.37.152.224/32, reject
 ip-cidr, 119.29.48.215/32, reject
 ip-cidr, 42.193.128.160/32, reject
 ip6-cidr, 2405:1480:3000:303b::303b/128, reject
 ip6-cidr, 2405:1480:1000:3::1e/128, reject
+ip6-cidr, 2405:1480:1000:4::15/128, reject
+ip6-cidr, 2402:4e00:40:40::2:373/128, reject
 
+^https?:\/\/(httpdns|httpdnsvip|httpdnsmultiapi|httpdnsmultiapivip)\.meituan\.com\/ url reject
+^http:\/\/103\.37\.155\.60\/fetch url reject
 ^https?:\/\/apimobile\.meituan\.com\/aggroup\/indexTab url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/MT.js
 ^https?:\/\/feedguess\.meituan\.com\/lycoris\/scene\/(gwc_feed1_2265|personalcenter_2154)(\?|$) url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/MT.js
 ^https?:\/\/mt-personalcenter\.meituan\.com\/usercenter\/display url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/MT.js
@@ -47,4 +60,4 @@ ip6-cidr, 2405:1480:1000:3::1e/128, reject
 ^https?:\/\/mop\.meituan\.com\/mop\/entry\/shoppingCartEntry url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/MT.js
 ^https?:\/\/mop\.meituan\.com\/api\/entryModule\/startupPicture url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/MT.js
 
-hostname = apimobile.meituan.com, feedguess.meituan.com, mop.meituan.com, mt-personalcenter.meituan.com, assistify.meituan.com
+hostname = apimobile.meituan.com, feedguess.meituan.com, mop.meituan.com, mt-personalcenter.meituan.com, assistify.meituan.com, httpdns.meituan.com, httpdnsmultiapi.meituan.com
