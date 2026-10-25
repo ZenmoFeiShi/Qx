@@ -1,11 +1,11 @@
 #!name = 美团App广告净化
 #!author = TG@ZenMoFiShi
 #!update = 2026-10-25
-#!desc = 美团 12.67.403：隐藏底栏「视频」「小团」、清空购物车推荐流与顶部横幅、去掉开屏图；另含「我的」页服务入口精简。
-# 需在 [mitm] 添加：apimobile.meituan.com, feedguess.meituan.com, mop.meituan.com, mt-personalcenter.meituan.com
-^https?:\/\/apimobile\.meituan\.com\/aggroup\/indexTab url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/MTAppAdClean.js
-^https?:\/\/feedguess\.meituan\.com\/lycoris\/scene\/gwc_feed1_2265(\?|$) url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/MTAppAdClean.js
-^https?:\/\/mop\.meituan\.com\/mop\/entry\/shoppingCartEntry url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/MTAppAdClean.js
-^https?:\/\/mop\.meituan\.com\/api\/entryModule\/startupPicture url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/MTAppAdClean.js
-^https?:\/\/feedguess\.meituan\.com\/lycoris\/scene\/personalcenter_2154(\?|$) url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/MTAppAdCleanMine.js
-^https?:\/\/mt-personalcenter\.meituan\.com\/usercenter\/display url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/MTAppAdCleanMine.js
+
+^https?:\/\/apimobile\.meituan\.com\/aggroup\/indexTab url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/MTAppAdClean.js
+^https?:\/\/feedguess\.meituan\.com\/lycoris\/scene\/gwc_feed1_2265(\?|$) url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/MTAppAdClean.js
+^https?:\/\/mop\.meituan\.com\/mop\/entry\/shoppingCartEntry url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/MTAppAdClean.js
+^https?:\/\/mop\.meituan\.com\/api\/entryModule\/startupPicture url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/MTAppAdClean.js
+
+^https?:\/\/feedguess\.meituan\.com\/lycoris\/scene\/personalcenter_2154(\?|$) url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/MTAppAdCleanMine.js
+^https?:\/\/mt-personalcenter\.meituan\.com\/usercenter\/display url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/MTAppAdCleanMine.js
