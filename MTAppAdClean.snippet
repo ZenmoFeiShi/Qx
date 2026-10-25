@@ -2,10 +2,47 @@
 #!author = TG@ZenMoFiShi
 #!update = 2026-10-25
 
-^https?:\/\/apimobile\.meituan\.com\/aggroup\/indexTab url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/MTAppAdClean.js
-^https?:\/\/feedguess\.meituan\.com\/lycoris\/scene\/gwc_feed1_2265(\?|$) url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/MTAppAdClean.js
-^https?:\/\/mop\.meituan\.com\/mop\/entry\/shoppingCartEntry url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/MTAppAdClean.js
-^https?:\/\/mop\.meituan\.com\/api\/entryModule\/startupPicture url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/MTAppAdClean.js
+host, shark-mt.meituan.com, reject
+host, shark-default.meituan.com, reject
+host, shark-dp.meituan.com, reject
+host, shark-ps.meituan.com, reject
+host, shark-wm.sankuai.com, reject
+host, shark.dianping.com, reject
+host-wildcard, mquic-*.meituan.com, reject
+host, httpdnsmultiapi.meituan.com, reject
+host, httpdnsmultiapivip.meituan.com, reject
+host, dnspod.meituan.httpdns.qcloud.com, reject
+host, dnspod.meituan.httpdns.start.qcloud.com, reject
+ip-cidr, 202.90.108.13/32, reject
+ip-cidr, 202.90.110.46/32, reject
+ip-cidr, 202.90.108.69/32, reject
+ip-cidr, 202.90.110.45/32, reject
+ip-cidr, 202.90.108.68/32, reject
+ip-cidr, 202.90.110.48/32, reject
+ip-cidr, 202.90.108.67/32, reject
+ip-cidr, 202.90.110.36/32, reject
+ip-cidr, 202.90.108.54/32, reject
+ip-cidr, 202.90.108.55/32, reject
+ip-cidr, 203.76.217.51/32, reject
+ip-cidr, 203.76.217.53/32, reject
+ip-cidr, 203.76.217.241/32, reject
+ip-cidr, 203.76.217.243/32, reject
+ip-cidr, 103.202.146.30/32, reject
+ip-cidr, 103.202.146.49/32, reject
+ip-cidr, 101.50.8.64/32, reject
+ip-cidr, 103.63.160.64/32, reject
+ip-cidr, 103.63.160.69/32, reject
+ip-cidr, 103.37.155.77/32, reject
+ip-cidr, 119.29.48.215/32, reject
+ip-cidr, 42.193.128.160/32, reject
+ip6-cidr, 2405:1480:3000:303b::303b/128, reject
+ip6-cidr, 2405:1480:1000:3::1e/128, reject
 
-^https?:\/\/feedguess\.meituan\.com\/lycoris\/scene\/personalcenter_2154(\?|$) url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/MTAppAdCleanMine.js
-^https?:\/\/mt-personalcenter\.meituan\.com\/usercenter\/display url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/MTAppAdCleanMine.js
+^https:\/\/apimobile\.meituan\.com\/aggroup\/indexTab url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/MTAppAdClean.js
+^https:\/\/feedguess\.meituan\.com\/lycoris\/scene\/gwc_feed1_2265(\?|$) url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/MTAppAdClean.js
+^https:\/\/mop\.meituan\.com\/mop\/entry\/shoppingCartEntry url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/MTAppAdClean.js
+^https:\/\/mop\.meituan\.com\/api\/entryModule\/startupPicture url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/MTAppAdClean.js
+^https:\/\/feedguess\.meituan\.com\/lycoris\/scene\/personalcenter_2154(\?|$) url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/MTAppAdCleanMine.js
+^https:\/\/mt-personalcenter\.meituan\.com\/usercenter\/display url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/MTAppAdCleanMine.js
+
+hostname = apimobile.meituan.com, feedguess.meituan.com, mop.meituan.com, mt-personalcenter.meituan.com
