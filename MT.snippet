@@ -39,8 +39,9 @@ ip6-cidr, 2405:1480:3000:303b::303b/128, reject
 ip6-cidr, 2405:1480:1000:3::1e/128, reject
 
 ^https?:\/\/apimobile\.meituan\.com\/aggroup\/indexTab url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/MT.js
-^https?:\/\/feedguess\.meituan\.com\/lycoris\/scene\/gwc_feed1_2265(\?|$) url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/MT.js
+^https?:\/\/feedguess\.meituan\.com\/lycoris\/scene\/(gwc_feed1_2265|personalcenter_2154)(\?|$) url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/MT.js
+^https?:\/\/mt-personalcenter\.meituan\.com\/usercenter\/display url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/MT.js
 ^https?:\/\/mop\.meituan\.com\/mop\/entry\/shoppingCartEntry url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/MT.js
 ^https?:\/\/mop\.meituan\.com\/api\/entryModule\/startupPicture url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/MT.js
 
-hostname = apimobile.meituan.com, feedguess.meituan.com, mop.meituan.com
+hostname = apimobile.meituan.com, feedguess.meituan.com, mop.meituan.com, mt-personalcenter.meituan.com
