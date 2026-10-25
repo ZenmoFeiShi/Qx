@@ -3,6 +3,7 @@ const mtqxHideTabs = ["video", "xiaotuan"];
 const mtqxKeepTabs = ["homepage", "mine"];
 const mtqxFeedScenes = ["gwc_feed1_2265", "personalcenter_2154"];
 const mtqxMineHide = ["mine_cross_recommend"];
+const mtqxSearchHide = ["EntranceHotwordsV2Hotwords", "EntranceHotwordsV2ContentCard"];
 
 function mtqxIsObj(v) {
   return v !== null && typeof v === "object" && !Array.isArray(v);
@@ -35,6 +36,61 @@ function mtqxMine(obj) {
   const kept = obj.children.filter(c => !(mtqxIsObj(c) && mtqxMineHide.indexOf(c.name) >= 0));
   if (kept.length === obj.children.length) return false;
   obj.children = kept;
+  return true;
+}
+
+function mtqxDefaultWord(obj) {
+  const res = obj && obj.searchIntroduceResponse;
+  if (!mtqxIsObj(res)) return false;
+  let changed = false;
+  const dw = res.defaultWordRes;
+  if (mtqxIsObj(dw) && Array.isArray(dw.defaultWordItems) && dw.defaultWordItems.length) {
+    dw.defaultWordItems = [];
+    changed = true;
+  }
+  if (Array.isArray(res.HotWordInfos) && res.HotWordInfos.length) {
+    res.HotWordInfos = [];
+    changed = true;
+  }
+  return changed;
+}
+
+function mtqxHotRecommend(obj) {
+  const d = obj && obj.data;
+  if (!mtqxIsObj(d) || !Array.isArray(d.segmentsV2)) return false;
+  let changed = false;
+  const kept = [];
+  d.segmentsV2.forEach(s => {
+    if (!mtqxIsObj(s) || !Array.isArray(s.hotwordSegments)) {
+      kept.push(s);
+      return;
+    }
+    const hs = s.hotwordSegments.filter(h => !(mtqxIsObj(h) && mtqxSearchHide.indexOf(h.pageName) >= 0));
+    if (hs.length === s.hotwordSegments.length) {
+      kept.push(s);
+      return;
+    }
+    changed = true;
+    if (hs.length) {
+      s.hotwordSegments = hs;
+      kept.push(s);
+    }
+  });
+  if (changed) d.segmentsV2 = kept;
+  const b = d.aiSearchBubble;
+  if (mtqxIsObj(b) && Array.isArray(b.bubbleTexts) && b.bubbleTexts.length) {
+    b.bubbleTexts = [];
+    changed = true;
+  }
+  return changed;
+}
+
+function mtqxAiSkill(obj) {
+  if (!mtqxIsObj(obj) || typeof obj.data !== "string") return false;
+  const d = JSON.parse(obj.data);
+  if (!mtqxIsObj(d) || !mtqxIsObj(d.skills) || !Object.keys(d.skills).length) return false;
+  d.skills = {};
+  obj.data = JSON.stringify(d);
   return true;
 }
 
@@ -71,6 +127,9 @@ function mtqxClearArea(root, key) {
     if (/\/aggroup\/indexTab/.test(mtqxUrl)) changed = mtqxTab(obj);
     else if (/\/lycoris\/scene\//.test(mtqxUrl)) changed = mtqxFeed(obj);
     else if (/\/usercenter\/display/.test(mtqxUrl)) changed = mtqxMine(obj);
+    else if (/\/searchpage\/defaultword/.test(mtqxUrl)) changed = mtqxDefaultWord(obj);
+    else if (/\/searchpage\/hotword\/city\/divide\/hotrecommend\//.test(mtqxUrl)) changed = mtqxHotRecommend(obj);
+    else if (/\/assistant\/getAppClientHornConfig/.test(mtqxUrl)) changed = mtqxAiSkill(obj);
     else if (/\/mop\/entry\/shoppingCartEntry/.test(mtqxUrl)) changed = mtqxClearArea(obj, "topBannerArea");
     else if (/\/entryModule\/startupPicture/.test(mtqxUrl)) changed = mtqxClearArea(obj, "startupPicArea");
   } catch (e) {
