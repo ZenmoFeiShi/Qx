@@ -1,7 +1,8 @@
 const mtqxUrl = (typeof $request !== "undefined" && $request && $request.url) || "";
 const mtqxHideTabs = ["video", "xiaotuan"];
 const mtqxKeepTabs = ["homepage", "mine"];
-const mtqxFeedScenes = ["gwc_feed1_2265"];
+const mtqxFeedScenes = ["gwc_feed1_2265", "personalcenter_2154"];
+const mtqxMineHide = ["mine_cross_recommend"];
 
 function mtqxIsObj(v) {
   return v !== null && typeof v === "object" && !Array.isArray(v);
@@ -26,6 +27,14 @@ function mtqxFeed(obj) {
   obj.bottom = true;
   if (!mtqxIsObj(obj.ext)) obj.ext = {};
   obj.ext.forbidByExp = true;
+  return true;
+}
+
+function mtqxMine(obj) {
+  if (!mtqxIsObj(obj) || !Array.isArray(obj.children)) return false;
+  const kept = obj.children.filter(c => !(mtqxIsObj(c) && mtqxMineHide.indexOf(c.name) >= 0));
+  if (kept.length === obj.children.length) return false;
+  obj.children = kept;
   return true;
 }
 
@@ -61,6 +70,7 @@ function mtqxClearArea(root, key) {
   try {
     if (/\/aggroup\/indexTab/.test(mtqxUrl)) changed = mtqxTab(obj);
     else if (/\/lycoris\/scene\//.test(mtqxUrl)) changed = mtqxFeed(obj);
+    else if (/\/usercenter\/display/.test(mtqxUrl)) changed = mtqxMine(obj);
     else if (/\/mop\/entry\/shoppingCartEntry/.test(mtqxUrl)) changed = mtqxClearArea(obj, "topBannerArea");
     else if (/\/entryModule\/startupPicture/.test(mtqxUrl)) changed = mtqxClearArea(obj, "startupPicArea");
   } catch (e) {
