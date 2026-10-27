@@ -1,0 +1,13 @@
+#!name = 腾讯视频净化
+#!author = TG@ZenMoFiShi
+#!update = 2026-10-27
+#!desc = 去除开屏广告、视频播放前广告、底部的多余 tap 栏、我的页面美化、我的界面顶部广告
+host, iacc.stgw.qq.com, reject
+host, tacc.video.qq.com, reject
+^https?:\/\/i\.video\.qq\.com\/(?:\?.*)?$ url script-request-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/Txvideoad.js
+^https?:\/\/i\.video\.qq\.com\/(?:\?.*)?$ url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/Txvideoad.js
+^https?:\/\/iacc\.qq\.com\/(?:\?.*)?$ url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/Txvideoad.js
+^https?:\/\/config\.ab\.qq\.com\/tab\/GetTabRemoteConfig(?:\?.*)?$ url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/Txvideoad.js
+^https:\/\/rdelivery\.qq\.com\/v1\/sdkconfig\/get(?:\?.*)?$ url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/refs/heads/main/Txvideoad.js
+
+hostname = i.video.qq.com, iacc.qq.com, config.ab.qq.com, rdelivery.qq.com
