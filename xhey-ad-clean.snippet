@@ -1,5 +1,12 @@
 #!name=XCamera广告净化合集
-#!desc=XCamera 3.0.480开屏、插屏、信息流与RTB广告净化；作者：TG@ZenMoFiShi
+#!desc=今日水印专业版3.0.186全局关广告开关、TopOn/百度/快手/CLL广告请求拦截。作者：TG@ZenMoFiShi
+^https?:\/\/abtest-tx-beijing-01\.saas\.sensorsdata\.cn\/api\/v2\/abtest\/online\/results\?project-key=(?:0E6053C30A799D63EFA48959776B2EE2EDC81359|EE39C73914ED208E6EBE24A7333CAF5C3FE2E89D) url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/xhey-ad-clean.js
+^https?:\/\/(?:api|da|tk|adx)\.anythinktech\.com\/ url reject
+^https?:\/\/api\.toponadss\.com\/ url reject
+^https?:\/\/mobads(?:-logs)?\.baidu\.com\/ url reject
+^https?:\/\/mobads-pre-config\.(?:bj|cdn)\.bcebos\.com\/ url reject
+^https?:\/\/open\.e\.kuaishou\.(?:com|cn)\/ url reject
+^https?:\/\/stage2\.chelaile\.net\.cn\/sdk url reject
 ^https?:\/\/ad\.xhey\.top\/next\/(?:app\/adx\/|promote\/operation\/appstart\/adx\/|ad\/event\/track\/).* url reject
 ^https?:\/\/39\.108\.85\.131\/next\/(?:ios\/config\/cache|promote\/operation\/config\/get\/cache)(?:\?.*)?$ url reject
 ^https?:\/\/sdk\.1rtb\.net\/sdk\/(?:config\/v2a|req_ad)(?:\?.*)?$ url reject
@@ -10,4 +17,4 @@
 ^https?:\/\/sdkquic\.e\.qq\.com\/launch(?:\?.*)?$ url reject
 ^https?:\/\/als\.baidu\.com\/clog\/glog(?:\?.*)?$ url reject
 ^https?:\/\/jt-sdk-ios\.oss-cn-beijing\.aliyuncs\.com\/iOSConfig\.txt(?:\?.*)?$ url script-response-body https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/xhey-ad-clean.js
-hostname = ad.xhey.top, 39.108.85.131, sdk.1rtb.net, adx-strategy-api-cn.statisticslinks.com, adx-micro.statisticslinks.com, da.statisticslinks.com, tk.statisticslinks.com, sdkquic.e.qq.com, als.baidu.com, jt-sdk-ios.oss-cn-beijing.aliyuncs.com
+hostname = abtest-tx-beijing-01.saas.sensorsdata.cn, api.anythinktech.com, da.anythinktech.com, tk.anythinktech.com, adx.anythinktech.com, api.toponadss.com, mobads.baidu.com, mobads-logs.baidu.com, mobads-pre-config.bj.bcebos.com, mobads-pre-config.cdn.bcebos.com, open.e.kuaishou.com, open.e.kuaishou.cn, stage2.chelaile.net.cn, ad.xhey.top, 39.108.85.131, sdk.1rtb.net, adx-strategy-api-cn.statisticslinks.com, adx-micro.statisticslinks.com, da.statisticslinks.com, tk.statisticslinks.com, sdkquic.e.qq.com, als.baidu.com, jt-sdk-ios.oss-cn-beijing.aliyuncs.com
