@@ -1,7 +1,7 @@
 (() => {
   const TAB_DROP_KEYS = ["smallvideo_entrance", "goods_entrance"];
   const TAB_DROP_TITLES = ["短剧", "好物"];
-  const TAB_CUT_WHITELIST = "0;2;4";
+  const TAB_CUT_WHITELIST = "0;4";
   const AD_ANY = ["AdResponseInfo", "InnerAdPromotionEventList", "InnerAdCommonPromotionEventActivityList", "LoadingConfig", "PreloadResourceInfo", "AdFeedInfo"];
   const DROP_MODULES = ["user_center_more_function"];
   const AD_MODULE_IDS = ["outerPaster"];
