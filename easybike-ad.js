@@ -415,6 +415,44 @@ function hbeCapitalTemplateEcho(hbeRequest) {
     } catch (hbeDSLError) { return hbeFail; }
 }
 
+function hbeHitchHost(hbeRequest) {
+    return /^https:\/\/taxiapi\.hellobike\.com(?::443)?\/api(?:\?|$)/i.test(String(hbeRequest.url || ""));
+}
+function hbeHitchClean(hbeRequest, hbeResponse) {
+    try {
+        if (String(hbeRequest.method || "").toUpperCase() !== "POST" || hbeHeader(hbeRequest.headers, "action") !== "hitch.driver.journeyList") return {};
+        if (hbeResponse.statusCode && Number(hbeResponse.statusCode) !== 200) return {};
+        var hbeBody = hbeResponse.body;
+        if (typeof hbeBody !== "string" || !hbeBody || hbeBody.length > 2097152) return {};
+        var hbeOpened = hbeOpenBody(hbeBody, hbeResponseSecrets(hbeRequest.headers));
+        var hbeTag = "__HBE_QX_NUMBER_";
+        if (hbeOpened.text.indexOf(hbeTag) !== -1) return {};
+        var hbeNumbers = [];
+        var hbeObject = JSON.parse(hbeOpened.text.replace(/"(?:\\.|[^"\\])*"|-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?/g, function (hbeToken) {
+            if (hbeToken.charAt(0) === '"') return hbeToken;
+            hbeNumbers.push(hbeToken);
+            return '"' + hbeTag + (hbeNumbers.length - 1) + '__"';
+        }));
+        if (!hbeObject || typeof hbeObject !== "object" || Array.isArray(hbeObject) || (hbeObject.code !== "0" && hbeNumberText(hbeObject.code, hbeNumbers) !== "0")) return {};
+        var hbeData = hbeObject.data;
+        if (!hbeData || typeof hbeData !== "object" || Array.isArray(hbeData) || !hbeHas(hbeData, "payProductBanner")) return {};
+        var hbeBanner = hbeData.payProductBanner;
+        if (!hbeBanner || typeof hbeBanner !== "object" || Array.isArray(hbeBanner) || typeof hbeBanner.url !== "string" || !/ph-driver-member/.test(hbeBanner.url)) return {};
+        delete hbeData.payProductBanner;
+        var hbeOutput = JSON.stringify(hbeObject).replace(/"__HBE_QX_NUMBER_(\d+)__"/g, function (hbeToken, hbeIndex) {
+            var hbeNumber = hbeNumbers[Number(hbeIndex)];
+            if (typeof hbeNumber !== "string") throw new Error("number-contract");
+            return hbeNumber;
+        });
+        if (hbeOpened.mode === "aes") {
+            hbeOutput = HBE_AES.AES.encrypt(hbeOutput, hbeOpened.key, { iv: hbeOpened.key, mode: HBE_AES.mode.CBC, padding: HBE_AES.pad.Pkcs7 }).ciphertext.toString(HBE_AES.enc.Base64);
+            if (hbeOpened.quoted) hbeOutput = JSON.stringify(hbeOutput);
+        }
+        return { body: hbeOutput };
+    } catch (hbeHitchError) {
+        return {};
+    }
+}
 function hbeCleanResponse() {
     var hbeResult = {};
     try {
@@ -425,6 +463,7 @@ function hbeCleanResponse() {
         if (!hbeResponseStage) return hbeCaptureContext(hbeReq);
         var hbeRes = $response;
         if (/^https:\/\/api\.hellobike\.com(?::443)?\/secretkey(?:\?|$)/i.test(hbeURL)) return hbeCaptureKey(hbeReq, hbeRes);
+        if (hbeHitchHost(hbeReq)) return hbeHitchClean(hbeReq, hbeRes);
         var hbeMatch = hbeAPIHost(hbeReq);
         var hbeMeta = hbeTakeContext(hbeReq, hbeRes);
         var hbeBody = hbeRes.body;
